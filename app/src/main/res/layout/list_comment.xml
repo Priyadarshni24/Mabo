@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_margin="@dimen/margin10"
+            android:layout_width="@dimen/dimen50"
+            android:layout_height="@dimen/dimen50"
+            android:src="@drawable/ic_avatar"
+            android:id="@+id/img_profile"/>
+        <LinearLayout
+            android:layout_toRightOf="@id/img_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin10"
+            android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_name"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="@dimen/textsize18"
+            />
+        <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/txt_comment"
+           android:textColor="@color/black"
+           android:textSize="@dimen/textsize16"
+           />
+        <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/txt_date"
+            android:layout_gravity="right"
+            android:gravity="right"
+           android:textColor="@color/black"
+           android:textSize="@dimen/textsize14"
+           />
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

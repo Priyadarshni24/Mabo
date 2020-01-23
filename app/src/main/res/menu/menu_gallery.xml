@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="me.pushapp.honk.gallery.GalleryActivity">
+    <item
+        android:id="@+id/action_upload_image"
+        android:icon="@drawable/ic_white_plus"
+        android:title="@string/action_upload_image"
+        app:showAsAction="always" />
+    <!--<item
+        android:id="@+id/action_upload_image_from_camera"
+        android:icon="@drawable/ic_callcamera"
+        android:title="@string/action_upload_image"
+        app:showAsAction="never" />-->
+    <item
+        android:id="@+id/action_image_delete"
+        android:icon="@drawable/ic_delete"
+        android:visible="false"
+        android:title="@string/action_delete_image"
+        app:showAsAction="always" />
+</menu>

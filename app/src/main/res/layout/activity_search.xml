@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/mToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="0dp"
+            app:navigationIcon="@drawable/ic_backarraow"
+            android:background="@color/apptheme"
+            android:minHeight="?attr/actionBarSize"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+          </androidx.appcompat.widget.Toolbar>
+        <EditText
+            android:id="@+id/edt_name"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen60"
+            android:background="@drawable/background_with_shadow"
+            android:layout_below="@+id/mToolbar"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_below="@+id/edt_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_users"
+            android:layout_marginLeft="@dimen/margin10"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:scrollbars="none"
+            android:minHeight="@dimen/dimen50"
+            android:layout_marginBottom="@dimen/margin25"
+            />
+    </RelativeLayout>
+</layout>

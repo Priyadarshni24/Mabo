@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:id="@+id/lyt_row"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_margin="@dimen/margin10"
+            android:layout_width="@dimen/dimen50"
+            android:layout_height="@dimen/dimen50"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_avatar"
+            android:id="@+id/img_profile"/>
+          <TextView
+                android:layout_toRightOf="@id/img_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_name"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/textsize18"
+                />
+        <ImageView
+            android:visibility="gone"
+            android:layout_width="@dimen/dimen50"
+            android:layout_height="@dimen/dimen50"
+            android:src="@drawable/ic_videochat"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/videocall"/>
+        <ImageView
+            android:visibility="gone"
+            android:layout_width="@dimen/dimen50"
+            android:layout_height="@dimen/dimen50"
+            android:src="@drawable/ic_makechat"
+            android:layout_toLeftOf="@+id/videocall"
+            android:layout_centerVertical="true"
+            android:id="@+id/makechat"/>
+       </RelativeLayout>
+</layout>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/mToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="0dp"
+            app:navigationIcon="@drawable/ic_backarraow"
+            android:background="@color/apptheme"
+            android:minHeight="?attr/actionBarSize"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+
+
+        </androidx.appcompat.widget.Toolbar>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <fragment
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:id="@+id/frg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:textColor="@color/white"
+                android:padding="@dimen/margin10"
+                android:layout_width="wrap_content"
+                android:layout_margin="@dimen/margin10"
+                android:layout_height="wrap_content"
+                android:background="@color/apptheme"
+                android:id="@+id/str_estimatedtime"
+                android:textSize="@dimen/textsize18"
+                android:layout_alignParentBottom="true"
+                android:text="@string/str_estimated"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

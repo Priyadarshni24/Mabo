@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:layout_gravity="center">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp">
+
+        <ImageView
+            android:id="@+id/iv_image_icon"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitXY"
+            android:src="@drawable/slide1"
+            android:visibility="visible"/>
+
+
+    </androidx.cardview.widget.CardView>
+    <ImageView
+        android:layout_width="@dimen/margin25"
+        android:layout_height="@dimen/margin25"
+        android:src="@drawable/ic_closeblack"
+       android:layout_alignParentRight="true"
+        android:layout_marginLeft="-10dp"
+        android:layout_marginBottom="-10dp"
+        android:id="@+id/btn_close"/>
+
+
+</RelativeLayout>

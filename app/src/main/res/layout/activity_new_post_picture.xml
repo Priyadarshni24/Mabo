@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="94dp"
+    android:layout_margin="4dp"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_gravity="center_horizontal"
+        android:clickable="true"
+        android:scaleType="centerCrop" />
+
+
+    <com.andexert.library.RippleView
+        android:id="@+id/deleteImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/margin5">
+
+        <ImageView
+            android:layout_width="@dimen/dimen50"
+            android:layout_height="@dimen/dimen50"
+            android:src="@drawable/ic_close"/>
+    </com.andexert.library.RippleView>
+</RelativeLayout>

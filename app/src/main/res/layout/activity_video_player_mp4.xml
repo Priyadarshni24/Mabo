@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+    <RelativeLayout
+        android:background="@color/apptheme"
+        android:id="@+id/action_bar"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize">
+        <ImageView
+            android:layout_width="45dp"
+            android:layout_height="25dp"
+            android:gravity="center_vertical"
+            android:id="@+id/txt_back"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin15"
+            android:src="@drawable/ic_backarraow"
+            android:layout_alignParentLeft="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textsize20"
+            android:layout_centerVertical="true"
+            android:id="@+id/title"
+            android:text="@string/txt_video"
+            android:layout_toRightOf="@+id/txt_back"/>
+    </RelativeLayout>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <VideoView
+
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:id="@+id/videoView" />
+    <ProgressBar
+        android:id="@+id/pb_loading"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+</RelativeLayout>
+</LinearLayout>
+</layout>

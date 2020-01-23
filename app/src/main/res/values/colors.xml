@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="apptheme">#37285E</color>
+    <color name="colorPrimary">#2E214E</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="grey">#A1A1A1</color>
+
+    <color name="red">#db3236</color>
+    <color name="blue">#3b5998</color>
+    <color name="skyblue">#87cefa</color>
+
+    <color name="lightpurple">#d3b9df</color>
+    <color name="violet">#C709C7</color>
+    <!-- VIDEO TRIMMER -->
+    <color name="background_video_color">#2f3031</color>
+    <color name="background_progress_color">#6C6D6D</color>
+    <color name="progress_color">@color/colorPrimary</color>
+    <color name="line_color">#0DC143</color>
+    <color name="shadow_color">#FF000000</color>
+    <color name="line_button">#565758</color>
+    <color name="black_translucent">#50000000</color>
+
+
+    <!--Comet Chat -->
+    <color name="primaryColor">#fafafa</color>
+    <color name="primaryLightColor">#ffffff</color>
+    <color name="primaryDarkColor">#c7c7c7</color>
+    <color name="bannar">#F0F0F0</color>
+    <color name="secondaryColor">#1976d2</color>
+    <color name="secondaryLightColor">#63a4ff</color>
+    <color name="secondaryDarkColor">#004ba0</color>
+    <color name="primaryTextColor">#FF000000</color>
+    <color name="video_background">#263238</color>
+    <color name="secondaryTextColor">#6b000000</color>
+    <color name="popup_gallary">#AB47BC</color>
+    <color name="popup_camera">#66BB6A</color>
+    <color name="popup_audio">#FFA726</color>
+    <color name="popup_whiteboard">#5C6BC0</color>
+    <color name="popup_document">#EF5350</color>
+    <color name="error">#c62828</color>
+    <color name="shimmer_background">#dddddd</color>
+    <color name="green_600">#43A047</color>
+    <color name="green_100">#C8E6C9</color>
+    <color name="red_100">#FFCDD2</color>
+    <color name="red_600">#E53935</color>
+    <color name="selection">#dddddd</color>
+</resources>

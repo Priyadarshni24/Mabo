@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/action_setrange"
+        android:title="@string/action_setrange"
+        />
+    <item
+        android:id="@+id/action_findme"
+        android:title="@string/action_findme"
+        />
+    <item
+        android:id="@+id/action_findpartner"
+        android:title="@string/action_findPartner"
+         />
+    <item
+        android:id="@+id/action_findfriends"
+        android:title="@string/action_findfriends"
+        />
+    <item android:id="@+id/action_findnearme"
+        android:title="@string/action_findnearme"/>
+</menu>

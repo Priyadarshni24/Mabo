@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/gibsonregular"
+        android:text="@string/str_setrange"
+        android:layout_marginLeft="@dimen/margin15"
+        android:layout_marginRight="@dimen/margin15"
+        android:textColor="@color/apptheme"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="@dimen/textsize18"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/gibsonregular"
+        android:textSize="@dimen/textsize18"
+        android:layout_margin="@dimen/margin5"
+        android:id="@+id/seekvalue"/>
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/seekrange"
+        android:layout_below="@+id/txt_title"
+        android:layout_width="match_parent"
+        android:layout_margin="@dimen/margin25"
+        android:min="25"
+        android:max="1000"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:layout_marginTop="@dimen/textsize20"
+        android:id="@+id/btn_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/apptheme"
+        android:text="@string/ok"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textsize18"
+        android:layout_below="@+id/seekvalue"/>
+</LinearLayout>
