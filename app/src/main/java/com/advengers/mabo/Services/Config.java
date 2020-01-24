@@ -7,4 +7,5 @@ public class Config {
     public static String gameUrl = "";
     public static String message = "";
 
+
 }

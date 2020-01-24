@@ -627,7 +627,7 @@ void ShowInterestAlert(JSONObject login)
         cometChatActivityPresenter.addCallEventListener(context, TAG);
         Log.d(TAG, "onResume: ");
         cometChatActivityPresenter.addMessageListener(DashboardActivity.this,TAG);
-        App.activityResumed();
+
     }
 
     @Override
@@ -636,7 +636,7 @@ void ShowInterestAlert(JSONObject login)
         Log.d(TAG, "onPause: ");
         cometChatActivityPresenter.removeMessageListener(TAG);
         cometChatActivityPresenter.removeCallEventListener(TAG);
-        App.activityPaused();
+
     }
 
     @Override

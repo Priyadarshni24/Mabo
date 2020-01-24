@@ -121,15 +121,23 @@ public class App extends Application {
         return activityVisible;
     }
 
-    public static void activityResumed() {
-        activityVisible = true;
+    public static String getRoomid()
+    {
+        return roomid;
     }
 
-    public static void activityPaused() {
+    public static void activityResumed(String room_id) {
+        activityVisible = true;
+        roomid = room_id;
+    }
+
+    public static void activityPaused(String room_id) {
         activityVisible = false;
+        roomid = room_id;
     }
 
     private static boolean activityVisible;
+    private static String roomid = "";
 
     public static Context getappContext() {
 

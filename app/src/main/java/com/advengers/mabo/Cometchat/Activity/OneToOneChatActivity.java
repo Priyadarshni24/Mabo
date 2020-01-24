@@ -41,6 +41,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.advengers.mabo.Activity.App;
 import com.advengers.mabo.Utils.LogUtils;
 import com.asksira.bsimagepicker.BSImagePicker;
 import com.cometchat.pro.constants.CometChatConstants;
@@ -724,6 +725,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
         if (oneToOneAdapter!=null)
             oneToOnePresenter.refreshList(contactUid,LIMIT);
         oneToOnePresenter.addCallEventListener(TAG);
+        App.activityResumed(contactUid);
     }
 
     @Override
@@ -738,6 +740,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
         oneToOnePresenter.removeMessageLisenter(getString(R.string.message_listener));
         oneToOnePresenter.removePresenceListener(getString(R.string.presenceListener));
         oneToOnePresenter.removeCallListener(TAG);
+        App.activityPaused(contactUid);
     }
 
 

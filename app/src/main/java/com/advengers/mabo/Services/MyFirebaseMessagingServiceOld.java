@@ -33,6 +33,9 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -82,7 +85,18 @@ public class MyFirebaseMessagingServiceOld extends FirebaseMessagingService {
             Config.message = data.get("message");
             if(data.containsKey("alert"))
                 Config.message = data.get("alert");
-            String[] arrOfStr = Config.title.split("~", 3);
+            if(data.get("message").contains("sender"))
+            {
+                try {
+                    JSONObject obj = new JSONObject(data.get("message"));
+                    LogUtils.e("I am coming");
+                    name = obj.getString("sender");//data.get("message");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+           /* String[] arrOfStr = Config.title.split("~", 3);
             int i=0;
             for (String a : arrOfStr)
             {
@@ -94,7 +108,7 @@ public class MyFirebaseMessagingServiceOld extends FirebaseMessagingService {
                     roomid = a.trim();
                 i++;
                 LogUtils.e(a.trim());
-            }
+            }*/
 
             sendNotification();
            /* Notification notification = new NotificationCompat.Builder(this)
@@ -149,8 +163,14 @@ public class MyFirebaseMessagingServiceOld extends FirebaseMessagingService {
               //  db = new MyDBHandler(getBaseContext());
                // User user = new Gson().fromJson(Utils.getInstance(getBaseContext()).getString(USER),User.class);
            //     db.insertMessages(name,id, user.getId(),Config.message,RECEIVED,roomid);
+        LogUtils.e(App.getRoomid()+" "+App.isActivityVisible()+" "+name);
         if(!App.isActivityVisible())
-        notificationManager.notify(createID(), notificationBuilder.build());
+        {
+            notificationManager.notify(createID(), notificationBuilder.build());
+        }else if(App.isActivityVisible()&&!App.getRoomid().equals(name)){
+
+            notificationManager.notify(createID(), notificationBuilder.build());
+        }
 
 
     }
