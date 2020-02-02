@@ -521,17 +521,17 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
 
                 if (CCPermissionHelper.hasPermissions(this, CCPermissionHelper.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE)) {
                  //   AttachmentHelper.selectMedia(this, "*/*", StringContract.IntentStrings.EXTRA_MIME_TYPE, StringContract.RequestCode.ADD_GALLERY);
-                   /* FilePickerBuilder.getInstance().setMaxCount(5)
+                    FilePickerBuilder.getInstance().setMaxCount(5)
                             .setSelectedFiles(photoPaths)
                             .setActivityTheme(R.style.LibAppTheme)
-                            .pickPhoto(this);*/
-                    BSImagePicker pickerDialog = new BSImagePicker.Builder("com.asksira.imagepickersheetdemo.fileprovider")
+                            .pickPhoto(this,StringContract.RequestCode.ADD_GALLERY);
+                  /*  BSImagePicker pickerDialog = new BSImagePicker.Builder("com.asksira.imagepickersheetdemo.fileprovider")
                             .setMaximumDisplayingImages(Integer.MAX_VALUE)
                             .isMultiSelect()
                             .setMinimumMultiSelectCount(1)
                             .setMaximumMultiSelectCount(3)
-                            .build();
-                    pickerDialog.show(getSupportFragmentManager(), "picker");
+                            .build();*/
+                  //  pickerDialog.show(getSupportFragmentManager(), "picker");
                 } else {
                     CCPermissionHelper.requestPermissions(this, STORAGE_PERMISSION, StringContract.RequestCode.ADD_GALLERY);
                 }
@@ -542,7 +542,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
                   //  AttachmentHelper.selectMedia(this, StringContract.IntentStrings.DOCUMENT_TYPE,
                     //        StringContract.IntentStrings.EXTRA_MIME_DOC, StringContract.RequestCode.ADD_DOCUMENT);
                     FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setSelectedFiles(photoPaths)
+                            .setSelectedFiles(docPaths)
                             .setActivityTheme(R.style.LibAppTheme)
                             .pickFile(this, StringContract.RequestCode.ADD_DOCUMENT);
                 } else {
@@ -589,7 +589,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
                 //    AttachmentHelper.selectMedia(this, StringContract.IntentStrings.DOCUMENT_TYPE,
                   //          null, StringContract.RequestCode.ADD_DOCUMENT);
                     FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setSelectedFiles(photoPaths)
+                            .setSelectedFiles(docPaths)
                             .setActivityTheme(R.style.LibAppTheme)
                             .pickFile(this, StringContract.RequestCode.ADD_DOCUMENT);
                 } else {
@@ -602,17 +602,17 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
 
            //   AttachmentHelper.selectMedia(this, "*/*",
              //               StringContract.IntentStrings.EXTRA_MIME_TYPE, StringContract.RequestCode.ADD_GALLERY);
-                  /*  FilePickerBuilder.getInstance().setMaxCount(5)
+                    FilePickerBuilder.getInstance().setMaxCount(5)
                             .setSelectedFiles(photoPaths)
                             .setActivityTheme(R.style.LibAppTheme)
-                            .pickPhoto(this);*/
-                    BSImagePicker pickerDialog = new BSImagePicker.Builder("com.asksira.imagepickersheetdemo.fileprovider")
+                            .pickPhoto(this,StringContract.RequestCode.ADD_GALLERY);
+                  /*  BSImagePicker pickerDialog = new BSImagePicker.Builder("com.asksira.imagepickersheetdemo.fileprovider")
                             .setMaximumDisplayingImages(Integer.MAX_VALUE)
                             .isMultiSelect()
                             .setMinimumMultiSelectCount(1)
                             .setMaximumMultiSelectCount(3)
                             .build();
-                    pickerDialog.show(getSupportFragmentManager(), "picker");
+                    pickerDialog.show(getSupportFragmentManager(), "picker");*/
                 } else {
                     showToast();
                 }
@@ -762,7 +762,9 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
           //  LogUtils.e("onActivityResult "+data.getData());
             switch (requestCode) {
                 case StringContract.RequestCode.ADD_GALLERY:
-                    AttachmentHelper.handlefile(this, "*/*", oneToOnePresenter, data, contactUid);
+                    photoPaths = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
+                    for(int i=0;i<photoPaths.size();i++)
+                    AttachmentHelper.handlefileUri(this, "*/*", oneToOnePresenter, Uri.parse(photoPaths.get(i)), contactUid);
                     break;
                 case StringContract.RequestCode.TAKE_PHOTO:
                     LogUtils.e("Take Photo "+data);
@@ -775,11 +777,11 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
                     AttachmentHelper.handlefile(OneToOneChatActivity.this, CometChatConstants.MESSAGE_TYPE_AUDIO, oneToOnePresenter, data, contactUid);
                     break;
                 case StringContract.RequestCode.ADD_DOCUMENT:
-                    photoPaths = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS);
+                    docPaths = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS);
                   //  LogUtils.e();
-                    for(int i=0;i<photoPaths.size();i++)
+                    for(int i=0;i<docPaths.size();i++)
                     {
-                        AttachmentHelper.handlefileUri(OneToOneChatActivity.this, CometChatConstants.MESSAGE_TYPE_FILE, oneToOnePresenter, Uri.parse(photoPaths.get(i)), contactUid);
+                        AttachmentHelper.handlefileUri(OneToOneChatActivity.this, CometChatConstants.MESSAGE_TYPE_FILE, oneToOnePresenter, Uri.parse(docPaths.get(i)), contactUid);
                     }
                     break;
             }

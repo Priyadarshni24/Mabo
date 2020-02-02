@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: org.jitsi.react:jitsi-meet-sdk:2.4.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/239973934838fbefcfafa334e10fed39/jitsi-meet-sdk-2.4.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/239973934838fbefcfafa334e10fed39/jitsi-meet-sdk-2.4.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e0d0b9813ca4bba01f3aec6946a10b5a/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e0d0b9813ca4bba01f3aec6946a10b5a/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

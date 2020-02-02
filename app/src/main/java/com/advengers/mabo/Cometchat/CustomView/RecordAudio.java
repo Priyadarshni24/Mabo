@@ -183,6 +183,7 @@ public class RecordAudio extends RelativeLayout {
 
                     @Override
                     public void onCompletion(MediaPlayer mp) {
+                        mp.reset();
                         mp.release();
                     }
 

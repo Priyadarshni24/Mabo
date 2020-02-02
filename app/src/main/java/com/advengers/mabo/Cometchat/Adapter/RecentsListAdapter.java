@@ -55,10 +55,13 @@ public class RecentsListAdapter extends RecyclerView.Adapter<RecentsListAdapter.
         this.context = context;
         this.isBlockedList = isBlockedList;
         this.resId = resId;
-        new FontUtils(context);
+     //   new FontUtils(this.context);
 
     }
-
+    public void clear() {
+        conversationList.clear();
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override

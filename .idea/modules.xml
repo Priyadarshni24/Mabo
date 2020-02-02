@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Mabo.iml" filepath="$PROJECT_DIR$/Mabo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pro-android-chat-sdk/pro-android-chat-sdk.iml" filepath="$PROJECT_DIR$/pro-android-chat-sdk/pro-android-chat-sdk.iml" />
     </modules>
   </component>
 </project>

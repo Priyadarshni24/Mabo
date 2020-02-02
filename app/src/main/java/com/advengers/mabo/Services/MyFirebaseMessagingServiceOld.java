@@ -49,7 +49,7 @@ public class MyFirebaseMessagingServiceOld extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMessagingServ";
     private AtomicInteger c = new AtomicInteger(0);
     MyDBHandler db = new MyDBHandler(getBaseContext());
-    String id,name,roomid;
+    String id,name,roomid,type;
     Target target = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -91,6 +91,7 @@ public class MyFirebaseMessagingServiceOld extends FirebaseMessagingService {
                     JSONObject obj = new JSONObject(data.get("message"));
                     LogUtils.e("I am coming");
                     name = obj.getString("sender");//data.get("message");
+                    type = obj.getString("type");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -164,11 +165,11 @@ public class MyFirebaseMessagingServiceOld extends FirebaseMessagingService {
                // User user = new Gson().fromJson(Utils.getInstance(getBaseContext()).getString(USER),User.class);
            //     db.insertMessages(name,id, user.getId(),Config.message,RECEIVED,roomid);
         LogUtils.e(App.getRoomid()+" "+App.isActivityVisible()+" "+name);
-        if(!App.isActivityVisible())
+        if(!App.isActivityVisible())//&&(!Config.message.equals("Incoming audio call")||!Config.message.equals("Incoming video call")))
         {
             notificationManager.notify(createID(), notificationBuilder.build());
-        }else if(App.isActivityVisible()&&!App.getRoomid().equals(name)){
-
+        }else if(App.isActivityVisible())//&&!App.getRoomid().equals(name)&&(!Config.message.equals("Incoming audio call")||!Config.message.equals("Incoming video call"))){
+        {
             notificationManager.notify(createID(), notificationBuilder.build());
         }
 

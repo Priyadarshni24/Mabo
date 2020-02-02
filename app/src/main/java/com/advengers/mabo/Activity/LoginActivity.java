@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.advengers.mabo.Chat.web_communication.WebCall;
         import com.advengers.mabo.Chat.web_communication.WebConstants;
         import com.advengers.mabo.Chat.web_communication.WebResponse;
+import com.advengers.mabo.Cometchat.Activity.CometChatActivity;
 import com.advengers.mabo.Cometchat.Contracts.StringContract;
 import com.advengers.mabo.Model.User;
         import com.advengers.mabo.Tools.MyActivity;
@@ -133,6 +134,7 @@ public class LoginActivity extends MyActivity {
         if(User.getUser().isLogged())
         {
             startActivity(new Intent(LoginActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+            //startActivity(new Intent(LoginActivity.this, CometChatActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         }
 
         emailsignupdialog = new Dialog(this);

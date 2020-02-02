@@ -38,6 +38,7 @@ import com.advengers.mabo.Activity.MainActivity;
 import com.advengers.mabo.Adapter.InterestAdapter;
 import com.advengers.mabo.Cometchat.Activity.CometChatActivity;
 import com.advengers.mabo.Cometchat.Contracts.StringContract;
+//import com.advengers.mabo.Database.MyDBHandler;
 import com.advengers.mabo.Database.MyDBHandler;
 import com.advengers.mabo.Model.Interest;
 import com.advengers.mabo.Model.User;

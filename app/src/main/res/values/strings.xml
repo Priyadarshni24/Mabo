@@ -414,6 +414,7 @@
     <string name="add_members">Add Members</string>
     <string name="str_synccontacts">Sync Contacts</string>
     <string name="str_pleasewait">Please Wait</string>
+    <string name="channel_description">channel</string>
     <string-array name="group_type">
         <item>Select Type</item>
         <item>public</item>

@@ -16,7 +16,7 @@ import com.advengers.mabo.Cometchat.Utils.Logger;
 
 import java.io.IOException;
 
-public class IncomingAudioHelper {
+public class IncomingAudioHelper implements MediaPlayer.OnPreparedListener {
 
     private static final String TAG = "IncomingAudioHelper";
 
@@ -49,7 +49,8 @@ public class IncomingAudioHelper {
             try {
                 if (!player.isPlaying()) {
                     player.prepare();
-                    player.start();
+                    player.setOnPreparedListener(this);
+
                     Logger.error(TAG, "Playing ringtone now...");
                 } else {
                     Logger.error(TAG, "Ringtone is already playing, declining to restart.");
@@ -120,6 +121,11 @@ public class IncomingAudioHelper {
             Logger.error(TAG, "Failed to create player for incoming call ringer");
             return null;
         }
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mediaPlayer) {
+        player.start();
     }
 
 

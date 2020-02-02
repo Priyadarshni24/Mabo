@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.facebook.react:react-native-background-timer:2.1.1-jitsi-2416345@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/717e7f59d3c97d7d8b493e67d9e363cd/react-native-background-timer-2.1.1-jitsi-2416345/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/717e7f59d3c97d7d8b493e67d9e363cd/react-native-background-timer-2.1.1-jitsi-2416345/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/198e0803d083945e305892912215ba7d/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/198e0803d083945e305892912215ba7d/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

@@ -1,13 +1,17 @@
 package com.advengers.mabo.Activity;
 
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.advengers.mabo.Cometchat.Contracts.StringContract;
+import com.advengers.mabo.Cometchat.Utils.FontUtils;
 import com.advengers.mabo.R;
 import com.advengers.mabo.ServerCall.VolleySingleTone;
 import com.advengers.mabo.Utils.Utils;
@@ -58,7 +62,7 @@ public class App extends Application {
         requestQueue.getCache().clear();
         //mImageLoader = volleySingleTone.getImageLoader();
         FontsOverride.setDefaultFont(this, "DEFAULT", "gibsonregular.ttf");
-
+        new FontUtils(this);
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("M/d/yy hh:mm a");
@@ -87,6 +91,7 @@ public class App extends Application {
             }
 
         });
+        createNotificationChannel();
     }
 
 
@@ -142,6 +147,23 @@ public class App extends Application {
     public static Context getappContext() {
 
         return appInstance.getApplicationContext();
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.app_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("2", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
     }
 
 }

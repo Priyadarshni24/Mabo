@@ -17,6 +17,7 @@ import android.os.Bundle;
 import com.advengers.mabo.Adapter.InterestAdapter;
 import com.advengers.mabo.Cometchat.Contracts.CometChatActivityContract;
 import com.advengers.mabo.Cometchat.Presenters.CometChatActivityPresenter;
+import com.advengers.mabo.Cometchat.Utils.FontUtils;
 import com.advengers.mabo.Database.MyDBHandler;
 import com.advengers.mabo.Fragments.ChatFragment;
 import com.advengers.mabo.Fragments.PeoplesFragment;
@@ -198,6 +199,7 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
 
                     }
                 });
+        new FontUtils(this);
         getUser();
         db = new MyDBHandler(this);
       //  db.Createfriends();

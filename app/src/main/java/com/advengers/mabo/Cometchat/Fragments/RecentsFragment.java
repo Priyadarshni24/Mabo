@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.advengers.mabo.Utils.LogUtils;
+import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.helpers.CometChatHelper;
 import com.cometchat.pro.models.BaseMessage;
 import com.cometchat.pro.models.Conversation;
@@ -51,7 +54,7 @@ public class RecentsFragment extends Fragment implements RecentsContract.Recents
     private User user;
 
     private ShimmerFrameLayout recentShimmer;
-
+    private Button btn_resume;
     private LinearLayoutManager linearLayoutManager;
     private List<Conversation> conversationList=new ArrayList<>();
 
@@ -65,7 +68,14 @@ public class RecentsFragment extends Fragment implements RecentsContract.Recents
         //Inflate the layout for this fragment
 
         final View view = inflater.inflate(R.layout.fragment_recents, container, false);
-
+        btn_resume = (Button)view.findViewById(R.id.btn_resume);
+        btn_resume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LogUtils.e("I am coming");
+                //   getActivity().startActivity(CometChat.getActiveCall());
+            }
+        });
         ivNoRecents = view.findViewById(R.id.ivNoRecents);
         tvNoRecents=view.findViewById(R.id.tvNoRecents);
         recentsRecyclerView = view.findViewById(R.id.recents_recycler_view);
@@ -139,6 +149,9 @@ public class RecentsFragment extends Fragment implements RecentsContract.Recents
         Conversation newConversation= CometChatHelper.getConversationFromMessage(message);
          recentsListAdapter.updateConversation(newConversation);
     }
+
+
+
     @Override
     public void setRecentAdapter(List<Conversation> conversationList) {
         this.conversationList.addAll(conversationList);

@@ -39,7 +39,6 @@ public class CallActivity extends AppCompatActivity implements CallActivityContr
         if (getIntent().hasExtra(StringContract.IntentStrings.SESSION_ID)) {
             sessionId = getIntent().getStringExtra(StringContract.IntentStrings.SESSION_ID);
             Logger.error(TAG, " sessionId " + sessionId);
-
             CometChat.startCall(CallActivity.this, sessionId, callView, new CometChat.OngoingCallListener() {
                 @Override
                 public void onUserJoined(User user) {
@@ -69,7 +68,7 @@ public class CallActivity extends AppCompatActivity implements CallActivityContr
     @Override
     protected void onStart() {
         super.onStart();
-         callActivityPresenter.addCallListener(this,TAG);
+        callActivityPresenter.addCallListener(this,TAG);
     }
 
     @Override

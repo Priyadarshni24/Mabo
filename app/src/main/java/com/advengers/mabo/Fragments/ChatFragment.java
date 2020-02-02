@@ -17,16 +17,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.advengers.mabo.Activity.SearchActivity;
-import com.advengers.mabo.Cometchat.Fragments.ContactsFragment;
 import com.advengers.mabo.Cometchat.Fragments.RecentsFragment;
 import com.advengers.mabo.R;
-import com.advengers.mabo.Utils.LogUtils;
 import com.advengers.mabo.databinding.FragmentChatBinding;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;

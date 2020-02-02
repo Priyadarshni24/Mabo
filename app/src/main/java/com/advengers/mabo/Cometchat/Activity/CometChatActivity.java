@@ -26,16 +26,11 @@ import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.models.User;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
-import com.advengers.mabo.Cometchat.Adapter.ViewPagerAdapter;
-import com.advengers.mabo.Cometchat.Contracts.CometChatActivityContract;
 import com.advengers.mabo.Cometchat.Contracts.StringContract;
 import com.advengers.mabo.Cometchat.Fragments.ContactsFragment;
 import com.advengers.mabo.Cometchat.Fragments.GroupListFragment;
 import com.advengers.mabo.Cometchat.Fragments.RecentsFragment;
-import com.advengers.mabo.Cometchat.Helper.FabIconAnimator;
-import com.advengers.mabo.Cometchat.Helper.ScrollHelper;
 import com.advengers.mabo.Cometchat.Presenters.CometChatActivityPresenter;
-import com.advengers.mabo.R;
 import com.advengers.mabo.Cometchat.Utils.FontUtils;
 
 import java.util.HashMap;

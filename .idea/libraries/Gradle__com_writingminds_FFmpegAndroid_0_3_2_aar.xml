@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.writingminds:FFmpegAndroid:0.3.2@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/952edacf62354bd1f463cc039d66f50c/FFmpegAndroid-0.3.2/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/952edacf62354bd1f463cc039d66f50c/FFmpegAndroid-0.3.2/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/364d5ff6f94077f49ffa4834773527ff/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/364d5ff6f94077f49ffa4834773527ff/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.writingminds/FFmpegAndroid/0.3.2/5d44cb53cefb28a1471928662f0f4a0c2ea902d8/FFmpegAndroid-0.3.2-javadoc.jar!/" />
