@@ -96,14 +96,14 @@ public class ContactsFragment extends Fragment implements ContactsContract.Conta
                 User user= (User) var1.getTag(R.string.user);
                 ContactListAdapter.ContactViewHolder contactViewHolder = (ContactListAdapter.ContactViewHolder) var1.getTag(R.string.userHolder);
 
-                Pair<View, String> p1= Pair.create(((View)contactViewHolder.avatar),"profilePic");
-                Pair<View, String> p2= Pair.create(((View)contactViewHolder.userName),"Name");
-                Pair<View, String> p3= Pair.create(((View)contactViewHolder.userStatus),"status");
+                Pair<View,String > p1=Pair.create(((View)contactViewHolder.avatar),"profilePic");
+                Pair<View,String > p2=Pair.create(((View)contactViewHolder.userName),"Name");
+                Pair<View,String > p3=Pair.create(((View)contactViewHolder.userStatus),"status");
                 Intent intent=new Intent(getContext(), OneToOneChatActivity.class);
                 intent.putExtra(StringContract.IntentStrings.USER_ID,contactID);
                 intent.putExtra(StringContract.IntentStrings.USER_AVATAR,userAvatar);
                 intent.putExtra(StringContract.IntentStrings.USER_NAME,contactName);
-                ActivityOptionsCompat optionsCompat= ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),p1,p2,p3);
+                ActivityOptionsCompat optionsCompat=ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),p1,p2,p3);
                 startActivity(intent,optionsCompat.toBundle());
 
             }
@@ -126,10 +126,10 @@ public class ContactsFragment extends Fragment implements ContactsContract.Conta
                  @Override
                  public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                      super.onScrolled(recyclerView, dx, dy);
-                    /* if (dy < 0) {
+                     if (dy < 0) {
                          scrollHelper.setFab(true);
                      } else
-                         scrollHelper.setFab(false);*/
+                         scrollHelper.setFab(false);
                  }
              });
 
@@ -187,10 +187,10 @@ public class ContactsFragment extends Fragment implements ContactsContract.Conta
     }
 
     @Override
-    public void setContactAdapter(HashMap<String, User> userHashMap) {
+    public void setContactAdapter(HashMap<String,User> userHashMap) {
 
         if (contactListAdapter == null) {
-            contactListAdapter = new ContactListAdapter(userHashMap, getActivity(), R.layout.contact_list_item,false);
+            contactListAdapter = new ContactListAdapter(userHashMap, getContext(), R.layout.contact_list_item,false);
             contactRecyclerView.setAdapter(contactListAdapter);
             contactShimmer.stopShimmer();
             contactShimmer.setVisibility(View.GONE);

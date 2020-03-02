@@ -23,14 +23,15 @@ import com.advengers.mabo.Cometchat.Utils.MediaUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.GroupHolder> {
 
     private Context context;
 
-    private HashMap<String, Group> groupList;
+    private HashMap<String ,Group> groupList;
 
-    public GroupListAdapter(HashMap<String, Group> groupList, Context context) {
+    public GroupListAdapter(HashMap<String ,Group> groupList, Context context) {
 
         this.groupList=groupList;
         this.context=context;
@@ -65,20 +66,14 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Grou
         groupHolder.usersOnline.setTypeface(FontUtils.robotoRegular);
 
         Drawable drawable = context.getResources().getDrawable(R.drawable.cc_ic_group);
+
         if (group.getIcon() != null && !group.getIcon().isEmpty()) {
 
             Glide.with(context).load(group.getIcon()).into(groupHolder.imageViewGroupAvatar);
+
         } else {
-            try {
-                groupHolder.imageViewGroupAvatar.setCircleBackgroundColor(ColorUtils.getMaterialColor(context));
+                groupHolder.imageViewGroupAvatar.setCircleBackgroundColor(context.getResources().getColor(R.color.secondaryColor));
                 groupHolder.imageViewGroupAvatar.setImageBitmap(MediaUtils.getPlaceholderImage(context, drawable));
-            } catch (Exception e) {
-                groupHolder.imageViewGroupAvatar.setCircleBackgroundColor(context.getResources().
-                        getColor(R.color.secondaryDarkColor));
-
-                groupHolder.imageViewGroupAvatar.setImageDrawable(drawable);
-            }
-
         }
 
         if (group.getGroupType().equals(CometChatConstants.GROUP_TYPE_PASSWORD)) {
@@ -97,12 +92,12 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Grou
             return 0;
         }
     }
-    public void refreshData(HashMap<String, Group> groupList) {
+    public void refreshData(HashMap<String,Group> groupList) {
         this.groupList.putAll(groupList);
         notifyDataSetChanged();
     }
 
-    public void setFilterList(HashMap<String, Group> groups) {
+    public void setFilterList(HashMap<String,Group> groups) {
         groupList=groups;
         notifyDataSetChanged();
     }

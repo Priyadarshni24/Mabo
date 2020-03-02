@@ -29,7 +29,7 @@ public interface OneToOneActivityContract {
 
         void setTitle(String name);
 
-        void addSendMessage(BaseMessage baseMessage);
+        void addSendMessage(BaseMessage baseMessage );
 
         void setContactUid(String stringExtra);
 
@@ -56,7 +56,7 @@ public interface OneToOneActivityContract {
 
     interface OneToOnePresenter extends BasePresenter<OneToOneView> {
 
-        void sendMessage(String message, String uId);
+        void sendMessage(String message,String uId);
 
         void setContext(Context context);
 
@@ -66,7 +66,7 @@ public interface OneToOneActivityContract {
 
         void sendMediaMessage(File filepath, String receiverUid, String type);
 
-        void fetchPreviousMessage(String contactUid, int limit);
+        void fetchPreviousMessage(String contactUid,int limit);
 
         void getOwnerDetail();
 
@@ -76,7 +76,7 @@ public interface OneToOneActivityContract {
 
         void addPresenceListener(String presenceListener);
 
-        void sendCallRequest(Context context, String contactUid, String receiverTypeUser, String callType);
+        void sendCallRequest(Context context,String contactUid, String receiverTypeUser, String callType);
 
         void addCallEventListener(String callEventListener);
 
@@ -94,9 +94,9 @@ public interface OneToOneActivityContract {
 
         void deleteMessage(BaseMessage baseMessage);
 
-        void editMessage(BaseMessage baseMessage, String message);
+        void editMessage(BaseMessage baseMessage,String message);
 
-        void searchMessage(String s, String UID);
+        void searchMessage(String s,String UID);
 
         void refreshList(String contactUid, int limit);
     }

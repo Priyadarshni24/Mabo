@@ -12,7 +12,7 @@ public interface ContactsContract {
 
     interface ContactView{
 
-        void setContactAdapter(HashMap<String, User> userHashMap);
+        void setContactAdapter(HashMap<String,User> userHashMap);
 
         void updatePresence(User user);
 

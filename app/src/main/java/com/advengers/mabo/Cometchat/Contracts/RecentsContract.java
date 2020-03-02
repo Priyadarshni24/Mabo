@@ -20,9 +20,9 @@ public interface RecentsContract {
 
         void setLastMessage(Conversation conversation);
 
-        void setFilterList(List<Conversation> hashMap);
-
         void refreshConversation(BaseMessage message);
+
+        void clearConversations();
     }
 
     interface RecentsPresenter extends BasePresenter<RecentsView> {
@@ -36,5 +36,7 @@ public interface RecentsContract {
 //          void searchConversation(String s);
 
           void updateConversation();
+
+        void refreshConversations(Context context);
     }
 }

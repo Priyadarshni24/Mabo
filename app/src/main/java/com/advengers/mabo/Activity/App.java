@@ -48,7 +48,7 @@ public class App extends Application {
 
     private static App appInstance;
     public static SharedPreferences app_data_sp;
-
+    public static final String CHANNEL_ID = "exampleServiceChannel";
     public static Gson gson;
 
     @Override

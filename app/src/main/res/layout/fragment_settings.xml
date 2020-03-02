@@ -417,7 +417,38 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
     <LinearLayout
-    android:layout_below="@+id/line3"
+        android:layout_below="@+id/line3"
+        android:id="@+id/ll_changepassword"
+        android:layout_margin="@dimen/margin10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_changepassword"
+            android:textSize="@dimen/textsize18"
+            android:background="@color/white"
+            android:layout_marginLeft="@dimen/margin10"
+            android:drawableLeft="@drawable/ic_feedback"
+            android:drawablePadding="@dimen/margin10"
+            android:text="@string/str_changepassword"
+            android:textColor="@color/black"
+            android:layout_below="@+id/rl_scrumble"
+            android:fontFamily="@font/gibsonregular"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/textsize16"
+            android:background="@color/white"
+            android:layout_marginLeft="@dimen/margin45"
+            android:text="@string/str_changepwddesc"
+            android:fontFamily="@font/gibsonregular"
+            />
+    </LinearLayout>
+    <LinearLayout
+    android:layout_below="@+id/ll_changepassword"
     android:id="@+id/ll_feedback"
     android:layout_margin="@dimen/margin10"
     android:layout_width="match_parent"

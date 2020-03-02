@@ -30,10 +30,10 @@ public class MemberListFragmentPresenter extends Presenter<MemberListFragmentCon
 
     private Context context;
 
-    HashMap<String, GroupMember> groupMemberHashMap=new HashMap<>();
+    HashMap<String ,GroupMember> groupMemberHashMap=new HashMap<>();
 
     @Override
-    public void initMemberList(String guid, int LIMIT, Context context) {
+    public void initMemberList(String guid, int LIMIT,Context context) {
 
         this.context=context;
 
@@ -120,11 +120,11 @@ public class MemberListFragmentPresenter extends Presenter<MemberListFragmentCon
     }
 
     @Override
-    public void addGroupEventListener(String listenerId, String groupId, final GroupMemberListAdapter groupMemberListAdapter) {
+    public void addGroupEventListener(String listenerId, String groupId,final GroupMemberListAdapter groupMemberListAdapter) {
         CometChat.addGroupListener(listenerId, new CometChat.GroupListener() {
             @Override
             public void onGroupMemberKicked(Action action, User kickedUser, User kickedBy, Group kickedFrom) {
-                Toast.makeText(context,"Group Member:"+action.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context,"Group Member:"+action.getMessage(),Toast.LENGTH_LONG).show();
                 Log.e(TAG, "onGroupMemberKicked: "+kickedUser.getUid());
                 if (kickedUser.getUid().equals(CometChat.getLoggedInUser().getUid())) {
                     context.startActivity(new Intent(context,CometChatActivity.class));
@@ -135,14 +135,14 @@ public class MemberListFragmentPresenter extends Presenter<MemberListFragmentCon
 
             @Override
             public void onGroupMemberJoined(Action action, User joinedUser, Group joinedGroup) {
-                Toast.makeText(context,"Group Member:"+action.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context,"Group Member:"+action.getMessage(),Toast.LENGTH_LONG).show();
                 Log.e(TAG, "onGroupMemberJoined: "+joinedUser.getUid() );
                 groupMemberListAdapter.addMember(joinedUser.getUid(),UserToGroupMember(joinedUser,action));
             }
 
             @Override
             public void onMemberAddedToGroup(Action action, User addedby, User userAdded, Group addedTo) {
-                Toast.makeText(context,"Group Member:"+action.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context,"Group Member:"+action.getMessage(),Toast.LENGTH_LONG).show();
                 groupMemberListAdapter.addMember(userAdded.getUid(),UserToGroupMember(userAdded,action));
             }
 
@@ -175,11 +175,11 @@ public class MemberListFragmentPresenter extends Presenter<MemberListFragmentCon
     }
 
     @Override
-    public void refresh(String GUID, int LIMIT, Context context) {
+    public void refresh(String GUID, int LIMIT,Context context) {
         groupMembersRequest=null;
         initMemberList(GUID,LIMIT,context);
     }
-    public GroupMember UserToGroupMember(User joinedUser, Action action)
+    public GroupMember UserToGroupMember(User joinedUser,Action action)
     {
         GroupMember groupMember = new GroupMember(joinedUser.getUid(), action.getOldScope());
         groupMember.setAvatar(joinedUser.getAvatar());

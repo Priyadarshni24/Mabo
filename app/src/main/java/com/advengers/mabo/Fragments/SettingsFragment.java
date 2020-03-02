@@ -31,6 +31,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.advengers.mabo.Activity.App;
+import com.advengers.mabo.Activity.ChangePasswordActivity;
 import com.advengers.mabo.Activity.DashboardActivity;
 import com.advengers.mabo.Activity.GalleryActivity;
 import com.advengers.mabo.Activity.LoginActivity;
@@ -175,6 +176,7 @@ public class SettingsFragment extends MyFragment implements
         binding.llLogout.setOnClickListener(this);
         binding.edtGender.setOnClickListener(this);
         binding.txtEditprofile.setOnClickListener(this);
+        binding.llChangepassword.setOnClickListener(this);
         binding.imgProfile.setOnClickListener(this);
      //   LogUtils.e(user.getprofile_imagename());
         getUser();
@@ -387,6 +389,9 @@ public class SettingsFragment extends MyFragment implements
                 break;
             case R.id.edt_gender:
                 selectGender();
+                break;
+            case R.id.ll_changepassword:
+                startActivity(new Intent(getActivity(), ChangePasswordActivity.class));
                 break;
         }
     }

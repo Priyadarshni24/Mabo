@@ -56,11 +56,11 @@ public interface GroupChatActivityContract {
 
         void handleIntent(Intent intent);
 
-        void addMessageReceiveListener(String ListenerId, String groupId, String ownerId);
+        void addMessageReceiveListener(String ListenerId,String groupId,String ownerId);
 
         void removeMessageReceiveListener(String ListenerId);
 
-        void addGroupEventListener(String listenerId, String groupId, String ownerId);
+        void addGroupEventListener(String listenerId,String groupId,String ownerId);
 
         void sendTextMessage(String message, String groupId);
 
@@ -70,7 +70,7 @@ public interface GroupChatActivityContract {
 
         void sendMediaMessage(File imagefile, String groupId, String messageType);
 
-        void leaveGroup(Group group, Context context);
+        void leaveGroup(Group group,Context context);
 
         void fetchGroupMembers(String groupId);
 

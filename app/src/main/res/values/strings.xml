@@ -415,6 +415,14 @@
     <string name="str_synccontacts">Sync Contacts</string>
     <string name="str_pleasewait">Please Wait</string>
     <string name="channel_description">channel</string>
+    <string name="action_group">Create Group</string>
+    <string name="str_groups">Groups</string>
+    <string name="str_changepassword">Change Password</string>
+    <string name="str_newpassword">New Password</string>
+    <string name="str_confirmpassword">Confirm Password</string>
+    <string name="str_confirm">Confirm</string>
+    <string name="str_changepwddesc">Change the currrent password to the new one</string>
+    <string name="str_forgotpassword">Forgot password</string>
     <string-array name="group_type">
         <item>Select Type</item>
         <item>public</item>

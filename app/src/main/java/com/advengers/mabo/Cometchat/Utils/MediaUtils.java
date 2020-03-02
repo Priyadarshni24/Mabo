@@ -23,11 +23,11 @@ import java.util.HashMap;
 public class MediaUtils {
 
 
-    private static Bitmap getBitmapFromDrawable(Context context, Drawable drawable)
+    private static Bitmap getBitmapFromDrawable(Context context,Drawable drawable)
     {
         Bitmap bitmap;
 
-        bitmap= Bitmap.createBitmap(drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        bitmap=Bitmap.createBitmap(drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight(),Bitmap.Config.ARGB_8888);
 
         Canvas canvas=new Canvas(bitmap);
         drawable.setBounds(0,0,canvas.getWidth(),canvas.getHeight());
@@ -36,11 +36,11 @@ public class MediaUtils {
         return bitmap;
     }
 
-    public static Bitmap getPlaceholderImage(Context context, Drawable drawable)
+    public static Bitmap getPlaceholderImage(Context context,Drawable drawable)
     {
         Bitmap bitmap=getBitmapFromDrawable(context,drawable);
 
-        Bitmap outputImage= Bitmap.createBitmap(bitmap.getWidth()+80,bitmap.getHeight()+80, Bitmap.Config.ARGB_8888);
+        Bitmap outputImage=Bitmap.createBitmap(bitmap.getWidth()+80,bitmap.getHeight()+80,Bitmap.Config.ARGB_8888);
         Canvas canvas=new Canvas(outputImage);
         canvas.drawARGB(0,0,0,0);
         canvas.drawBitmap(bitmap,40,40,null);
@@ -120,13 +120,13 @@ public class MediaUtils {
         int camCount=0;
         Camera camera=null;
         Camera.CameraInfo cameraInfo=new Camera.CameraInfo();
-        camCount= Camera.getNumberOfCameras();
+        camCount=Camera.getNumberOfCameras();
         for (int i = 0; i < camCount; i++) {
             Camera.getCameraInfo(i,cameraInfo);
-            if (cameraInfo.facing== Camera.CameraInfo.CAMERA_FACING_FRONT)
+            if (cameraInfo.facing==Camera.CameraInfo.CAMERA_FACING_FRONT)
             {
                 try {
-                    camera= Camera.open(i);
+                    camera=Camera.open(i);
                     camera.setDisplayOrientation(90);
                 }catch (RuntimeException re)
                 {
@@ -145,7 +145,7 @@ public class MediaUtils {
     }
 
 
-    public static void playSendSound(Context context , int ringId) {
+    public static void playSendSound(Context context ,int ringId) {
         MediaPlayer mMediaPlayer = MediaPlayer.create(context, ringId);
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMediaPlayer.start();

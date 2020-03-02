@@ -36,7 +36,16 @@ public class ServerParams {
         return map;
 
     }
+    public HashMap<String, String> changePassword(String userid, String newpassword,String confirmpassword,String email) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(USER_ID, userid);
+        map.put(EMAIL, email);
+        map.put(NEWPASSWORD,newpassword);
+        map.put(CONFIRMPASSWORD,confirmpassword);
+        //Log.d("LOGIN", "" + map);
+        return map;
 
+    }
     public HashMap<String, String> UserDetails(String userid, String freindid) {
         HashMap<String, String> map = new HashMap<>();
         map.put(USERID, freindid);

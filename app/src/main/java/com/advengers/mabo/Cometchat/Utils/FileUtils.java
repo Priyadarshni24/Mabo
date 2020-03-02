@@ -49,9 +49,9 @@ public class FileUtils {
         return filePath;
     }
 
-    public static Boolean checkDirExistence(Context context, String type) {
+    public static Boolean checkDirExistence(Context context,String type) {
 
-        File audioDir = new File(Environment.getExternalStorageDirectory().toString() + "/" +
+        File  audioDir = new File(Environment.getExternalStorageDirectory().toString() + "/" +
                 context.getResources().getString(R.string.app_name) + "/" + type + "/");
 
         return audioDir.isDirectory();
@@ -67,7 +67,7 @@ public class FileUtils {
         return mediaFile.substring(mediaFile.lastIndexOf(".") + 1);
     }
 
-    public static String getPath(Context context, String folder) {
+    public static String  getPath(Context context, String folder) {
 
         return Environment.getExternalStorageDirectory().toString() + "/" +
                 context.getResources().getString(R.string.app_name) + "/" + folder + "/";
@@ -123,9 +123,9 @@ public class FileUtils {
 
     }
 
-    public static void  makeDirectory(Context context, String type) {
+    public static void  makeDirectory(Context context,String type) {
 
-        String audioDir = Environment.getExternalStorageDirectory().toString() + "/" +
+        String  audioDir = Environment.getExternalStorageDirectory().toString() + "/" +
                 context.getResources().getString(R.string.app_name) + "/" + type + "/";
 
         createDirectory(audioDir);

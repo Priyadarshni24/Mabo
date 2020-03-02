@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.advengers.mabo.Utils.LogUtils;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.core.GroupsRequest;
 import com.cometchat.pro.exceptions.CometChatException;
@@ -31,9 +32,7 @@ public class GroupListPresenter extends Presenter<GroupListContract.GroupView> i
     public void initGroupView() {
 
         if (groupsRequest == null) {
-
             groupsRequest = new GroupsRequest.GroupsRequestBuilder().setLimit(50).build();
-
         }
         setGroupsRequest(groupsRequest);
     }
@@ -44,6 +43,7 @@ public class GroupListPresenter extends Presenter<GroupListContract.GroupView> i
             @Override
             public void onSuccess(List<Group> groups) {
                 if (isViewAttached()) {
+                    LogUtils.e(groups.toString());
                     Timber.d("onSuccess: %s", groups.toString());
                     for (Group group : groups) {
                         groupHashMap.put(group.getGuid(), group);
@@ -57,7 +57,7 @@ public class GroupListPresenter extends Presenter<GroupListContract.GroupView> i
             @Override
             public void onError(CometChatException e) {
                 Timber.d("onError: %s", e.getMessage());
-
+                LogUtils.e(e.getMessage());
             }
 
         });
@@ -80,7 +80,11 @@ public class GroupListPresenter extends Presenter<GroupListContract.GroupView> i
             @Override
             public void onError(CometChatException e) {
                 Log.d("joinGroup", "onError: " + e.getMessage());
-                progressDialog.dismiss();
+                if (e.getCode().equals("ERR_ALREADY_JOINED")){
+                    if (isViewAttached())
+                        getBaseView().groupjoinCallback(group);
+                }
+               progressDialog.dismiss();
                 Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
@@ -98,7 +102,7 @@ public class GroupListPresenter extends Presenter<GroupListContract.GroupView> i
     @Override
     public void searchGroup(String s) {
 
-        HashMap<String, Group> filterMap=new HashMap<>();
+        HashMap<String ,Group> filterMap=new HashMap<>();
         GroupsRequest groupsRequest = new GroupsRequest.GroupsRequestBuilder().setSearchKeyWord(s).setLimit(100).build();
 
         groupsRequest.fetchNext(new CometChat.CallbackListener<List<Group>>() {
@@ -121,7 +125,7 @@ public class GroupListPresenter extends Presenter<GroupListContract.GroupView> i
     }
 
     @Override
-    public void deleteGroup(Context context, String guid, GroupListAdapter groupListAdapter) {
+    public void deleteGroup(Context context,String guid,GroupListAdapter groupListAdapter) {
         CometChat.deleteGroup(guid, new CometChat.CallbackListener<String>() {
             @Override
             public void onSuccess(String s) {

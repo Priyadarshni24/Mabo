@@ -16,12 +16,12 @@ public class PreferenceHelper {
 
     public static void init(Context ctx){
         context=ctx;
-        sharedPreferences=context.getSharedPreferences(context.getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+        sharedPreferences=context.getSharedPreferences(context.getResources().getString(R.string.app_name),Context.MODE_PRIVATE);
          editor=sharedPreferences.edit();
     }
 
 
-    public static void saveString(String key, String value){
+    public static void saveString(String key,String value){
         editor.putString(key,value);
         editor.apply();
     }

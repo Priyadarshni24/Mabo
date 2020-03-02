@@ -18,7 +18,7 @@ public class MessageInfoActivityPresenter extends Presenter<MessageInfoActivityC
         implements MessageInfoActivityContract.MessageInfoActivityPresenter {
 
     @Override
-    public void getIntent(Context context, Intent intent) {
+    public void getIntent(Context context,Intent intent) {
 
         if (intent.hasExtra("type")){
 
@@ -43,15 +43,10 @@ public class MessageInfoActivityPresenter extends Presenter<MessageInfoActivityC
         }
 
         if (intent.hasExtra("id")){
-            getBaseView().setMessageId(intent.getIntExtra("id",0));
             CometChat.getMessageReceipts(intent.getIntExtra("id", 0), new CometChat.CallbackListener<List<MessageReceipt>>() {
                 @Override
                 public void onSuccess(List<MessageReceipt> messageReceipts) {
-                    HashMap recieptMap = new HashMap();
-                    for (MessageReceipt messageReceipt : messageReceipts) {
-                        recieptMap.put(messageReceipt.getSender().getUid(),messageReceipt);
-                    }
-                    getBaseView().setReceiptsAdapter(recieptMap);
+                     getBaseView().setReceiptsAdapter(messageReceipts);
                 }
 
                 @Override
@@ -60,35 +55,5 @@ public class MessageInfoActivityPresenter extends Presenter<MessageInfoActivityC
                 }
             });
         }
-    }
-
-    @Override
-    public void addmessagelistener(String tag, int id) {
-        CometChat.addMessageListener(tag, new CometChat.MessageListener() {
-            @Override
-            public void onMessagesDelivered(MessageReceipt messageReceipt) {
-                if (messageReceipt.getMessageId()==id)
-                {
-                    Log.e( "onMessagesDelivered: ",messageReceipt.toString());
-                    getBaseView().updateReciept(messageReceipt);
-                }
-                super.onMessagesDelivered(messageReceipt);
-            }
-
-            @Override
-            public void onMessagesRead(MessageReceipt messageReceipt) {
-                if (messageReceipt.getMessageId()==id)
-                {
-                    Log.e( "onMessagesRead: ",messageReceipt.toString() );
-                    getBaseView().updateReciept(messageReceipt);
-                }
-                super.onMessagesRead(messageReceipt);
-            }
-        });
-    }
-
-    @Override
-    public void removemessagelistener(String tag) {
-
     }
 }

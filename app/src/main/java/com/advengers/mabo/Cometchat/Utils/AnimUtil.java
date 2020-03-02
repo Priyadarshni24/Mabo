@@ -160,7 +160,7 @@ public class AnimUtil {
     }
 
 
-    public static void clearAlphaAnimation(boolean hideView, ImageView recordMic) {
+    public static void clearAlphaAnimation(boolean hideView,ImageView recordMic) {
         alphaAnimation.cancel();
         alphaAnimation.reset();
         recordMic.clearAnimation();
@@ -192,7 +192,7 @@ public class AnimUtil {
     }
 
 
-    public  static void moveSlideToCancel(final RecordMicButton recordMicButton, FrameLayout layout, float initialX, float difX) {
+    public  static void moveSlideToCancel(final RecordMicButton recordMicButton,FrameLayout layout, float initialX, float difX) {
 
         final ValueAnimator positionAnimator =
                 ValueAnimator.ofFloat(recordMicButton.getX(), initialX);

@@ -12,7 +12,7 @@ public interface BannedMemberListContract {
 
     interface BannedMemberListView{
 
-        void setAdapter(HashMap<String, GroupMember> list);
+        void setAdapter(HashMap<String ,GroupMember> list);
     }
 
     interface BannedMemberListPresenter extends BasePresenter<BannedMemberListView>
@@ -22,9 +22,9 @@ public interface BannedMemberListContract {
 
         void reinstateUser(String uid, String groupId, GroupMemberListAdapter groupMemberListAdapter);
 
-        void refresh(String GUID, int LIMIT, Context context);
+        void refresh(String GUID,int LIMIT,Context context);
 
-        void addGroupEventListener(String listenerId, String groupId, GroupMemberListAdapter groupMemberListAdapter);
+        void addGroupEventListener(String listenerId,String groupId,GroupMemberListAdapter groupMemberListAdapter);
     }
 
 

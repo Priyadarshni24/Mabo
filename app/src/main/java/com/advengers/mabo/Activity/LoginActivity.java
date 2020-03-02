@@ -643,7 +643,7 @@ public class LoginActivity extends MyActivity {
     };
     void setRange()
     {
-        Utils.getInstance(LoginActivity.this).setInt(RANGE,25);
+        Utils.getInstance(LoginActivity.this).setInt(RANGE,1000);
     }
 
 

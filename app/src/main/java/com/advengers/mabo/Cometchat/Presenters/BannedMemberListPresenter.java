@@ -31,7 +31,7 @@ public class BannedMemberListPresenter extends Presenter<BannedMemberListContrac
     public void initMemberList(String groupId, int limit, Context context) {
 
         this.context = context;
-        HashMap<String, GroupMember> groupMemberHashMap=new HashMap<>();
+        HashMap<String ,GroupMember> groupMemberHashMap=new HashMap<>();
         if (bannedMembersRequest == null) {
             bannedMembersRequest = new BannedGroupMembersRequest.BannedGroupMembersRequestBuilder(groupId).setLimit(limit).build();
             bannedMembersRequest.fetchNext(new CometChat.CallbackListener<List<GroupMember>>(){
@@ -39,11 +39,12 @@ public class BannedMemberListPresenter extends Presenter<BannedMemberListContrac
                 public void onSuccess(List<GroupMember> groupMembers) {
                     if (groupMembers != null && groupMembers.size() != 0) {
                         Logger.error("OutcastMembersRequest", " " + groupMembers.size());
-                        if (isViewAttached())
+                        if (isViewAttached()){
                             for (GroupMember groupMember :groupMembers) {
                                 groupMemberHashMap.put(groupMember.getUid(),groupMember);
                             }
-                        getBaseView().setAdapter(groupMemberHashMap);
+                            getBaseView().setAdapter(groupMemberHashMap);
+                        }
                     }
                 }
 
@@ -101,13 +102,13 @@ public class BannedMemberListPresenter extends Presenter<BannedMemberListContrac
     }
 
     @Override
-    public void refresh(String GUID, int LIMIT, Context context) {
+    public void refresh(String GUID, int LIMIT,Context context) {
         bannedMembersRequest=null;
         initMemberList(GUID,LIMIT,context);
     }
 
     @Override
-    public void addGroupEventListener(String listenerId, String groupId, final GroupMemberListAdapter groupMemberListAdapter) {
+    public void addGroupEventListener(String listenerId, String groupId,final GroupMemberListAdapter groupMemberListAdapter) {
         CometChat.addGroupListener(listenerId, new CometChat.GroupListener() {
             @Override
             public void onGroupMemberUnbanned(Action action, User unbannedUser, User unbannedBy, Group unbannedFrom) {
@@ -126,7 +127,7 @@ public class BannedMemberListPresenter extends Presenter<BannedMemberListContrac
             }
         });
     }
-    public GroupMember UserToGroupMember(User joinedUser, Action action)
+    public GroupMember UserToGroupMember(User joinedUser,Action action)
     {
         GroupMember groupMember = new GroupMember(joinedUser.getUid(), action.getOldScope());
         groupMember.setAvatar(joinedUser.getAvatar());

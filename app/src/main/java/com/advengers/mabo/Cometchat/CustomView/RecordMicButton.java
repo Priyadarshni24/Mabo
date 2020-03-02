@@ -109,7 +109,7 @@ public class RecordMicButton extends AppCompatImageView implements View.OnTouchL
         AnimUtil.stop(scaleView);
     }
 
-    public void setListenForRecord(boolean listenForRecord, Context context) {
+    public void setListenForRecord(boolean listenForRecord,Context context) {
         this.listenForRecord = listenForRecord;
         this.context=context;
     }

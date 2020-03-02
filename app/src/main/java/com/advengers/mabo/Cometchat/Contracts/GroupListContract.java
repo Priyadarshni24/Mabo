@@ -15,11 +15,11 @@ public interface GroupListContract {
 
     interface GroupView extends BaseView {
 
-        void setGroupAdapter(HashMap<String, Group> groupList);
+        void setGroupAdapter(HashMap<String,Group> groupList);
 
         void groupjoinCallback(Group group);
 
-        void setFilterGroup(HashMap<String, Group> groups);
+        void setFilterGroup(HashMap<String,Group> groups);
     }
 
     interface GroupPresenter extends BasePresenter<GroupView>
@@ -32,6 +32,6 @@ public interface GroupListContract {
 
         void searchGroup(String s);
 
-        void deleteGroup(Context context, String guid, GroupListAdapter groupListAdapter);
+        void deleteGroup(Context context,String guid,GroupListAdapter groupListAdapter);
     }
 }

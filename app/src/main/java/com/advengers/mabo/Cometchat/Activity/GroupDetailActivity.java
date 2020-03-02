@@ -214,7 +214,7 @@ public class GroupDetailActivity extends AppCompatActivity implements View.OnCli
                 e.printStackTrace();
             }
         } else {
-            groupDetailPresenter.setIcon(GroupDetailActivity.this, icon, groupImage);
+            groupDetailPresenter.setIcon(this, icon, groupImage);
         }
     }
 

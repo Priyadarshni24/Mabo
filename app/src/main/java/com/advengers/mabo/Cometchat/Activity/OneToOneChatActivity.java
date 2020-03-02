@@ -167,7 +167,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
 
     private ImageView ivReplyImage;
 
-    public static String contactId;
+    public static  String contactId;
 
     private User user;
 
@@ -523,6 +523,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
                  //   AttachmentHelper.selectMedia(this, "*/*", StringContract.IntentStrings.EXTRA_MIME_TYPE, StringContract.RequestCode.ADD_GALLERY);
                     FilePickerBuilder.getInstance().setMaxCount(5)
                             .setSelectedFiles(photoPaths)
+                            .enableCameraSupport(false)
                             .setActivityTheme(R.style.LibAppTheme)
                             .pickPhoto(this,StringContract.RequestCode.ADD_GALLERY);
                   /*  BSImagePicker pickerDialog = new BSImagePicker.Builder("com.asksira.imagepickersheetdemo.fileprovider")
@@ -604,6 +605,7 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
              //               StringContract.IntentStrings.EXTRA_MIME_TYPE, StringContract.RequestCode.ADD_GALLERY);
                     FilePickerBuilder.getInstance().setMaxCount(5)
                             .setSelectedFiles(photoPaths)
+                            .enableCameraSupport(false)
                             .setActivityTheme(R.style.LibAppTheme)
                             .pickPhoto(this,StringContract.RequestCode.ADD_GALLERY);
                   /*  BSImagePicker pickerDialog = new BSImagePicker.Builder("com.asksira.imagepickersheetdemo.fileprovider")
@@ -809,14 +811,14 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
         if (oneToOneAdapter == null) {
             oneToOneAdapter = new OneToOneAdapter(this, messageArrayList, ownerUid);
             oneToOneAdapter.setHasStableIds(true);
-            oneToOneAdapter.setTopReachedListener(new OnTopReachedListener() {
+           /* oneToOneAdapter.setTopReachedListener(new OnTopReachedListener() {
                 @Override
                 public void onTopReached(int pos) {
                     Log.e(TAG, "onTopReached: " + pos);
                     oneToOnePresenter.fetchPreviousMessage(contactUid, LIMIT);
                     messageRecyclerView.scrollToPosition(LIMIT);
                 }
-            });
+            });*/
             messageRecyclerView.setAdapter(oneToOneAdapter);
             StickyHeaderDecoration decor = new StickyHeaderDecoration(oneToOneAdapter);
             messageRecyclerView.addItemDecoration(decor);
@@ -875,6 +877,15 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
             if (btnScroll.getVisibility() == View.GONE) {
                 messageRecyclerView.scrollToPosition(oneToOneAdapter.getItemCount() - 1);
             }
+        }
+        else
+        {
+            oneToOneAdapter = new OneToOneAdapter(OneToOneChatActivity.this,ownerUid);
+            oneToOneAdapter.setHasStableIds(true);
+            messageRecyclerView.setAdapter(oneToOneAdapter);
+            StickyHeaderDecoration decor = new StickyHeaderDecoration(oneToOneAdapter);
+            messageRecyclerView.addItemDecoration(decor);
+            oneToOneAdapter.addMessage(baseMessage);
         }
     }
 

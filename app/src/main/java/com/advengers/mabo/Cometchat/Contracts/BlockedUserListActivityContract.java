@@ -16,7 +16,7 @@ public interface BlockedUserListActivityContract {
         void userUnBlocked(String uid);
     }
 
-    interface BlockedUserListActivityPresenter extends BasePresenter<BlockedUserListActivityView> {
+    interface BlockedUserListActivityPresenter extends BasePresenter<BlockedUserListActivityView>{
 
         void getBlockedUsers();
 

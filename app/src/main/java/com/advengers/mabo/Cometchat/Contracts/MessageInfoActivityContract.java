@@ -7,6 +7,7 @@ import com.advengers.mabo.Cometchat.Base.BasePresenter;
 import com.cometchat.pro.models.MessageReceipt;
 
 import java.util.HashMap;
+import java.util.List;
 
 public interface  MessageInfoActivityContract {
 
@@ -18,18 +19,10 @@ public interface  MessageInfoActivityContract {
 
         void receiverUID(String receiverUID);
 
-        void setReceiptsAdapter(HashMap<String, MessageReceipt> messageReceipts);
-
-        void updateReciept(MessageReceipt messageReceipt);
-
-        void setMessageId(int id);
+        void setReceiptsAdapter(List<MessageReceipt> messageReceipts);
     }
 
-    interface MessageInfoActivityPresenter extends BasePresenter<MessageInfoActivityView> {
-        void getIntent(Context context, Intent intent);
-
-        void addmessagelistener(String tag, int id);
-
-        void removemessagelistener(String tag);
+    interface MessageInfoActivityPresenter extends BasePresenter<MessageInfoActivityView>{
+        void getIntent(Context context,Intent intent);
     }
 }

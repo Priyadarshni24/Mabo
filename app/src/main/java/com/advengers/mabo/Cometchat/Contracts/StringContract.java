@@ -1,6 +1,6 @@
 package com.advengers.mabo.Cometchat.Contracts;
 
-import com.advengers.mabo.Model.User;
+        import com.advengers.mabo.Model.User;
 
 public class StringContract {
 
@@ -47,8 +47,8 @@ public class StringContract {
     }
 
     public static class AppDetails{
-        public static final String APP_ID  =  "132906292aae10e"; // your app_id
-        public static final String API_KEY =  "b561cb82697af5213a7c5984621890dd2af7f5f2"; // your api_key
+        public static final String APP_ID  =  "14542efbdf7e381"; // your app_id
+        public static final String API_KEY =  "242cb359710181c7a512643a04718052ce807905"; // your api_key
         public static final String REGION = "us";  // your app region
         public static final String AppID_user_UID = APP_ID+"_user_mabo"+ User.getUser().getId();
 

@@ -72,5 +72,7 @@ public interface Keys {
     public static final String COMET_ID = "uid";
     public static final String COMET_NAME = "name";
     public static final String AVATAR = "avatar";
-
+    public static final String USER_ID = "user_id";
+    public static final String NEWPASSWORD = "newpassword";
+    public static final String CONFIRMPASSWORD = "confirmpassword";
 }

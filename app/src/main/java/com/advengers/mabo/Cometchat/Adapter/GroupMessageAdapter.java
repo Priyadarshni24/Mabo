@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -28,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.core.Call;
+import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.models.Action;
 import com.cometchat.pro.models.BaseMessage;
 import com.cometchat.pro.models.MediaMessage;
@@ -58,8 +60,11 @@ import com.advengers.mabo.Cometchat.ViewHolders.RightReplyViewHolder;
 import org.json.JSONException;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.advengers.mabo.Cometchat.Utils.FileUtils.getFileExtension;
 import static com.advengers.mabo.Cometchat.Utils.FileUtils.getFileName;
@@ -108,7 +113,7 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final Drawable drawableAvatar;
 
 
-    private LongSparseArray<BaseMessage> messageList=new LongSparseArray<>();
+    private LinkedHashMap<Integer,BaseMessage> messageList=new LinkedHashMap<>();
 
     private Context context;
 
@@ -165,10 +170,13 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
-    private void setList(List<BaseMessage> messageList){
-        for (BaseMessage basemessage:messageList) {
-            this.messageList.put(basemessage.getId(),basemessage);
+    private void setList(List<BaseMessage> messagesList){
+        LinkedHashMap<Integer,BaseMessage> oldmessageArray = (LinkedHashMap<Integer, BaseMessage>) messageList.clone();
+        messageList.clear();
+        for (BaseMessage basemessage:messagesList) {
+            messageList.put(basemessage.getId(),basemessage);
         }
+        messageList.putAll(oldmessageArray);
         notifyDataSetChanged();
     }
     @NonNull
@@ -279,7 +287,7 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
 
-        BaseMessage baseMessage = messageList.get(messageList.keyAt(viewHolder.getAdapterPosition()));
+        BaseMessage baseMessage = new ArrayList<BaseMessage>(messageList.values()).get(viewHolder.getAdapterPosition());
         String message = null;
         String mediaFile = null;
         String avatar = baseMessage.getSender().getAvatar();
@@ -294,13 +302,13 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         currentSenderId = baseMessage.getSender().getUid();
         currentData = new java.text.SimpleDateFormat("yyyy/MM/dd")
-                .format(new java.util.Date(messageList.get(messageList.keyAt(position)).getSentAt() * 1000));
+                .format(new java.util.Date(baseMessage.getSentAt() * 1000));
 
         if (position > 0) {
             previousViewType = getItemViewType(position - 1);
-            previousSenderId = messageList.get(messageList.keyAt(i-1)).getSender().getUid();
+            previousSenderId = baseMessage.getSender().getUid();
             previousDate = new java.text.SimpleDateFormat("yyyy/MM/dd")
-                    .format(new java.util.Date(messageList.get(messageList.keyAt(i-1) ).getSentAt() * 1000));
+                    .format(new java.util.Date(baseMessage.getSentAt() * 1000));
         }
 
         if (baseMessage instanceof TextMessage) {
@@ -1368,29 +1376,29 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-
-        switch (messageList.get(messageList.keyAt(position)).getCategory()) {
+        BaseMessage message = new ArrayList<BaseMessage>(messageList.values()).get(position);
+        switch (message.getCategory()) {
 
             case CometChatConstants.CATEGORY_MESSAGE:
 
-                if (ownerId.equalsIgnoreCase(messageList.get(messageList.keyAt(position)).getSender().getUid())) {
+                if (ownerId.equalsIgnoreCase(message.getSender().getUid())) {
 
-                    if (messageList.get(messageList.keyAt(position)) instanceof TextMessage &&
-                            ((TextMessage) messageList.get(messageList.keyAt(position))).getMetadata() != null
-                            && ((TextMessage) messageList.get(messageList.keyAt(position))).getMetadata().has("reply")) {
+                    if (message instanceof TextMessage &&
+                            ((TextMessage) message).getMetadata() != null
+                            && ((TextMessage) message).getMetadata().has("reply")) {
 
 
                         return RIGHT_TEXT_REPLY_MESSAGE;
 
-                    } else if (messageList.get(messageList.keyAt(position)) instanceof MediaMessage &&
-                            ((MediaMessage) messageList.get(messageList.keyAt(position))).getMetadata() != null
-                            && ((MediaMessage) messageList.get(messageList.keyAt(position))).getMetadata().has("reply")) {
+                    } else if (message instanceof MediaMessage &&
+                            ((MediaMessage) message).getMetadata() != null
+                            && ((MediaMessage) message).getMetadata().has("reply")) {
 
                         return RIGHT_MEDIA_REPLY_MESSAGE;
 
                     } else {
 
-                        switch (messageList.get(messageList.keyAt(position)).getType()) {
+                        switch (message.getType()) {
                             case CometChatConstants.MESSAGE_TYPE_TEXT:
 
                                 return RIGHT_TEXT_MESSAGE;
@@ -1413,22 +1421,22 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                 } else {
 
-                    if (messageList.get(messageList.keyAt(position)) instanceof TextMessage &&
-                            ((TextMessage) messageList.get(messageList.keyAt(position))).getMetadata() != null
-                            && ((TextMessage) messageList.get(messageList.keyAt(position))).getMetadata().has("reply")) {
+                    if (message instanceof TextMessage &&
+                            ((TextMessage) message).getMetadata() != null
+                            && ((TextMessage) message).getMetadata().has("reply")) {
 
 
                         return LEFT_TEXT_REPLY_MESSAGE;
 
-                    } else if (messageList.get(messageList.keyAt(position)) instanceof MediaMessage &&
-                            ((MediaMessage) messageList.get(messageList.keyAt(position))).getMetadata() != null
-                            && ((MediaMessage) messageList.get(messageList.keyAt(position))).getMetadata().has("reply")) {
+                    } else if (message instanceof MediaMessage &&
+                            ((MediaMessage) message).getMetadata() != null
+                            && ((MediaMessage) message).getMetadata().has("reply")) {
 
                         return LEFT_MEDIA_REPLY_MESSAGE;
 
                     } else {
 
-                        switch (messageList.get(messageList.keyAt(position)).getType()) {
+                        switch (message.getType()) {
 
                             case CometChatConstants.MESSAGE_TYPE_TEXT:
 
@@ -1459,7 +1467,7 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 return ACTION_MESSAGE;
 
             case CometChatConstants.CATEGORY_CUSTOM:
-                if (ownerId.equalsIgnoreCase(messageList.get(messageList.keyAt(position)).getSender().getUid())) {
+                if (ownerId.equalsIgnoreCase(message.getSender().getUid())) {
                     return RIGHT_CUSTOM_MESSAGE;
                 } else {
                     return LEFT_CUSTOM_MESSAGE;
@@ -1472,7 +1480,6 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public int getItemCount() {
 
         if (messageList != null) {
-
             return messageList.size();
         } else {
             return 0;
@@ -1482,7 +1489,8 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public long getHeaderId(int var1) {
 
-        return Long.parseLong(DateUtils.getDateId(messageList.get(messageList.keyAt(var1)).getSentAt() * 1000));
+        BaseMessage baseMessage = new ArrayList<BaseMessage>(messageList.values()).get(var1);
+        return Long.parseLong(DateUtils.getDateId(baseMessage.getSentAt() * 1000));
     }
 
     @Override
@@ -1496,7 +1504,8 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindHeaderViewHolder(GroupMessageAdapter.DateItemHolder var1, int var2, long var3) {
 
-        Date date = new Date(messageList.get(messageList.keyAt(var2)).getSentAt() * 1000);
+        BaseMessage baseMessage = new ArrayList<BaseMessage>(messageList.values()).get(var2);
+        Date date = new Date(baseMessage.getSentAt() * 1000);
         String formattedDate = DateUtils.getCustomizeDate(date.getTime());
         var1.txtMessageDate.setBackground(context.getResources().getDrawable(R.drawable.cc_rounded_date_button));
         var1.txtMessageDate.setTypeface(FontUtils.robotoMedium);
@@ -1510,18 +1519,17 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public void refreshData(List<BaseMessage> messageList) {
         setList(messageList);
-        notifyItemRangeInserted(0, messageList.size());
-        notifyItemChanged(messageList.size());
+//        notifyItemRangeInserted(0, messageList.size());
+//        notifyItemChanged(messageList.size());
     }
 
 
-    private void setDeliveryIcon(CircleImageView circleImageView, BaseMessage baseMessage){
+    private void setDeliveryIcon(CircleImageView circleImageView,BaseMessage baseMessage){
 
     }
 
-    private void setReadIcon(CircleImageView circleImageView, BaseMessage baseMessage){
+    private void setReadIcon(CircleImageView circleImageView,BaseMessage baseMessage){
         if (baseMessage.getReadAt()!=0){
-            Log.e(TAG, "setReadIcon: "+baseMessage);
             circleImageView.setImageResource(R.drawable.ic_double_tick_blue);
             circleImageView.setCircleBackgroundColor(context.getResources().getColor(android.R.color.transparent));
         }
@@ -1536,14 +1544,16 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void setDelivered(MessageReceipt messageReceipt) {
-        for (int i = messageList.size() - 1; i >0; i--) {
-            if (messageList.get(messageList.keyAt(i)).getReadAt() > 0) {
-                break;
-            } else {
-                BaseMessage baseMessage = messageList.get(messageList.keyAt(i));
-                if (baseMessage!=null){
-                    baseMessage.setDeliveredAt(messageReceipt.getDeliveredAt());
-                    messageList.put(baseMessage.getId(),baseMessage);
+        for (Map.Entry<Integer,BaseMessage> entry : messageList.entrySet()) {
+            if (messageList.containsKey(entry.getKey())) {
+                if (messageList.get(entry.getKey()).getDeliveredAt() > 0) {
+                    break;
+                } else {
+                    BaseMessage baseMessage = messageList.get(entry.getKey());
+                    if (baseMessage != null) {
+                        baseMessage.setDeliveredAt(messageReceipt.getDeliveredAt());
+                        messageList.put(baseMessage.getId(), baseMessage);
+                    }
                 }
             }
         }
@@ -1552,15 +1562,16 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void setRead(MessageReceipt messageReceipt) {
-
-        for (int i = messageList.size() - 1; i > 0; i--) {
-            if (messageList.get(messageList.keyAt(i)).getReadAt() > 0) {
-                break;
-            } else {
-                BaseMessage baseMessage = messageList.get(messageList.keyAt(i));
-                if (baseMessage!=null){
-                    baseMessage.setReadAt(messageReceipt.getReadAt());
-                    messageList.put(baseMessage.getId(),baseMessage);
+        for (Map.Entry<Integer,BaseMessage> entry : messageList.entrySet()) {
+            if (messageList.containsKey(entry.getKey())) {
+                if (messageList.get(entry.getKey()).getReadAt() > 0) {
+                    break;
+                } else {
+                    BaseMessage baseMessage = messageList.get(entry.getKey());
+                    if (baseMessage != null) {
+                        baseMessage.setReadAt(messageReceipt.getReadAt());
+                        messageList.put(baseMessage.getId(), baseMessage);
+                    }
                 }
             }
         }
@@ -1574,7 +1585,7 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void setEditMessage(BaseMessage baseMessage) {
-        messageList.put(baseMessage.getId(),baseMessage);
+        messageList.put(baseMessage.getId(), baseMessage);
         notifyDataSetChanged();
     }
 

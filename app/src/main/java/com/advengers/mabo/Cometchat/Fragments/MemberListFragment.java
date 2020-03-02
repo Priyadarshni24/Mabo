@@ -160,15 +160,15 @@ public class MemberListFragment extends Fragment implements MemberListFragmentCo
                 break;
 
             case R.id.subMenu_admin:
-                memberListFragmentPresenter.updateScope(user.getUid(),groupId,groupMemberListAdapter, CometChatConstants.SCOPE_ADMIN);
+                memberListFragmentPresenter.updateScope(user.getUid(),groupId,groupMemberListAdapter,CometChatConstants.SCOPE_ADMIN);
                 break;
 
             case R.id.subMenu_moderator:
-                memberListFragmentPresenter.updateScope(user.getUid(),groupId,groupMemberListAdapter, CometChatConstants.SCOPE_MODERATOR);
+                memberListFragmentPresenter.updateScope(user.getUid(),groupId,groupMemberListAdapter,CometChatConstants.SCOPE_MODERATOR);
                 break;
 
             case R.id.subMenu_participant:
-                memberListFragmentPresenter.updateScope(user.getUid(),groupId,groupMemberListAdapter, CometChatConstants.SCOPE_PARTICIPANT);
+                memberListFragmentPresenter.updateScope(user.getUid(),groupId,groupMemberListAdapter,CometChatConstants.SCOPE_PARTICIPANT);
                 break;
 
         }
@@ -182,7 +182,7 @@ public class MemberListFragment extends Fragment implements MemberListFragmentCo
 
 
     @Override
-    public void setAdapter(HashMap<String, GroupMember> groupMemberList) {
+    public void setAdapter(HashMap<String ,GroupMember> groupMemberList) {
 
         if (groupMemberListAdapter == null) {
             groupMemberListAdapter = new GroupMemberListAdapter(groupMemberList, getContext(),ownerUid);

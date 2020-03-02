@@ -2,6 +2,7 @@ package com.advengers.mabo.Cometchat.Presenters;
 
 import android.content.Context;
 
+import com.advengers.mabo.Utils.LogUtils;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.core.ConversationsRequest;
 import com.cometchat.pro.exceptions.CometChatException;
@@ -27,19 +28,20 @@ public class RecentsListPresenter extends Presenter<RecentsContract.RecentsView>
 
     @Override
     public void fetchConversations(Context context) {
-
-        conversationRequest = new ConversationsRequest.ConversationsRequestBuilder().setLimit(100).build();
+       LogUtils.e("I am coming");
+        conversationRequest = new ConversationsRequest.ConversationsRequestBuilder().setLimit(30).build();
         conversationRequest.fetchNext(new CometChat.CallbackListener<List<Conversation>>() {
             @Override
             public void onSuccess(List<Conversation> conversations) {
                 Logger.error(TAG, " " + conversations.size());
-
+                LogUtils.e("I am coming"+ conversations.size());
                 getBaseView().setRecentAdapter(conversations);
             }
 
             @Override
             public void onError(CometChatException e) {
                 Timber.d("fetchNext onError: %s", e.getMessage());
+                LogUtils.e("I am coming"+e.getMessage());
             }
         });
     }
@@ -49,7 +51,7 @@ public class RecentsListPresenter extends Presenter<RecentsContract.RecentsView>
         CometChat.addMessageListener(messageListener, new CometChat.MessageListener() {
             @Override
             public void onTextMessageReceived(TextMessage message) {
-                   getBaseView().refreshConversation(message);
+                getBaseView().refreshConversation(message);
 
             }
 
@@ -72,44 +74,15 @@ public class RecentsListPresenter extends Presenter<RecentsContract.RecentsView>
     }
 
 
-//    @Override
-//    public void searchConversation(String s) {
-//
-//       ConversationsRequest conversationsRequest= new ConversationsRequest.ConversationsRequestBuilder().setLimit(100).build();
-//       List<Conversation> hashMap = new ArrayList<>();
-//       conversationsRequest.fetchNext(new CometChat.CallbackListener<List<Conversation>>() {
-//           @Override
-//           public void onSuccess(List<Conversation> conversations) {
-//                for (Conversation conversation :conversations) {
-//                    if (s!=null) {
-//                        if (conversation.getConversationId().contains(s)) {
-//                            hashMap.add(conversation);
-//                        } else {
-//                            if (conversation.getConversationType().equals(CometChatConstants.CONVERSATION_TYPE_USER) && ((User) conversation.getConversationWith()).getName().toLowerCase().contains(s)) {
-//                                Log.e(TAG, "onSuccess: " + s + "=" + ((User) conversation.getConversationWith()).getName().toLowerCase());
-//                                hashMap.add(conversation);
-//                            } else if (conversation.getConversationType().equals(CometChatConstants.CONVERSATION_TYPE_GROUP) && ((Group) conversation.getConversationWith()).getName().toLowerCase().contains(s)) {
-//                                Log.e(TAG, "Group: " + ((Group) conversation.getConversationWith()).getName().toLowerCase() + "=" + s);
-//                                hashMap.add(conversation);
-//                            }
-//                        }
-//                    }
-//                    else
-//                    {
-//                        hashMap.add(conversation);
-//                    }
-//                }
-//               getBaseView().setFilterList(hashMap);
-//           }
-//           @Override
-//           public void onError(CometChatException e) {
-//               Timber.d("onError: fetchNext %s", e.getMessage());
-//           }
-//       });
-//    }
-
     @Override
     public void updateConversation() {
 
+    }
+
+    @Override
+    public void refreshConversations(Context context) {
+        conversationRequest=null;
+        getBaseView().clearConversations();
+        fetchConversations(context);
     }
 }

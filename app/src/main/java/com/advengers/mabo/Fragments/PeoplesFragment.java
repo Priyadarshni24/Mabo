@@ -194,6 +194,7 @@ public class PeoplesFragment extends MyFragment implements View.OnClickListener,
             final TextView txtseelvalue = (TextView)dialogView.findViewById(R.id.seekvalue);
             SeekBar seekBar=(SeekBar)dialogView.findViewById(R.id.seekrange);
             seekBar.setProgress(Utils.getInstance(getActivity()).getInt(RANGE));
+
             txtseelvalue.setText("Range "+Utils.getInstance(getActivity()).getInt(RANGE));
 
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

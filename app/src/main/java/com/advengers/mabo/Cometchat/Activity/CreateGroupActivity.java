@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.advengers.mabo.Utils.LogUtils;
 import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.models.Group;
 import com.google.android.material.textfield.TextInputEditText;
@@ -115,7 +116,9 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        spinner.setVisibility(View.GONE);
 
+        groupType = "private";
 
     }
 
@@ -264,7 +267,7 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
 
 
         groupType = (String) adapterView.getSelectedItem();
-
+        LogUtils.e(groupType);
         if (groupType.equalsIgnoreCase(CometChatConstants.GROUP_TYPE_PASSWORD)) {
             textInputLayoutPassword.setVisibility(View.VISIBLE);
         } else {

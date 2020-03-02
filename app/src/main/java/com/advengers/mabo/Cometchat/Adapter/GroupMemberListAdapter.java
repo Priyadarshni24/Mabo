@@ -24,11 +24,11 @@ import java.util.HashMap;
 public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberListAdapter.GroupMemberHolder> {
 
     private final String ownerId;
-    private HashMap<String, GroupMember> groupMemberList;
+    private HashMap<String ,GroupMember> groupMemberList;
 
     private Context context;
 
-    public GroupMemberListAdapter(HashMap<String, GroupMember> groupMemberList, Context context, String ownerId) {
+    public GroupMemberListAdapter(HashMap<String ,GroupMember> groupMemberList, Context context, String ownerId) {
         this.groupMemberList = groupMemberList;
         this.context = context;
         this.ownerId=ownerId;
@@ -86,7 +86,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         }
 
     }
-    public void addMember(String uid, GroupMember user) {
+    public void addMember(String uid,GroupMember user) {
         try {
             groupMemberList.put(uid,user);
             notifyDataSetChanged();
@@ -121,7 +121,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         groupMemberList.clear();
     }
 
-    public void refreshList(HashMap<String, GroupMember> groupMemberList) {
+    public void refreshList(HashMap<String ,GroupMember> groupMemberList) {
         this.groupMemberList.putAll(groupMemberList);
         notifyDataSetChanged();
     }

@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -38,6 +39,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.advengers.mabo.Cometchat.Helper.MyFirebaseMessagingService;
 import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.models.BaseMessage;
 import com.cometchat.pro.models.Group;
@@ -70,9 +72,13 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import droidninja.filepicker.FilePickerBuilder;
+import droidninja.filepicker.FilePickerConst;
 
 public class GroupChatActivity extends AppCompatActivity implements GroupChatActivityContract.GroupChatView, TextWatcher, View.OnClickListener, ActionMode.Callback {
 
@@ -160,6 +166,9 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatAct
 
     private SearchView searchView;
 
+    private boolean searchBox = false;
+    private ArrayList<String> photoPaths = new ArrayList<>();
+    private ArrayList<String> docPaths = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
@@ -170,6 +179,7 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatAct
         groupChatPresenter = new GroupChatPresenter();
         groupChatPresenter.attach(this);
         initViewComponent();
+        MyFirebaseMessagingService.subscribeGroup(groupId);
 
     }
 
@@ -225,14 +235,14 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatAct
         ivClose.setOnClickListener(this);
 
         linearLayoutManager = new LinearLayoutManager(this);
-//        linearLayoutManager.setReverseLayout(true);
+     //   linearLayoutManager.setReverseLayout(true);
 
         messageRecyclerView.setLayoutManager(linearLayoutManager);
         messageRecyclerView.getItemAnimator().setChangeDuration(0);
 
         toolbar = findViewById(R.id.cometchat_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
 
         recordMicButton = findViewById(R.id.record_button);
@@ -275,25 +285,27 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatAct
 
         new Thread(() -> groupChatPresenter.fetchGroupMembers(groupId)).start();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            setScrollListener();
-        } else {
-            messageRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+        if (!searchBox) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                setScrollListener();
+            } else {
+                messageRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
 
-                    if (linearLayoutManager.findFirstVisibleItemPosition() == 0) {
+                        if (!messageRecyclerView.canScrollVertically(-1)) {
 
-                        groupChatPresenter.fetchPreviousMessage(groupId, LIMIT);
+                            groupChatPresenter.fetchPreviousMessage(groupId, LIMIT);
+
+                        }
+
+                        //for toolbar elevation animation i.e stateListAnimator
+                        toolbar.setSelected(recyclerView.canScrollVertically(-1));
+
 
                     }
-
-                    //for toolbar elevation animation i.e stateListAnimator
-                    toolbar.setSelected(recyclerView.canScrollVertically(-1));
-
-
-                }
-            });
+                });
+            }
         }
 
         KeyboardVisibilityEvent.setEventListener(this, var1 -> {
@@ -341,7 +353,7 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatAct
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 int temp = linearLayoutManager.findFirstVisibleItemPosition();
 
-                if (temp < 5) {
+                if (!messageRecyclerView.canScrollVertically(-1)) {
 
                     groupChatPresenter.fetchPreviousMessage(groupId, LIMIT);
 
@@ -478,12 +490,14 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatAct
 
                 @Override
                 public boolean onQueryTextChange(String s) {
+                    searchBox = true;
                     groupChatPresenter.searchMessage(s,groupId);
-                       return false;
+                    return false;
                 }
             });
 
             searchView.setOnCloseListener(() -> {
+                searchBox = false;
                 groupChatPresenter.fetchPreviousMessage(groupId,30);
                 return false;
             });
@@ -569,16 +583,16 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatAct
         super.onResume();
         groupChatPresenter.addMessageReceiveListener(getResources().getString(R.string.group_message_listener), groupId, ownerId);
         groupChatPresenter.addGroupEventListener("action_message", groupId, ownerId);
-        groupChatPresenter.refreshList(groupId,ownerId,LIMIT);
+//        groupChatPresenter.refreshList(groupId,ownerId,LIMIT);
         groupChatPresenter.addCallListener("call_listener");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-         if (groupMessageAdapter!=null) {
-             groupMessageAdapter.stopPlayer();
-         }
+        if (groupMessageAdapter!=null) {
+            groupMessageAdapter.stopPlayer();
+        }
         groupChatPresenter.removeMessageReceiveListener(getResources().getString(R.string.group_message_listener));
         groupChatPresenter.removeMessageReceiveListener("action_message");
         groupChatPresenter.removeCallListener("call_listener");
@@ -669,6 +683,7 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatAct
         }
         if (groupMessageAdapter == null) {
             groupMessageAdapter = new GroupMessageAdapter(messageList, context, groupId, ownerId);
+
             messageRecyclerView.setAdapter(groupMessageAdapter);
             decor = new StickyHeaderDecoration(groupMessageAdapter);
             messageRecyclerView.addItemDecoration(decor, 0);
@@ -710,26 +725,26 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatAct
 
     @Override
     public void typingStarted(TypingIndicator typingIndicator) {
-       toolbarSubTitle.setText(typingIndicator.getSender().getName()+" "+getString(R.string.is_typing));
+        toolbarSubTitle.setText(typingIndicator.getSender().getName()+" "+getString(R.string.is_typing));
     }
 
     @Override
     public void typingEnded(TypingIndicator typingIndicator) {
-           toolbarSubTitle.setText(names);
+        toolbarSubTitle.setText(names);
     }
 
     @Override
     public void setDeliveryReceipt(MessageReceipt messageReceipt) {
-         if (groupMessageAdapter!=null){
-             groupMessageAdapter.setDelivered(messageReceipt);
-         }
+//         if (groupMessageAdapter!=null){
+//             groupMessageAdapter.setDelivered(messageReceipt);
+//         }
     }
 
     @Override
     public void onMessageRead(MessageReceipt messageReceipt) {
-        if (groupMessageAdapter!=null){
-            groupMessageAdapter.setRead(messageReceipt);
-        }
+//        if (groupMessageAdapter!=null){
+//            groupMessageAdapter.setRead(messageReceipt);
+//        }
     }
 
     @Override
@@ -761,8 +776,12 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatAct
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 ) {
 
-                    AttachmentHelper.selectMedia(this, StringContract.IntentStrings.DOCUMENT_TYPE,
-                            null, StringContract.RequestCode.ADD_DOCUMENT);
+              /*      AttachmentHelper.selectMedia(this, StringContract.IntentStrings.DOCUMENT_TYPE,
+                            null, StringContract.RequestCode.ADD_DOCUMENT);*/
+                    FilePickerBuilder.getInstance().setMaxCount(1)
+                            .setSelectedFiles(docPaths)
+                            .setActivityTheme(R.style.LibAppTheme)
+                            .pickFile(this, StringContract.RequestCode.ADD_DOCUMENT);
                 } else {
                     showToast();
                 }
@@ -771,8 +790,12 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatAct
             case StringContract.RequestCode.ADD_GALLERY:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    AttachmentHelper.selectMedia(this, StringContract.IntentStrings.IMAGE_TYPE,
-                            StringContract.IntentStrings.EXTRA_MIME_TYPE, StringContract.RequestCode.ADD_GALLERY);
+                   /* AttachmentHelper.selectMedia(this, StringContract.IntentStrings.IMAGE_TYPE,
+                            StringContract.IntentStrings.EXTRA_MIME_TYPE, StringContract.RequestCode.ADD_GALLERY);*/
+                    FilePickerBuilder.getInstance().setMaxCount(5)
+                            .setSelectedFiles(photoPaths)
+                            .setActivityTheme(R.style.LibAppTheme)
+                            .pickPhoto(this,StringContract.RequestCode.ADD_GALLERY);
                 } else {
                     showToast();
                 }
@@ -821,7 +844,10 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatAct
         if (resultCode == RESULT_OK && data != null && groupChatPresenter != null) {
             switch (requestCode) {
                 case StringContract.RequestCode.ADD_GALLERY:
-                    AttachmentHelper.handlefile(context, CometChatConstants.MESSAGE_TYPE_IMAGE, groupChatPresenter, data, groupId);
+                 //   AttachmentHelper.handlefile(context, CometChatConstants.MESSAGE_TYPE_IMAGE, groupChatPresenter, data, groupId);
+                    photoPaths = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
+                    for(int i=0;i<photoPaths.size();i++)
+                        AttachmentHelper.handlefileUri(this, "*/*", groupChatPresenter, Uri.parse(photoPaths.get(i)), groupId);
                     break;
 
                 case StringContract.RequestCode.TAKE_PHOTO:
@@ -833,7 +859,13 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatAct
                     break;
 
                 case StringContract.RequestCode.ADD_DOCUMENT:
-                    AttachmentHelper.handlefile(context, CometChatConstants.MESSAGE_TYPE_FILE, groupChatPresenter, data, groupId);
+               //     AttachmentHelper.handlefile(context, CometChatConstants.MESSAGE_TYPE_FILE, groupChatPresenter, data, groupId);
+                    docPaths = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS);
+                    //  LogUtils.e();
+                    for(int i=0;i<docPaths.size();i++)
+                    {
+                        AttachmentHelper.handlefileUri(GroupChatActivity.this, CometChatConstants.MESSAGE_TYPE_FILE, groupChatPresenter, Uri.parse(docPaths.get(i)), groupId);
+                    }
                     break;
 
                 case StringContract.RequestCode.ADD_SOUND:
@@ -953,7 +985,11 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatAct
             case StringContract.RequestCode.ADD_GALLERY:
 
                 if (CCPermissionHelper.hasPermissions(this, STORAGE_PERMISSION)) {
-                    AttachmentHelper.selectMedia(this, StringContract.IntentStrings.IMAGE_TYPE, StringContract.IntentStrings.EXTRA_MIME_TYPE, StringContract.RequestCode.ADD_GALLERY);
+              //      AttachmentHelper.selectMedia(this, StringContract.IntentStrings.IMAGE_TYPE, StringContract.IntentStrings.EXTRA_MIME_TYPE, StringContract.RequestCode.ADD_GALLERY);
+                    FilePickerBuilder.getInstance().setMaxCount(5)
+                            .setSelectedFiles(photoPaths)
+                            .setActivityTheme(R.style.LibAppTheme)
+                            .pickPhoto(this,StringContract.RequestCode.ADD_GALLERY);
                 } else {
                     CCPermissionHelper.requestPermissions(this, STORAGE_PERMISSION, StringContract.RequestCode.ADD_GALLERY);
                 }
@@ -961,7 +997,11 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatAct
             case StringContract.RequestCode.ADD_DOCUMENT:
 
                 if (CCPermissionHelper.hasPermissions(this, STORAGE_PERMISSION)) {
-                    AttachmentHelper.selectMedia(this, StringContract.IntentStrings.DOCUMENT_TYPE, null, StringContract.RequestCode.ADD_DOCUMENT);
+                //    AttachmentHelper.selectMedia(this, StringContract.IntentStrings.DOCUMENT_TYPE, null, StringContract.RequestCode.ADD_DOCUMENT);
+                    FilePickerBuilder.getInstance().setMaxCount(1)
+                            .setSelectedFiles(docPaths)
+                            .setActivityTheme(R.style.LibAppTheme)
+                            .pickFile(this, StringContract.RequestCode.ADD_DOCUMENT);
                 } else {
                     CCPermissionHelper.requestPermissions(this, STORAGE_PERMISSION, StringContract.RequestCode.ADD_DOCUMENT);
                 }

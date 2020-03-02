@@ -13,21 +13,22 @@ public class FontUtils {
 
     public static Typeface robotoCondenseRegular;
 
-    private Context context;
+    private static Context context;
 
-    public FontUtils(Context context) {
+    public FontUtils(Context c) {
 
-        this.context=context;
+        context=c;
 
         initFonts();
     }
 
     private void initFonts() {
 
-
-        robotoMedium= Typeface.createFromAsset(context.getAssets(),"gibsonregular.ttf");
-        robotoRegular= Typeface.createFromAsset(context.getAssets(),"gibsonregular.ttf");
-        openSansRegular = Typeface.createFromAsset(context.getAssets(),"gibsonregular.ttf");
-        robotoCondenseRegular= Typeface.createFromAsset(context.getAssets(),"gibsonregular.ttf");
+          if (context!=null) {
+              robotoMedium = Typeface.createFromAsset(context.getAssets(), "gibsonregular.ttf");
+              robotoRegular = Typeface.createFromAsset(context.getAssets(), "gibsonregular.ttf");
+              openSansRegular = Typeface.createFromAsset(context.getAssets(), "gibsonregular.ttf");
+              robotoCondenseRegular = Typeface.createFromAsset(context.getAssets(), "gibsonregular.ttf");
+          }
     }
 }

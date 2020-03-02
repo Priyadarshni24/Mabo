@@ -38,6 +38,6 @@ public interface UserProfileViewActivityContract {
 
         void sendCallRequest(Context context, String contactUid, String receiverType, String callTyp);
 
-        void getMediaMessage(String contactUid, int limit);
+        void getMediaMessage(String contactUid,int limit);
     }
 }

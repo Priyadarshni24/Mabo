@@ -1,5 +1,6 @@
 package com.advengers.mabo.Cometchat.CustomView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -31,6 +32,7 @@ import androidx.annotation.RequiresApi;
 
 import com.advengers.mabo.R;
 
+@SuppressLint("AppCompatCustomView")
 public class CircleImageView extends ImageView {
 
     private static final ScaleType SCALE_TYPE = ScaleType.CENTER_CROP;

@@ -2,6 +2,7 @@ package com.advengers.mabo.Cometchat.Fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.advengers.mabo.Cometchat.Activity.CallActivity;
+import com.advengers.mabo.Cometchat.Contracts.StringContract;
 import com.advengers.mabo.Utils.LogUtils;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.helpers.CometChatHelper;
@@ -73,9 +76,13 @@ public class RecentsFragment extends Fragment implements RecentsContract.Recents
             @Override
             public void onClick(View view) {
                 LogUtils.e("I am coming");
-                //   getActivity().startActivity(CometChat.getActiveCall());
+
+                Intent callIntent = new Intent(getContext(), CallActivity.class);
+                callIntent.putExtra(StringContract.IntentStrings.SESSION_ID, CometChat.getActiveCall().getSessionId());
+                getContext().startActivity(callIntent);
             }
         });
+       // CometChat.getActiveCall().
         ivNoRecents = view.findViewById(R.id.ivNoRecents);
         tvNoRecents=view.findViewById(R.id.tvNoRecents);
         recentsRecyclerView = view.findViewById(R.id.recents_recycler_view);
@@ -88,8 +95,8 @@ public class RecentsFragment extends Fragment implements RecentsContract.Recents
         recentPresenter = new RecentsListPresenter();
 
         recentPresenter.attach(this);
-
-        new Thread(() -> recentPresenter.fetchConversations(getContext())).start();
+      //  recentPresenter.refreshConversations(getContext());
+    //      recentPresenter.fetchConversations(getContext());
 
         recentsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -112,11 +119,10 @@ public class RecentsFragment extends Fragment implements RecentsContract.Recents
         return view;
     }
 
-
-    @Override
+/*
     public void setFilterList(List<Conversation> hashMap) {
         recentsListAdapter.setFilterList(hashMap);
-    }
+    }*/
 
     @Override
     public void onDestroy() {
@@ -134,7 +140,7 @@ public class RecentsFragment extends Fragment implements RecentsContract.Recents
     public void onResume() {
         super.onResume();
         recentPresenter.addMessageListener(getString(R.string.presenceListener));
-        recentPresenter.fetchConversations(getContext());
+        recentPresenter.refreshConversations(getContext());
     }
 
     @Override
@@ -150,20 +156,25 @@ public class RecentsFragment extends Fragment implements RecentsContract.Recents
          recentsListAdapter.updateConversation(newConversation);
     }
 
-
+    @Override
+    public void clearConversations() {
+        if (recentsListAdapter != null) {
+            recentsListAdapter.clear();
+        }
+    }
 
     @Override
     public void setRecentAdapter(List<Conversation> conversationList) {
         this.conversationList.addAll(conversationList);
         Log.e( "setRecentAdapter: ",conversationList.toString() );
         if (recentsListAdapter == null) {
-            recentsListAdapter = new RecentsListAdapter(conversationList, getActivity(), R.layout.recent_list_item,false);
+            recentsListAdapter = new RecentsListAdapter(conversationList, getContext(), R.layout.recent_list_item,false);
             recentsRecyclerView.setAdapter(recentsListAdapter);
             recentShimmer.stopShimmer();
             recentShimmer.setVisibility(View.GONE);
 
         } else {
-            if (this.conversationList != null) {
+            if (this.conversationList != null&&conversationList.size()!=0) {
                 recentsListAdapter.refreshData(conversationList);
             }
         }

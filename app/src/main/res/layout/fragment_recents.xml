@@ -36,7 +36,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/btn_resume"
-    android:visibility="gone"
+    android:visibility="visible"
     android:text="Resume call activity"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recents_recycler_view"
@@ -45,6 +45,7 @@
         android:clickable="true"
         android:focusable="true"
         android:scrollbars="none"
+        android:layout_below="@id/btn_resume"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,6 +57,7 @@
         android:layout_width="match_parent"
         app:shimmer_auto_start="true"
         app:shimmer_duration="1000"
+        android:layout_below="@id/btn_resume"
         android:layout_height="match_parent"
         android:visibility="visible">
 

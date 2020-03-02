@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.advengers.mabo.Activity.SearchActivity;
+import com.advengers.mabo.Cometchat.Activity.CreateGroupActivity;
+import com.advengers.mabo.Cometchat.Fragments.GroupListFragment;
 import com.advengers.mabo.Cometchat.Fragments.RecentsFragment;
 import com.advengers.mabo.R;
 import com.advengers.mabo.databinding.FragmentChatBinding;
@@ -45,6 +47,9 @@ public class ChatFragment extends Fragment {
                     case R.id.action_search:
                         startActivity(new Intent(getActivity(), SearchActivity.class));
                       break;
+                    case R.id.action_group:
+                        startActivity(new Intent(getActivity(), CreateGroupActivity.class));
+                        break;
                 }
                 return true;
             }
@@ -66,7 +71,7 @@ public class ChatFragment extends Fragment {
 
         adapter.addFragment(new FriendsFragment(), getString(R.string.str_friends));
         adapter.addFragment(new RecentsFragment(), getString(R.string.str_followers));
-       // adapter.addFragment(new ContactsFragment(),"CometContacts");
+        adapter.addFragment(new GroupListFragment(),getString(R.string.str_groups));
         viewPager.setAdapter(adapter);
  }
 

@@ -38,7 +38,7 @@ public class LeftReplyViewHolder extends RecyclerView.ViewHolder {
 
     public RelativeLayout rlAudioConatiner;
 
-    public ImageView ivPlayButton;
+    public ImageView  ivPlayButton;
 
     public SeekBar sbAudioSeekBar;
 

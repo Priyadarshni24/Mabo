@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.advengers.mabo.Cometchat.Helper.MyFirebaseMessagingService;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.cometchat.pro.constants.CometChatConstants;
@@ -90,7 +91,7 @@ public class GroupChatPresenter extends Presenter<GroupChatActivityContract.Grou
         CometChat.addMessageListener(listenerId, new CometChat.MessageListener() {
             @Override
             public void onTextMessageReceived(TextMessage message) {
-                if (groupId != null && groupId.equals(message.getReceiverUid()) && !message.getSender().getUid().equals(ownerId)) {
+                if (groupId != null && groupId.equals(message.getReceiverUid())) {
                     CometChat.markAsRead(message.getId(), message.getReceiverUid(), message.getReceiverType());
                     MediaUtils.playSendSound(context, R.raw.receive);
                     getBaseView().addReceivedMessage(message);
@@ -99,7 +100,7 @@ public class GroupChatPresenter extends Presenter<GroupChatActivityContract.Grou
 
             @Override
             public void onMediaMessageReceived(MediaMessage message) {
-                if (groupId != null && groupId.equals(message.getReceiverUid()) && !message.getSender().getUid().equals(ownerId)) {
+                if (groupId != null && groupId.equals(message.getReceiverUid()) ) {
 
                     CometChat.markAsRead(message.getId(), message.getReceiverUid(), message.getReceiverType());
 
@@ -110,39 +111,39 @@ public class GroupChatPresenter extends Presenter<GroupChatActivityContract.Grou
 
             @Override
             public void onTypingStarted(TypingIndicator typingIndicator) {
-                if (typingIndicator.getReceiverType().equals(CometChatConstants.RECEIVER_TYPE_GROUP))
+                if (groupId != null && groupId.equals(typingIndicator.getReceiverId()))
                     getBaseView().typingStarted(typingIndicator);
             }
 
             @Override
             public void onTypingEnded(TypingIndicator typingIndicator) {
-                if (typingIndicator.getReceiverType().equals(CometChatConstants.RECEIVER_TYPE_GROUP))
+                if (groupId != null && groupId.equals(typingIndicator.getReceiverId()))
                     getBaseView().typingEnded(typingIndicator);
             }
 
             @Override
             public void onMessagesDelivered(MessageReceipt messageReceipt) {
-                if (messageReceipt.getReceivertype().equals(CometChatConstants.RECEIVER_TYPE_GROUP))
+                if (groupId != null && groupId.equals(messageReceipt.getReceiverId()))
                     getBaseView().setDeliveryReceipt(messageReceipt);
 
             }
 
             @Override
             public void onMessagesRead(MessageReceipt messageReceipt) {
-                if (messageReceipt.getReceivertype().equals(CometChatConstants.RECEIVER_TYPE_GROUP))
+                if (groupId != null && groupId.equals(messageReceipt.getReceiverId()))
                     getBaseView().onMessageRead(messageReceipt);
 
             }
 
             @Override
             public void onMessageEdited(BaseMessage message) {
-                if (message.getReceiverType().equals(CometChatConstants.RECEIVER_TYPE_GROUP))
+                if (groupId != null && groupId.equals(message.getReceiverUid()))
                     getBaseView().setEditedMessage(message);
             }
 
             @Override
             public void onMessageDeleted(BaseMessage message) {
-                if (message.getReceiverType().equals(CometChatConstants.RECEIVER_TYPE_GROUP))
+                if (groupId != null && groupId.equals(message.getReceiverUid()))
                     getBaseView().setDeletedMessage(message);
             }
 
@@ -294,17 +295,17 @@ public class GroupChatPresenter extends Presenter<GroupChatActivityContract.Grou
 
             @Override
             public void onOutgoingCallAccepted(Call call) {
-                Log.e(TAG, "onOutgoingCallAccepted: "+call.getCallStatus());
+
             }
 
             @Override
             public void onOutgoingCallRejected(Call call) {
-                Log.e(TAG, "onOutgoingCallRejected"+call.getCallStatus());
+
             }
 
             @Override
             public void onIncomingCallCancelled(Call call) {
-                Log.e(TAG, "onIncomingCallCancelled: "+call.getCallStatus());
+
 
             }
         });
@@ -376,7 +377,7 @@ public class GroupChatPresenter extends Presenter<GroupChatActivityContract.Grou
                 if (isViewAttached()) {
                     for (BaseMessage baseMessage : baseMessages) {
                         Log.d(TAG, "onSuccess: delete " + baseMessage.getDeletedAt());
-                        if (!baseMessage.getCategory().equals(CometChatConstants.CATEGORY_ACTION) && baseMessage.getDeletedAt() == 0) {
+                        if (baseMessage.getDeletedAt() == 0) {
                             list.add(baseMessage);
                         }
                     }
@@ -412,16 +413,15 @@ public class GroupChatPresenter extends Presenter<GroupChatActivityContract.Grou
                     for (BaseMessage baseMessage : baseMessages) {
                         Log.d(TAG, "onSuccess: fetchPrevious" + baseMessage.toString());
                         Logger.error("groupMessage" + baseMessage.getId());
-
                         if (baseMessage.getDeletedAt() == 0) {
                             list.add(baseMessage);
                         }
+                        if (!baseMessage.getSender().getUid().equals(CometChat.getLoggedInUser().getUid())){
+                            CometChat.markAsRead(baseMessage.getId(), baseMessage.getReceiverUid(), baseMessage.getReceiverType());
+                        }
                     }
-                    if (baseMessages.size() != 0) {
-                        BaseMessage baseMessage = baseMessages.get(baseMessages.size() - 1);
-                        CometChat.markAsRead(baseMessage.getId(), baseMessage.getReceiverUid(), baseMessage.getReceiverType());
-                    }
-                    getBaseView().setAdapter(baseMessages);
+
+                    getBaseView().setAdapter(list);
                 }
 
             }
@@ -524,10 +524,12 @@ public class GroupChatPresenter extends Presenter<GroupChatActivityContract.Grou
             @Override
             public void onSuccess(String s) {
                 group.setHasJoined(false);
+                MyFirebaseMessagingService.unsubscribeGroup(group.getGuid());
                 Toast.makeText(context, "left", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, CometChatActivity.class);
                 ((Activity) context).startActivityForResult(intent, StringContract.RequestCode.LEFT);
                 ((GroupChatActivity) context).finish();
+
             }
 
             @Override

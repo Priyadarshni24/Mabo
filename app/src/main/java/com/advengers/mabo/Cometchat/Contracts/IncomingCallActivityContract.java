@@ -33,7 +33,7 @@ public interface IncomingCallActivityContract {
 
         void setImage(String stringExtra, ImageView ivUserPic, ImageView ivUserBackground);
 
-        void rejectCall(Context context, String sessionId, String callStatus);
+        void rejectCall(Context context, String sessionId,String callStatus);
 
         void answerCall(Camera camera, RelativeLayout callView, Context context, String sessionId);
 

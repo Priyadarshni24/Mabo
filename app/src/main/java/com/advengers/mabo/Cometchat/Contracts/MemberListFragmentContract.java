@@ -13,7 +13,7 @@ public interface MemberListFragmentContract {
 
     interface MemberListFragmentView{
 
-        void setAdapter(HashMap<String, GroupMember> groupMemberList);
+        void setAdapter(HashMap<String,GroupMember> groupMemberList);
 
         void removeMember(String uid);
     }
@@ -26,11 +26,11 @@ public interface MemberListFragmentContract {
 
         void kickUser(String uid, String groupId, GroupMemberListAdapter groupMemberListAdapter);
 
-        void refresh(String GUID, int LIMIT, Context context);
+        void refresh(String GUID,int LIMIT,Context context);
 
         void updateScope(String uid, String groupId, GroupMemberListAdapter groupMemberListAdapter, String scope);
 
-        void addGroupEventListener(String listenerId, String groupId, GroupMemberListAdapter groupMemberListAdapter);
+        void addGroupEventListener(String listenerId,String groupId,GroupMemberListAdapter groupMemberListAdapter);
 
     }
 }

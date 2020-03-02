@@ -15,7 +15,7 @@ public interface CallActivityContract {
 
         void removeCallListener(String listener);
 
-        void addCallListener(Context context, String listener);
+        void addCallListener(Context context,String listener);
 
     }
 }

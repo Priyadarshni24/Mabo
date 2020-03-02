@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.advengers.mabo.Activity.LoginActivity;
+import com.advengers.mabo.Cometchat.Helper.MyFirebaseMessagingService;
 import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.core.BlockedUsersRequest;
 import com.cometchat.pro.core.Call;
@@ -57,7 +58,7 @@ implements CometChatActivityContract.CometChatActivityPresenter {
     }
 
     @Override
-    public void addCallEventListener(Context context, String listenerId) {
+    public void addCallEventListener(Context context,String listenerId) {
         CometChat.addCallListener(listenerId, new CometChat.CallListener() {
             @Override
             public void onIncomingCallReceived(Call call) {
@@ -134,11 +135,13 @@ implements CometChatActivityContract.CometChatActivityPresenter {
 
     @Override
     public void logOut(Context context) {
+        MyFirebaseMessagingService.unsubscribeUser(CometChat.getLoggedInUser().getUid());
         CometChat.logout(new CometChat.CallbackListener<String>() {
             @Override
             public void onSuccess(String s) {
+                Log.e(TAG, "onSuccess: "+s );
                 Intent intent=new Intent(context, LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
                 ((CometChatActivity)context).finish();
             }

@@ -14,7 +14,7 @@ public interface LoginActivityContract {
 
     interface LoginActivityPresenter extends BasePresenter<LoginActivityView> {
 
-        void Login(Context context, String uid);
+        void Login(Context context,String uid);
 
         void loginCheck();
     }

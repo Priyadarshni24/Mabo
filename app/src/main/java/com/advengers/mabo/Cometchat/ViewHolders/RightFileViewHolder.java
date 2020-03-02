@@ -27,7 +27,7 @@ public class RightFileViewHolder extends RecyclerView.ViewHolder {
     public View fileContainer;
     public Guideline rightGuideLine;
 
-    public RightFileViewHolder(Context context , @NonNull View itemView) {
+    public RightFileViewHolder(Context context ,@NonNull View itemView) {
         super(itemView);
         Display display = ((WindowManager) context.getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
         int orientation = display.getRotation();

@@ -12,11 +12,11 @@ public interface CometChatActivityContract {
 
     interface CometChatActivityPresenter extends BasePresenter<CometChatActivityView> {
 
-        void addMessageListener(Context context, String listenerId);
+        void addMessageListener(Context context,String listenerId);
 
         void removeMessageListener(String listenerId);
 
-        void addCallEventListener(Context context, String listenerId);
+        void addCallEventListener(Context context,String listenerId);
 
         void removeCallEventListener(String tag);
 

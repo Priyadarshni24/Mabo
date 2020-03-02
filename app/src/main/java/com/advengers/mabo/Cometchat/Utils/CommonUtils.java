@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 
+import com.advengers.mabo.Utils.LogUtils;
 import com.cometchat.pro.models.Group;
 import com.cometchat.pro.models.User;
 import com.advengers.mabo.Cometchat.Activity.CreateGroupActivity;
@@ -25,6 +26,10 @@ import com.advengers.mabo.Cometchat.Activity.GroupChatActivity;
 import com.advengers.mabo.Cometchat.Activity.IncomingCallActivity;
 import com.advengers.mabo.Cometchat.Contracts.StringContract;
 import com.advengers.mabo.R;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class CommonUtils {
 
@@ -38,6 +43,32 @@ public class CommonUtils {
 
         NetworkInfo var0 = cm.getActiveNetworkInfo();
         return null != var0 && var0.isConnectedOrConnecting();
+    }
+
+    public static String getRandomElement() {
+        List<String> list=new ArrayList<>();
+        list.add("superhero1");
+        list.add("superhero2");
+        list.add("superhero3");
+        list.add("superhero4");
+        list.add("superhero5");
+        list.add("testuser128");
+        list.add("testuser12");
+        list.add("testuser13");
+        list.add("testuser11");
+        list.add("testuser15");
+        list.add("testuser25");
+        list.add("testuser26");
+        list.add("testuser28");
+        list.add("testuser27");
+        list.add("testuser30");
+        list.add("testuser31");
+        list.add("testuser33");
+
+        Random rand = new Random();
+        String  s=list.get(rand.nextInt(list.size()));
+        LogUtils.e( "getRandomElement: "+s);
+        return s;
     }
 
     public static void startCallIntent(Context context, User user, String type,
@@ -78,7 +109,7 @@ public class CommonUtils {
 
 
     @SafeVarargs
-    public static void startActivityIntent(com.cometchat.pro.models.Group group, Context context, boolean flag, @Nullable Pair<View, String>...pairs) {
+    public static void startActivityIntent(com.cometchat.pro.models.Group group, Context context, boolean flag, @Nullable Pair<View,String> ...pairs) {
         Intent intent = new Intent(context, GroupChatActivity.class);
         //intent.putExtra(StaticMembers.INTENT_GROUP_ID, chatroomId);
         Logger.error("", "GroupId : " + String.valueOf(group.getGuid()));

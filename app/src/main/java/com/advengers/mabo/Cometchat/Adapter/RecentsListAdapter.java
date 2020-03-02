@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.advengers.mabo.Cometchat.Utils.DateUtils;
 import com.bumptech.glide.Glide;
 import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.core.Call;
@@ -30,8 +31,12 @@ import com.advengers.mabo.Cometchat.Utils.ColorUtils;
 import com.advengers.mabo.Cometchat.Utils.FontUtils;
 import com.advengers.mabo.Cometchat.Utils.MediaUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+
+import static java.security.AccessController.getContext;
 
 
 public class RecentsListAdapter extends RecyclerView.Adapter<RecentsListAdapter.RecentsViewHolder> {
@@ -44,23 +49,20 @@ public class RecentsListAdapter extends RecyclerView.Adapter<RecentsListAdapter.
 
     private int resId;
 
-    private String guid,icon,groupName;
+    private String guid;
+    private String icon;
+    private String groupName;
 
     private String uid,avatar,username;
 
-    private HashMap<String, Integer> unreadCountMap;
 
-    public RecentsListAdapter(List<Conversation> conversationList, Context context, int resId, boolean isBlockedList) {
+    public RecentsListAdapter( List<Conversation> conversationList, Context context, int resId, boolean isBlockedList) {
         this.conversationList = conversationList;
         this.context = context;
         this.isBlockedList = isBlockedList;
         this.resId = resId;
-     //   new FontUtils(this.context);
+        new FontUtils(this.context);
 
-    }
-    public void clear() {
-        conversationList.clear();
-        notifyDataSetChanged();
     }
 
     @NonNull
@@ -75,48 +77,23 @@ public class RecentsListAdapter extends RecyclerView.Adapter<RecentsListAdapter.
 
         Conversation conversation =conversationList.get(contactViewHolder.getAdapterPosition());
         Drawable statusDrawable;
+
         if (conversation.getConversationType().equals(CometChatConstants.CONVERSATION_TYPE_GROUP))
         {
 
+//            str = conversation.getLastMessage().getSender().getName()+": ";
             guid = ((Group)conversation.getConversationWith()).getGuid();
             groupName = ((Group)conversation.getConversationWith()).getName();
             contactViewHolder.userName.setText(groupName);
-            if (((Group)conversation.getConversationWith()).getIcon() != null && !((Group)conversation.getConversationWith()).getIcon().isEmpty()) {
-                icon = ((Group)conversation.getConversationWith()).getIcon();
-                Glide.with(context).load(icon).into(contactViewHolder.avatar);
-                contactViewHolder.avatar.setCircleBackgroundColor(context.getResources().getColor(android.R.color.white));
-            }
-            else {
-                Drawable drawable = context.getResources().getDrawable(R.drawable.default_avatar);
-                try {
-                    contactViewHolder.avatar.setCircleBackgroundColor(ColorUtils.getMaterialColor(context));
-                    contactViewHolder.avatar.setImageBitmap(MediaUtils.getPlaceholderImage(context, drawable));
-                } catch (Exception e) {
-                    contactViewHolder.avatar.setCircleBackgroundColor(context.getResources().getColor(R.color.secondaryDarkColor));
-                    contactViewHolder.avatar.setImageDrawable(drawable);
-                }
-            }
-
+            setIcon(((Group) conversation.getConversationWith()).getIcon(),R.drawable.cc_ic_group,contactViewHolder.avatar);
         }
         else
         {
+            String str = "";
             uid = ((User)conversation.getConversationWith()).getUid();
             username = ((User)conversation.getConversationWith()).getName();
             contactViewHolder.userName.setText(username);
-            if (((User)conversation.getConversationWith()).getAvatar() != null && !((User)conversation.getConversationWith()).getAvatar().isEmpty()) {
-               avatar = ((User)conversation.getConversationWith()).getAvatar();
-                Glide.with(context).load(avatar).into(contactViewHolder.avatar);
-                contactViewHolder.avatar.setCircleBackgroundColor(context.getResources().getColor(android.R.color.white));
-            } else {
-                Drawable drawable = context.getResources().getDrawable(R.drawable.default_avatar);
-                try {
-                    contactViewHolder.avatar.setCircleBackgroundColor(ColorUtils.getMaterialColor(context));
-                    contactViewHolder.avatar.setImageBitmap(MediaUtils.getPlaceholderImage(context, drawable));
-                } catch (Exception e) {
-                    contactViewHolder.avatar.setCircleBackgroundColor(context.getResources().getColor(R.color.secondaryDarkColor));
-                    contactViewHolder.avatar.setImageDrawable(drawable);
-                }
-            }
+             setIcon(((User) conversation.getConversationWith()).getAvatar(),R.drawable.default_avatar,contactViewHolder.avatar);
         }
         contactViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,11 +121,13 @@ public class RecentsListAdapter extends RecyclerView.Adapter<RecentsListAdapter.
         contactViewHolder.userName.setTypeface(FontUtils.robotoRegular);
         contactViewHolder.lastMessage.setTypeface(FontUtils.robotoRegular);
         if (conversation.getLastMessage()!=null) {
+            contactViewHolder.messageTime.setText(DateUtils.getLastMessageDate(conversation.getLastMessage().getSentAt()));
+            Log.e("LastMessage: ",conversation.getLastMessage().toString());
             if (conversation.getLastMessage().getType().equals(CometChatConstants.MESSAGE_TYPE_TEXT)) {
                 contactViewHolder.lastMessage.setText(((TextMessage) conversation.getLastMessage()).getText());
             } else if (conversation.getLastMessage().getType().equals(CometChatConstants.MESSAGE_TYPE_IMAGE)) {
                 contactViewHolder.lastMessage.setText("Image File");
-            } else if (conversation.getLastMessage().getType().equals(CometChatConstants.MESSAGE_TYPE_AUDIO)) {
+            } else if (conversation.getLastMessage().getType().equals(CometChatConstants.MESSAGE_TYPE_AUDIO) && conversation.getLastMessage().getCategory().equals(CometChatConstants.CATEGORY_MESSAGE)) {
                 contactViewHolder.lastMessage.setText("Audio File");
             } else if (conversation.getLastMessage().getType().equals(CometChatConstants.MESSAGE_TYPE_VIDEO)) {
                 contactViewHolder.lastMessage.setText("Video File");
@@ -181,11 +160,32 @@ public class RecentsListAdapter extends RecyclerView.Adapter<RecentsListAdapter.
         contactViewHolder.unreadCount.setText(conversation.getUnreadMessageCount()+"");
     }
 
+    private void setIcon(String url,int drawableRes,CircleImageView circleImageView){
+
+        if (url!= null && !url.trim().isEmpty()) {
+            Glide.with(context).load(url).into(circleImageView);
+            circleImageView.setCircleBackgroundColor(context.getResources().getColor(android.R.color.white));
+        } else {
+            Drawable drawable = context.getResources().getDrawable(drawableRes);
+            circleImageView.setCircleBackgroundColor(context.getResources().getColor(R.color.secondaryColor));
+            circleImageView.setImageBitmap(MediaUtils.getPlaceholderImage(context, drawable));
+
+        }
+    }
+
 
     public void refreshData(List<Conversation> conversationsList) {
-        this.conversationList.clear();
-        this.conversationList.addAll(conversationsList);
-        notifyDataSetChanged();
+        if (conversationsList!=null) {
+            for (Conversation conversation : conversationsList)
+            {
+                if (this.conversationList.contains(conversation))
+                {
+                    this.conversationList.remove(conversation);
+                }
+            }
+            this.conversationList.addAll(conversationsList);
+            notifyDataSetChanged();
+        }
     }
 
     public void setFilterList(List<Conversation> hashMap) {
@@ -195,7 +195,7 @@ public class RecentsListAdapter extends RecyclerView.Adapter<RecentsListAdapter.
 
     @Override
     public int getItemCount() {
-     return conversationList.size();
+        return conversationList.size();
     }
 
 
@@ -205,9 +205,17 @@ public class RecentsListAdapter extends RecyclerView.Adapter<RecentsListAdapter.
             Conversation oldConversation=conversationList.get(conversationList.indexOf(newConversation));
             conversationList.remove(oldConversation);
             newConversation.setUnreadMessageCount(oldConversation.getUnreadMessageCount()+1);
-            Log.e( "updateConversation: ",newConversation.toString());
+            Log.e( "updateConversation: ",oldConversation.toString()+"\n"+newConversation.toString());
             conversationList.add(0,newConversation);
+            notifyDataSetChanged();
+        }else {
+            conversationList.add(0,newConversation);
+            notifyItemInserted(0);
         }
+    }
+
+    public void clear() {
+        conversationList.clear();
         notifyDataSetChanged();
     }
 
@@ -217,6 +225,7 @@ public class RecentsListAdapter extends RecyclerView.Adapter<RecentsListAdapter.
         public TextView userName;
         public TextView lastMessage;
         public TextView unreadCount;
+        public TextView messageTime;
         public CircleImageView avatar;
         public View view;
 
@@ -227,7 +236,7 @@ public class RecentsListAdapter extends RecyclerView.Adapter<RecentsListAdapter.
             userName = (TextView) view.findViewById(R.id.textviewUserName);
             lastMessage = (TextView) view.findViewById(R.id.textviewLastMessage);
             unreadCount = (TextView) view.findViewById(R.id.textviewSingleChatUnreadCount);
-
+            messageTime = (TextView)view.findViewById(R.id.textviewSingleChatTime);
 
         }
     }

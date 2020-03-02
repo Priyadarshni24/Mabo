@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.advengers.mabo.Utils.LogUtils;
 import com.cometchat.pro.constants.CometChatConstants;
 import com.advengers.mabo.Cometchat.Adapter.GroupListAdapter;
 import com.advengers.mabo.Cometchat.Contracts.GroupListContract;
@@ -53,7 +54,7 @@ public class GroupListFragment extends Fragment implements GroupListContract.Gro
 
     private StickyHeaderDecoration decor;
 
-    private String groupPassword;
+    private String  groupPassword;
 
     private ProgressDialog progressDialog;
 
@@ -110,10 +111,10 @@ public class GroupListFragment extends Fragment implements GroupListContract.Gro
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (dy < 0) {
+              /*  if (dy < 0) {
                     scrollHelper.setFab(true);
                 } else
-                    scrollHelper.setFab(false);
+                    scrollHelper.setFab(false);*/
             }
         });
 
@@ -126,8 +127,8 @@ public class GroupListFragment extends Fragment implements GroupListContract.Gro
                 GroupListAdapter.GroupHolder groupHolder= (GroupListAdapter.GroupHolder)
                         var1.getTag(R.string.groupHolder);
 
-                Pair<View, String> p1= Pair.create(((View)groupHolder.imageViewGroupAvatar),"groupImage");
-                Pair<View, String> p2= Pair.create(((View)groupHolder.groupNameField),"groupName");
+                Pair<View,String> p1=Pair.create(((View)groupHolder.imageViewGroupAvatar),"groupImage");
+                Pair<View,String> p2=Pair.create(((View)groupHolder.groupNameField),"groupName");
 
                 initJoinGroup(group,p1,p2);
 
@@ -162,7 +163,7 @@ public class GroupListFragment extends Fragment implements GroupListContract.Gro
         return super.onContextItemSelected(item);
     }
 
-    private void initJoinGroup(com.cometchat.pro.models.Group group, Pair<View, String>... pairs) {
+    private void initJoinGroup(com.cometchat.pro.models.Group group, Pair<View,String>... pairs) {
 
 
         if (CommonUtils.isConnected(getActivity())) {
@@ -205,7 +206,7 @@ public class GroupListFragment extends Fragment implements GroupListContract.Gro
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            Toast.makeText(getActivity(), getString(R.string.warning_group), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.warning), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -244,18 +245,20 @@ public class GroupListFragment extends Fragment implements GroupListContract.Gro
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        scrollHelper = (ScrollHelper) context;
+//        scrollHelper = (ScrollHelper) context;
     }
 
     @Override
     public void setGroupAdapter(HashMap<String,com.cometchat.pro.models.Group> groupList) {
-
-        if (groupListAdapter == null) {
+        LogUtils.e(groupList.size()+"");
+        groupListAdapter = new GroupListAdapter(groupList, getActivity());
+        groupsRecyclerView.setAdapter(groupListAdapter);
+      /*  if (groupListAdapter == null) {
             groupListAdapter = new GroupListAdapter(groupList, getActivity());
             groupsRecyclerView.setAdapter(groupListAdapter);
         } else {
             groupListAdapter.refreshData(groupList);
-        }
+        }*/
         if (groupList.size() == 0) {
             grpNoGroups.setVisibility(View.VISIBLE);
         } else {
@@ -297,6 +300,7 @@ public class GroupListFragment extends Fragment implements GroupListContract.Gro
                 if (groupPassword.length() == 0) {
                     groupPasswordInput.setText("");
                     groupPasswordInput.setError(getString(R.string.incorrect_password));
+                    alertDialog.dismiss();
 
                 } else {
                     try {

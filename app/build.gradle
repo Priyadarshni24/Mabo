@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.0"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.advengers.mabo"
         minSdkVersion 21
@@ -112,12 +112,14 @@ dependencies {
 
     implementation 'androidx.emoji:emoji-appcompat:1.0.0'
     implementation 'androidx.annotation:annotation:1.0.0'
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+   /* implementation ("com.github.bumptech.glide:glide:4.11.0@aar") {
+        transitive = true
+    }*/
     //cometchat sdk
-    //  implementation 'com.cometchat:pro-android-chat-sdk:2.0.1'
-    implementation 'com.cometchat:pro-android-chat-sdk:2.0.0-beta8'
+    implementation 'com.cometchat:pro-android-chat-sdk:2.0.3'
+  //  implementation 'com.cometchat:pro-android-chat-sdk:2.0.0-beta8'
     implementation 'androidx.recyclerview:recyclerview-selection:1.0.0'
 
     implementation 'com.facebook.shimmer:shimmer:0.4.0'

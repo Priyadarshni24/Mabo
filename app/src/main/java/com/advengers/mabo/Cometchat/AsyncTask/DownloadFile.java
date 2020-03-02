@@ -46,7 +46,7 @@ public class DownloadFile extends AsyncTask<String, Integer, String> {
             connection= (HttpURLConnection) url.openConnection();
             connection.connect();
 
-            if (connection.getResponseCode()!= HttpURLConnection.HTTP_OK){
+            if (connection.getResponseCode()!=HttpURLConnection.HTTP_OK){
                 return "server "+connection.getResponseCode() +" "+connection.getResponseMessage();
             }
 
@@ -59,7 +59,7 @@ public class DownloadFile extends AsyncTask<String, Integer, String> {
             file.setReadable(true,false);
 
 
-            outputStream= new FileOutputStream(file);
+            outputStream= new  FileOutputStream(file);
 
             byte []data=new byte[4096];
 

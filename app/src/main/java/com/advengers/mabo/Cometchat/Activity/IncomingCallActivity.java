@@ -261,7 +261,7 @@ public class IncomingCallActivity extends AppCompatActivity implements
 
                 cometChatAudioHelper.stop(false);
                 AnimUtil.stopBlinkAnimation(tvDots);
-                incomingCallActivityPresenter.rejectCall(IncomingCallActivity.this,sessionId, CometChatConstants.CALL_STATUS_CANCELLED);
+                incomingCallActivityPresenter.rejectCall(IncomingCallActivity.this,sessionId,CometChatConstants.CALL_STATUS_CANCELLED);
                 break;
         }
 
@@ -310,7 +310,7 @@ public class IncomingCallActivity extends AppCompatActivity implements
 
     @Override
     public void onDeclined() {
-        incomingCallActivityPresenter.rejectCall(IncomingCallActivity.this,sessionId, CometChatConstants.CALL_STATUS_REJECTED);
+        incomingCallActivityPresenter.rejectCall(IncomingCallActivity.this,sessionId,CometChatConstants.CALL_STATUS_REJECTED);
         cometChatAudioHelper.stop(true);
         AnimUtil.stopBlinkAnimation(tvDots);
         callScreenButton.setVisibility(View.GONE);

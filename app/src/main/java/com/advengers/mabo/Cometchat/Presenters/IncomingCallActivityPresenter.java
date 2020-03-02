@@ -72,7 +72,7 @@ public class IncomingCallActivityPresenter extends Presenter<IncomingCallActivit
 
 
     @Override
-    public void rejectCall(Context context, String sessionId, String callStatus) {
+    public void rejectCall(Context context, String sessionId,String callStatus) {
 
              CometChat.rejectCall(sessionId,callStatus, new CometChat.CallbackListener<Call>() {
                  @Override

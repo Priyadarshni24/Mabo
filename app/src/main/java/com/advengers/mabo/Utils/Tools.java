@@ -1,6 +1,7 @@
 package com.advengers.mabo.Utils;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
@@ -147,7 +148,15 @@ public class Tools {
 
         return scaledBitmap;
     }
-
+    public static boolean isMyServiceRunning(Class<?> serviceClass,Activity act) {
+        ActivityManager manager = (ActivityManager) act.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
     public static String getAddress(Context context,double latitude,double longtitude)
     {
         Geocoder geocoder;

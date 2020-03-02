@@ -122,6 +122,16 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
+        <TextView
+            android:id="@+id/tvBlock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bannar"
+            android:gravity="center"
+            android:padding="8dp"
+            android:textColor="@android:color/black"
+            android:textSize="24sp" />
+
     </RelativeLayout>
 
 
@@ -133,16 +143,6 @@
         tools:visibility="visible"
         android:visibility="gone"
         android:layout_height="?actionBarSize">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:id="@+id/tvBlock"
-            android:textSize="24sp"
-            android:padding="8dp"
-            android:gravity="center"
-            android:textColor="@android:color/black"
-            android:background="@color/bannar"
-            android:layout_height="wrap_content" />
 
 
     </RelativeLayout>
