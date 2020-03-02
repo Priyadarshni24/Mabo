@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public static String CLOUDVIDEOBASEURL = "http://res.cloudinary.com/mabo-app/video/upload/";
     public static String LOADAVATAR = "https://res.cloudinary.com/mabo-app/image/upload/v1568559008/ic_avatar.png";
     public static String CHANGEPASSWORD = "Authentication/change_password/";
-
+    public static String FORGOTPASSWORD = "Authentication/forgot_passwords/";
     //CometChat
     public static String COMETCHATURL = "https://api-us.cometchat.io/v2.0/users";
 

@@ -113,6 +113,7 @@ public class LoginActivity extends MyActivity {
     Dialog emailsignupdialog;
     LoginButton loginButton;
     CallbackManager callbackManager;
+    TextView forgotpwd;
     Gson gson;
     User user;
     String token;
@@ -292,6 +293,13 @@ public class LoginActivity extends MyActivity {
                         Tools.showDialog(true,getResources().getString(R.string.str_check_network),LoginActivity.this,LoginActivity.this);
                     }
                 }
+            }
+        });
+        forgotpwd = (TextView)findViewById(R.id.btn_forgotpwd);
+        forgotpwd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this,ForgotpasswordActivity.class));
             }
         });
         FirebaseInstanceId.getInstance().getInstanceId()

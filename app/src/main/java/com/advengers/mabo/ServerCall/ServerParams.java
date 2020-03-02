@@ -84,6 +84,13 @@ public class ServerParams {
         return map;
 
     }
+    public HashMap<String, String> forgotpassword(String email) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(EMAIL,email);
+        LogUtils.e(map.toString());
+        return map;
+
+    }
     public HashMap<String, String> logout(String id) {
         HashMap<String, String> map = new HashMap<>();
         map.put(ID,id);

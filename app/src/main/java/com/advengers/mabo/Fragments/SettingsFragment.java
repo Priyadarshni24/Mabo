@@ -194,6 +194,10 @@ public class SettingsFragment extends MyFragment implements
         binding.radioGroup.setOnCheckedChangeListener(this);
         onEditProfileDone();
         RequiresPermission();
+        if(!user.getLogin_type().equals("manual"))
+        {
+            binding.llChangepassword.setVisibility(View.GONE);
+        }
       /*  try {
             requestHint();
         } catch (IntentSender.SendIntentException e) {

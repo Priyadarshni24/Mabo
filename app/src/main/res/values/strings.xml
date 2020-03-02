@@ -423,6 +423,8 @@
     <string name="str_confirm">Confirm</string>
     <string name="str_changepwddesc">Change the currrent password to the new one</string>
     <string name="str_forgotpassword">Forgot password</string>
+    <string name="str_sendemail">Send email</string>
+    <string name="err_invalidemail">Email id entered is invalid</string>
     <string-array name="group_type">
         <item>Select Type</item>
         <item>public</item>
