@@ -72,6 +72,7 @@ public class RecentsFragment extends Fragment implements RecentsContract.Recents
 
         final View view = inflater.inflate(R.layout.fragment_recents, container, false);
         btn_resume = (Button)view.findViewById(R.id.btn_resume);
+        btn_resume.setVisibility(View.GONE);
         btn_resume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

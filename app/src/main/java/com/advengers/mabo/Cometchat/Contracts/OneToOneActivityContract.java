@@ -2,6 +2,7 @@ package com.advengers.mabo.Cometchat.Contracts;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 
 import com.advengers.mabo.Cometchat.Activity.OneToOneChatActivity;
 import com.advengers.mabo.Cometchat.Base.BasePresenter;
@@ -65,6 +66,8 @@ public interface OneToOneActivityContract {
         void addMessageReceiveListener(String contactUid);
 
         void sendMediaMessage(File filepath, String receiverUid, String type);
+
+        void sendLocationMessage(Location location, String receiverUid, String type);
 
         void fetchPreviousMessage(String contactUid,int limit);
 

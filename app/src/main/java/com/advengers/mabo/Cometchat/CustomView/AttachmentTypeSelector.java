@@ -36,6 +36,7 @@ import com.advengers.mabo.Cometchat.Utils.ViewUtil;
 import static com.advengers.mabo.Cometchat.Contracts.StringContract.RequestCode.ADD_DOCUMENT;
 import static com.advengers.mabo.Cometchat.Contracts.StringContract.RequestCode.ADD_GALLERY;
 import static com.advengers.mabo.Cometchat.Contracts.StringContract.RequestCode.ADD_SOUND;
+import static com.advengers.mabo.Cometchat.Contracts.StringContract.RequestCode.SHARE_LOCATION;
 import static com.advengers.mabo.Cometchat.Contracts.StringContract.RequestCode.TAKE_PHOTO;
 import static com.advengers.mabo.Cometchat.Contracts.StringContract.RequestCode.TAKE_VIDEO;
 
@@ -59,6 +60,8 @@ public class AttachmentTypeSelector extends PopupWindow {
     ImageView closeButton;
     private final @NonNull
     ImageView videoButton;
+    private final @NonNull
+    ImageView locationButton;
     private @Nullable
     View currentAnchor;
     private @Nullable
@@ -79,7 +82,7 @@ public class AttachmentTypeSelector extends PopupWindow {
         this.cameraButton = ViewUtil.findById(layout, R.id.camera_button);
         this.closeButton = ViewUtil.findById(layout, R.id.close_button);
         this.videoButton = ViewUtil.findById(layout, R.id.video);
-
+        this.locationButton = ViewUtil.findById(layout, R.id.location);
         Drawable imageDrawable = context.getResources().getDrawable(R.drawable.ic_image_black_24dp);
 
         Drawable caemraDrawable = context.getResources().getDrawable(R.drawable.ic_camera_white_24dp);
@@ -109,6 +112,7 @@ public class AttachmentTypeSelector extends PopupWindow {
         this.videoButton.setOnClickListener(new PropagatingClickListener(TAKE_VIDEO));
         this.closeButton.setOnClickListener(new CloseClickListener());
 
+        this.locationButton.setOnClickListener(new PropagatingClickListener(SHARE_LOCATION));
 
         setContentView(layout);
         setWidth(LinearLayout.LayoutParams.MATCH_PARENT);

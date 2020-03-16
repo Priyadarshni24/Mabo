@@ -72,17 +72,17 @@ public class CallActivity extends AppCompatActivity implements CallActivityContr
 
             @Override
             public void onUserLeft(User user) {
-                Log.d(TAG, "onUserLeft: "+user.getName());
+                Logger.error( "onUserLeft: "+user.getName());
             }
 
             @Override
             public void onError(CometChatException e) {
-                Log.d(TAG, "onError: "+e.getMessage());
+                Logger.error( "onError: "+e.getMessage());
             }
 
             @Override
             public void onCallEnded(Call call) {
-                Log.d(TAG, "onCallEnded: "+call.toString());
+                Logger.error("onCallEnded: "+call.toString());
                 finish();
             }
         });
@@ -118,7 +118,8 @@ public class CallActivity extends AppCompatActivity implements CallActivityContr
 
     @Override
     protected void onDestroy() {
-        if(CometChat.getActiveCall().getAction()!=null)
+        try{
+        if(CometChat.getActiveCall()!=null)
         {
             if(CometChat.getActiveCall().getAction().equalsIgnoreCase("ongoing"))
             {
@@ -126,6 +127,10 @@ public class CallActivity extends AppCompatActivity implements CallActivityContr
                 serviceIntent.putExtra(StringContract.IntentStrings.SESSION_ID, sessionId);
                 ContextCompat.startForegroundService(this, serviceIntent);
             }
+        }}catch (Exception e)
+        {
+            e.printStackTrace();
+        //    super.onDestroy();
         }
         super.onDestroy();
     }

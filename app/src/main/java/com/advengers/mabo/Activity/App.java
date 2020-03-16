@@ -50,7 +50,8 @@ public class App extends Application {
     public static SharedPreferences app_data_sp;
     public static final String CHANNEL_ID = "exampleServiceChannel";
     public static Gson gson;
-
+    private static boolean activityVisible,callactivityVisible;
+    private static String roomid = "";
     @Override
     public void onCreate() {
         super.onCreate();
@@ -141,9 +142,20 @@ public class App extends Application {
         roomid = room_id;
     }
 
-    private static boolean activityVisible;
-    private static String roomid = "";
+    public static void callvisible()
+    {
+       callactivityVisible = true;
+    }
 
+    public static void callinvisible()
+    {
+        callactivityVisible = false;
+    }
+
+    public static boolean isCallactivityVisible()
+    {
+        return callactivityVisible;
+    }
     public static Context getappContext() {
 
         return appInstance.getApplicationContext();

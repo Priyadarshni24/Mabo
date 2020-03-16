@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.advengers.mabo.Activity.App;
 import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.core.Call;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -235,6 +236,7 @@ public class IncomingCallActivity extends AppCompatActivity implements
             camera.release();
             camera = null;
         }
+        App.callinvisible();
         incomingCallActivityPresenter.removeCallListener(TAG);
     }
 
@@ -249,6 +251,7 @@ public class IncomingCallActivity extends AppCompatActivity implements
                 ivUserBackground.setVisibility(View.GONE);
             }
         }
+        App.callvisible();
         incomingCallActivityPresenter.addCallEventListener(TAG);
     }
 

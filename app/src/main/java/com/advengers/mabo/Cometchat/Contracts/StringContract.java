@@ -41,6 +41,7 @@ public class StringContract {
         public static final int ADD_SOUND = 3;
         public static final int TAKE_PHOTO = 5;
         public static final int TAKE_VIDEO = 7;
+        public static final int SHARE_LOCATION = 6;
         public static final int LEFT = 8;
         public static final int FILE_WRITE = 234;
         public static final int READ_STORAGE = 545;

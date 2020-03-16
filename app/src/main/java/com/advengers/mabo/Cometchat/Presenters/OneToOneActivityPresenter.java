@@ -3,6 +3,7 @@ package com.advengers.mabo.Cometchat.Presenters;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.core.MessagesRequest;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.BaseMessage;
+import com.cometchat.pro.models.CustomMessage;
 import com.cometchat.pro.models.Group;
 import com.cometchat.pro.models.MediaMessage;
 import com.cometchat.pro.models.MessageReceipt;
@@ -147,6 +149,21 @@ public class OneToOneActivityPresenter extends Presenter<OneToOneActivityContrac
             }
 
             @Override
+            public void onCustomMessageReceived(CustomMessage message) {
+                if (isViewAttached()) {
+                    if (message.getReceiverType().equals(CometChatConstants.RECEIVER_TYPE_USER)
+                            && message.getSender().getUid().equals(contactUid)) {
+                        if (message.getReadAt()==0){
+                            Log.d(TAG, "onMediaMessageReceived: getReadAt "+message.toString());
+                            CometChat.markAsRead(message.getId(),message.getSender().getUid(),message.getReceiverType());
+                        }
+                        MediaUtils.playSendSound(context, R.raw.receive);
+                        getBaseView().addSendMessage(message);
+                    }
+                }
+            }
+
+            @Override
             public void onMediaMessageReceived(MediaMessage message) {
                 if (isViewAttached()) {
                     if (message.getReceiverType().equals(CometChatConstants.RECEIVER_TYPE_USER)
@@ -273,6 +290,62 @@ public class OneToOneActivityPresenter extends Presenter<OneToOneActivityContrac
 
         });
     }
+
+
+
+    @Override
+    public void sendLocationMessage(Location location, String receiverUid, String type) {
+        final ProgressDialog dialog = new ProgressDialog(context);
+        String customType = "LOCATION";
+        JSONObject customData = new JSONObject();
+        try {
+            customData.put("latitude",location.getLatitude());
+            customData.put("longitude",location.getLongitude());
+
+            CustomMessage customMessage = new CustomMessage(receiverUid,type,customType, customData);
+            customMessage.setSubType("location");
+            CometChat.sendCustomMessage(customMessage, new CometChat.CallbackListener<CustomMessage>() {
+                @Override
+                public void onSuccess(CustomMessage customMessage) {
+                    Log.d(TAG, customMessage.toString());
+                    MediaUtils.playSendSound(context, R.raw.send);
+                    getBaseView().addMessage(customMessage);
+                }
+
+                @Override
+                public void onError(CometChatException e) {
+                    Log.d(TAG, e.getMessage());
+                    showToast(e.getMessage());
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+       /* CometChat.sendMediaMessage(mediaMessage, new CometChat.CallbackListener<MediaMessage>() {
+            @Override
+            public void onSuccess(MediaMessage mediaMessage) {
+                if(dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+                Log.d(TAG, "sendMediaMessage onSuccess: "+mediaMessage.toString());
+                MediaUtils.playSendSound(context, R.raw.send);
+                getBaseView().addMessage(mediaMessage);
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                if(dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+                Log.d(TAG, "sendMediaMessage onError: "+e.getMessage());
+                showToast(e.getMessage());
+            }
+
+        });*/
+    }
+
 
     @Override
     public void fetchPreviousMessage(String contactUid, int limit) {

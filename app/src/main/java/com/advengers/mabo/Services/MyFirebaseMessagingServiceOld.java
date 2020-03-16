@@ -164,7 +164,7 @@ public class MyFirebaseMessagingServiceOld extends FirebaseMessagingService {
               //  db = new MyDBHandler(getBaseContext());
                // User user = new Gson().fromJson(Utils.getInstance(getBaseContext()).getString(USER),User.class);
            //     db.insertMessages(name,id, user.getId(),Config.message,RECEIVED,roomid);
-        LogUtils.e(App.getRoomid()+" "+App.isActivityVisible()+" "+name);
+    /*    LogUtils.e(App.getRoomid()+" "+App.isActivityVisible()+" "+name);
         if(!App.isActivityVisible())//&&(!Config.message.equals("Incoming audio call")||!Config.message.equals("Incoming video call")))
         {
             notificationManager.notify(createID(), notificationBuilder.build());
@@ -172,7 +172,7 @@ public class MyFirebaseMessagingServiceOld extends FirebaseMessagingService {
         {
             notificationManager.notify(createID(), notificationBuilder.build());
         }
-
+*/
 
     }
     public int createID(){

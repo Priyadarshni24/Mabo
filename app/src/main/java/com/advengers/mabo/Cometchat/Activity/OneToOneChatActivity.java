@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
@@ -38,14 +40,20 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.util.Consumer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.advengers.mabo.Activity.App;
+import com.advengers.mabo.Activity.DashboardActivity;
+import com.advengers.mabo.Location.LocationTrack;
 import com.advengers.mabo.Utils.LogUtils;
 import com.asksira.bsimagepicker.BSImagePicker;
 import com.cometchat.pro.constants.CometChatConstants;
+import com.cometchat.pro.core.CometChat;
+import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.BaseMessage;
+import com.cometchat.pro.models.CustomMessage;
 import com.cometchat.pro.models.MessageReceipt;
 import com.cometchat.pro.models.TextMessage;
 import com.cometchat.pro.models.User;
@@ -72,8 +80,10 @@ import com.advengers.mabo.Cometchat.Utils.FontUtils;
 import com.advengers.mabo.Cometchat.Utils.KeyboardVisibilityEvent;
 import com.advengers.mabo.Cometchat.Utils.Logger;
 import com.advengers.mabo.Cometchat.Utils.MediaUtils;
+import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -576,6 +586,11 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
                 }
                 break;
 
+            case StringContract.RequestCode.SHARE_LOCATION:
+             //   AttachmentHelper.shareLocation(this,oneToOnePresenter,contactUid,StringContract.RequestCode.SHARE_LOCATION);
+                startActivityForResult(new Intent(OneToOneChatActivity.this,MapActivity.class),StringContract.RequestCode.SHARE_LOCATION);
+                break;
+
         }
     }
 
@@ -759,9 +774,10 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        LogUtils.e("onActivityResult before"+data);
+        LogUtils.e("onActivityResult before "+resultCode+" "+requestCode+data+oneToOnePresenter);
+
         if (resultCode == RESULT_OK && data != null && oneToOnePresenter != null) {
-          //  LogUtils.e("onActivityResult "+data.getData());
+            LogUtils.e("onActivityResult after ");
             switch (requestCode) {
                 case StringContract.RequestCode.ADD_GALLERY:
                     photoPaths = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
@@ -785,6 +801,18 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
                     {
                         AttachmentHelper.handlefileUri(OneToOneChatActivity.this, CometChatConstants.MESSAGE_TYPE_FILE, oneToOnePresenter, Uri.parse(docPaths.get(i)), contactUid);
                     }
+                    break;
+
+                case StringContract.RequestCode.SHARE_LOCATION:
+
+
+                    String latitude = data.getStringExtra("latitude");
+                    String longitude = data.getStringExtra("longitude");
+
+                    LatLng latLng = new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude));
+                    //LogUtils.e("I am coming "+latLng);
+
+                    AttachmentHelper.shareLocation(this,oneToOnePresenter,contactUid,StringContract.RequestCode.SHARE_LOCATION,latLng);
                     break;
             }
         }
@@ -969,6 +997,8 @@ public class OneToOneChatActivity extends AppCompatActivity implements OneToOneA
         }
 
     }
+
+
 
     @Override
     public void onClick(View view) {

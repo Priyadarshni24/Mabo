@@ -123,6 +123,9 @@
         <activity android:name=".Activity.ForgotpasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".Cometchat.Activity.MapActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
        <!-- <service
             android:name=".java.MyFirebaseMessagingService"
             android:exported="false">

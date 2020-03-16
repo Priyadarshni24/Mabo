@@ -135,7 +135,7 @@
         app:errorTextAppearance="@color/error"
         app:boxStrokeColor="@color/secondaryDarkColor"
         app:boxStrokeWidth="1dp"
-        app:helperText="Optional*"
+        app:helperText="Required*"
         app:hintEnabled="true"
         app:hintAnimationEnabled="true"
         app:helperTextTextAppearance="@style/AppTheme.HelpText">

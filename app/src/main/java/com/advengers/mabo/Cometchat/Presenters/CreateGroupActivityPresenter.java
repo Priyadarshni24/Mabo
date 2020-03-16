@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.advengers.mabo.Cometchat.Utils.Logger;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.Group;
@@ -33,8 +34,10 @@ public class CreateGroupActivityPresenter extends Presenter<CreateGroupActivityC
 
             @Override
             public void onError(CometChatException e) {
-                Log.d("createGroup", "onError: "+e.getMessage());
-                Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                Logger.error("createGroup", "onError: "+e.getDetails());
+                Logger.error("createGroup", "onError: "+e.getMessage());
+
+                Toast.makeText(context, e.getDetails(), Toast.LENGTH_SHORT).show();
             }
 
         });

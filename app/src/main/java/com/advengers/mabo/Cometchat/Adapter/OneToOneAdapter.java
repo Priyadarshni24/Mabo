@@ -23,7 +23,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.advengers.mabo.Cometchat.ViewHolders.LeftLocationViewHolder;
+import com.advengers.mabo.Cometchat.ViewHolders.RightLocationViewHolder;
 import com.advengers.mabo.Utils.LogUtils;
+import com.advengers.mabo.Utils.Tools;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -31,6 +34,7 @@ import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.core.Call;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.models.BaseMessage;
+import com.cometchat.pro.models.CustomMessage;
 import com.cometchat.pro.models.MediaMessage;
 import com.cometchat.pro.models.MessageReceipt;
 import com.cometchat.pro.models.TextMessage;
@@ -169,12 +173,12 @@ public class OneToOneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             case RIGHT_CUSTOM_MESSAGE:
                 View rightCustomMessageView = LayoutInflater.from(viewGroup.getContext())
-                        .inflate(R.layout.cc_text_layout_right, viewGroup, false);
-                return new RightMessageViewHolder(rightCustomMessageView);
+                        .inflate(R.layout.cc_location_layout_right, viewGroup, false);
+                return new RightLocationViewHolder(context,rightCustomMessageView);
             case LEFT_CUSTOM_MESSAGE:
                 View leftCustomMessageView = LayoutInflater.from(viewGroup.getContext())
-                        .inflate(R.layout.cc_text_layout_left, viewGroup, false);
-                return new LeftMessageViewHolder(leftCustomMessageView);
+                        .inflate(R.layout.cc_location_layout_left, viewGroup, false);
+                return new LeftLocationViewHolder(context,leftCustomMessageView);
 
             case RIGHT_TEXT_MESSAGE:
                 View rightTextMessageView = LayoutInflater.from(viewGroup.getContext())
@@ -279,6 +283,8 @@ public class OneToOneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         String message = null;
         String mediaFile = null;
         String imageUrl = null;
+        String latitude = null;
+        String longitude = null;
         if (baseMessage instanceof TextMessage) {
             message = ((TextMessage) baseMessage).getText();
             textMessage = ((TextMessage) baseMessage);
@@ -287,6 +293,19 @@ public class OneToOneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             imageUrl = ((MediaMessage) baseMessage).getAttachment().getFileUrl();
             mediaFile = ((MediaMessage) baseMessage).getAttachment().getFileUrl();
             mediaMessage = (MediaMessage) baseMessage;
+
+        }
+
+        if(baseMessage instanceof CustomMessage)
+        {
+            imageUrl = "https://maps.googleapis.com/maps/api/staticmap?";
+            try {
+                 latitude = ((CustomMessage) baseMessage).getCustomData().getString("latitude");
+                 longitude = ((CustomMessage) baseMessage).getCustomData().getString("longitude");
+                imageUrl = imageUrl + "https://maps.googleapis.com/maps/api/staticmap?zoom=13&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C"+latitude+","+longitude+"&key="+context.getString(R.string.DIRECTION_API_KEY);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
         }
 
@@ -306,21 +325,41 @@ public class OneToOneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         switch (holder.getItemViewType()) {
             case LEFT_CUSTOM_MESSAGE:
-                LeftMessageViewHolder leftCustomMessageViewHolder = (LeftMessageViewHolder) holder;
-                leftCustomMessageViewHolder.textMessage.setTypeface(FontUtils.openSansRegular);
-                leftCustomMessageViewHolder.textMessage.setText("Custom Message");
-                leftCustomMessageViewHolder.messageTimeStamp.setText(timeStampString);
-                leftCustomMessageViewHolder.senderName.setVisibility(View.GONE);
-                leftCustomMessageViewHolder.avatar.setVisibility(View.GONE);
+                LeftLocationViewHolder leftLocationViewHolder = (LeftLocationViewHolder) holder;
+                leftLocationViewHolder.senderName.setVisibility(View.GONE);
+                leftLocationViewHolder.messageTimeStamp.setText(timeStampString);
+                leftLocationViewHolder.btnPlayVideo.setVisibility(View.GONE);
+                leftLocationViewHolder.avatar.setVisibility(View.GONE);
+                leftLocationViewHolder.fileLoadingProgressBar.setVisibility(View.GONE);
+                if (imageUrl != null && !TextUtils.isEmpty(imageUrl)) {
 
+                    RequestOptions requestOptions = new RequestOptions().centerCrop()
+                            .placeholder(R.drawable.ic_broken_image_black).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+
+                    Glide.with(context).load(imageUrl).into(leftLocationViewHolder.imageMessage);
+                    String finalImageUrl1 = imageUrl;
+                    leftLocationViewHolder.imageMessage.setOnClickListener(view -> startIntent(finalImageUrl1, false));
+                }
+                leftLocationViewHolder.txtPlace.setText(Tools.getfullAddress(context,Double.parseDouble(latitude),Double.parseDouble(longitude)));
                 break;
             case RIGHT_CUSTOM_MESSAGE:
-                RightMessageViewHolder rightCustomMessageViewHolder = (RightMessageViewHolder) holder;
-                rightCustomMessageViewHolder.textMessage.setTypeface(FontUtils.openSansRegular);
-                rightCustomMessageViewHolder.textMessage.setText("Custom Message");
-                rightCustomMessageViewHolder.messageTimeStamp.setText(timeStampString);
-                setDeliveryIcon(rightCustomMessageViewHolder.messageStatus,baseMessage);
-                setReadIcon(rightCustomMessageViewHolder.messageStatus,baseMessage);
+                RightLocationViewHolder rightLocationViewHolder = (RightLocationViewHolder) holder;
+                rightLocationViewHolder.messageTimeStamp.setText(timeStampString);
+                rightLocationViewHolder.btnPlayVideo.setVisibility(View.GONE);
+                rightLocationViewHolder.fileLoadingProgressBar.setVisibility(View.GONE);
+                setDeliveryIcon(rightLocationViewHolder.messageStatus,baseMessage);
+                if (imageUrl != null && !TextUtils.isEmpty(imageUrl)) {
+                    String url = imageUrl.replace("/", "");
+                    Logger.error("location", url);
+                    RequestOptions requestOptions = new RequestOptions().centerCrop()
+                            .placeholder(R.drawable.ic_broken_image).diskCacheStrategy(DiskCacheStrategy.ALL);
+
+                    Glide.with(context).load(imageUrl).into(rightLocationViewHolder.imageMessage);
+                    String finalImageUrl = imageUrl;
+                    rightLocationViewHolder.imageMessage.setOnClickListener(view -> startIntent(finalImageUrl, false));
+                }
+                rightLocationViewHolder.txtPlace.setText(Tools.getfullAddress(context,Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                setReadIcon(rightLocationViewHolder.messageStatus,baseMessage);
                 break;
             case LEFT_TEXT_MESSAGE:
                 LeftMessageViewHolder leftMessageViewHolder = (LeftMessageViewHolder) holder;

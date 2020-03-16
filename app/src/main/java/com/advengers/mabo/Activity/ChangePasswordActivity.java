@@ -47,6 +47,12 @@ public class ChangePasswordActivity extends MyActivity implements View.OnClickLi
         binding = DataBindingUtil.setContentView(ChangePasswordActivity.this, R.layout.activity_changepassword);
         setSupportActionBar(binding.mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        binding.mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
       //  getSupportActionBar().setTitle(getString(R.string.title_comments));
         getUser();
         binding.btnCancel.setOnClickListener(this);

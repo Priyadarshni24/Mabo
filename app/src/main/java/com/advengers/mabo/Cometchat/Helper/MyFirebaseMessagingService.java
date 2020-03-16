@@ -1,16 +1,22 @@
 package com.advengers.mabo.Cometchat.Helper;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioAttributes;
 import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.advengers.mabo.Activity.App;
 import com.advengers.mabo.Cometchat.Activity.GroupChatActivity;
 import com.advengers.mabo.Cometchat.Activity.OneToOneChatActivity;
 import com.advengers.mabo.Cometchat.Contracts.StringContract;
@@ -143,16 +149,34 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setGroup(GROUP_ID)
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                     .setGroupSummary(true);
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+         //  NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                CharSequence name = getString(R.string.app_name);
+                String description = getString(R.string.channel_description);
+                int importance = NotificationManager.IMPORTANCE_HIGH;
 
+                AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .build();
+
+                NotificationChannel channel = new NotificationChannel("101", name, importance);
+                channel.setDescription(description);
+                channel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION), audioAttributes);
+                notificationManager.createNotificationChannel(channel);
+
+            }
             if (isCall){
                 builder.setGroup(GROUP_ID+"Call");
                 if (json.getString("alert").equals("Incoming audio call") || json.getString("alert").equals("Incoming video call")) {
                     builder.setOngoing(true);
                     builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
+                     builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.ring));
                     builder.addAction(0, "Answers", PendingIntent.getBroadcast(getApplicationContext(), REQUEST_CODE, getCallIntent("Answers"), PendingIntent.FLAG_UPDATE_CURRENT));
                     builder.addAction(0, "Decline", PendingIntent.getBroadcast(getApplicationContext(), 1, getCallIntent("Decline"), PendingIntent.FLAG_UPDATE_CURRENT));
                 }
+                if(!App.isCallactivityVisible())
                 notificationManager.notify(05,builder.build());
             }
             else {

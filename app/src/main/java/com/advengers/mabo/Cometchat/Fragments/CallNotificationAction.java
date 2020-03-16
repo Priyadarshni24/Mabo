@@ -55,6 +55,8 @@ public class CallNotificationAction extends BroadcastReceiver {
                 @Override
                 public void onError(CometChatException e) {
                     Log.e(TAG, "onError: " + e.getCode() + e.getDetails());
+                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+                    notificationManager.cancel(05);
                 }
             });
         }

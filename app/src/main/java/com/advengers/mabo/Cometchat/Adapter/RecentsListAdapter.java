@@ -142,7 +142,7 @@ public class RecentsListAdapter extends RecyclerView.Adapter<RecentsListAdapter.
             }
             else
             {
-                contactViewHolder.lastMessage.setText("Custom Message");
+                contactViewHolder.lastMessage.setText("Location");//("Custom Message");
             }
         }
         if (isBlockedList) {

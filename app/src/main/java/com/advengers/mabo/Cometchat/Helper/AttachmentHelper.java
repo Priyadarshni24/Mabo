@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -16,6 +18,9 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.advengers.mabo.Cometchat.Activity.OneToOneChatActivity;
+import com.advengers.mabo.Cometchat.Contracts.OneToOneActivityContract;
+import com.advengers.mabo.Location.LocationTrack;
 import com.advengers.mabo.Utils.LogUtils;
 import com.cometchat.pro.constants.CometChatConstants;
 import com.advengers.mabo.Cometchat.Presenters.GroupChatPresenter;
@@ -23,6 +28,13 @@ import com.advengers.mabo.Cometchat.Presenters.OneToOneActivityPresenter;
 import com.advengers.mabo.Cometchat.Utils.FileUtils;
 import com.advengers.mabo.Cometchat.Utils.Logger;
 import com.advengers.mabo.Cometchat.Utils.MediaUtils;
+import com.cometchat.pro.core.CometChat;
+import com.cometchat.pro.exceptions.CometChatException;
+import com.cometchat.pro.models.CustomMessage;
+import com.google.android.gms.maps.model.LatLng;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -33,6 +45,8 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import static com.advengers.mabo.Cometchat.Activity.OneToOneChatActivity.contactId;
 
 public class AttachmentHelper {
 
@@ -111,47 +125,72 @@ public class AttachmentHelper {
         }
 
     }
+    public static <P> void shareLocation(Context context, OneToOneActivityContract.OneToOnePresenter presenter, String contactUid, int type, LatLng latLng)
+    {
+      //  LocationTrack locationTrack = new LocationTrack(context);
+       // LogUtils.e(locationTrack.canGetLocation()+"");
+
+      //  if (locationTrack.canGetLocation()&&locationTrack.getLatitude()!=0.0&&locationTrack.getLongitude()!=0.0) {
+
+
+            double longitude = latLng.longitude;//locationTrack.getLongitude();
+            double latitude = latLng.latitude;//locationTrack.getLatitude();
+
+          //  LogUtils.e("Longitude:" + Double.toString(longitude) + "\nLatitude:" + Double.toString(latitude));//.show();
+            Location loc = new Location(LocationManager.GPS_PROVIDER);
+            loc.setLatitude(latitude);
+            loc.setLongitude(longitude);
+            /*UpdateLocation(loc);*/
+            if (presenter instanceof OneToOneActivityPresenter) {
+
+                ((OneToOneActivityPresenter) presenter).sendLocationMessage(loc, contactId, CometChatConstants.RECEIVER_TYPE_USER);
+            } /*else if (presenter instanceof GroupChatPresenter) {
+             //   ((GroupChatPresenter) presenter).sendLocationMessage(loc, contactId, type);
+            }*/
+        /*} else {
+
+            if(!locationTrack.isCheckGPS())
+            {
+                if(!locationTrack.isShowAlert())
+                    locationTrack.showSettingsAlert();
+            }
+        }*/
+
+    }
+
+
 
     public static <P> void handlefile(Context context, String type, P presenter, Intent data, String contactUid) {
-
-
         String filePath[] = new String[2];
-
         try {
 //            LogUtils.e(data.getExtras().get("data").toString());
             filePath = getPath(context, data.getData());
-
              if (filePath[0]!=null) {
                  sendMedia(new File(filePath[0]), contactUid, filePath[1], presenter);
              }
         } catch (Exception e) {
                e.printStackTrace();
         }
-
-
     }
+
+
+
     public static <P> void handlefileUri(Context context, String type, P presenter, Uri data, String contactUid) {
-
-
         String filePath[] = new String[2];
-
         try {
             LogUtils.e("handlefileUri "+ data.toString());
             filePath = getPath(context, data);
-
             if (filePath[0]!=null) {
                 sendMedia(new File(filePath[0]), contactUid, filePath[1], presenter);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
+
     private static <P> void sendMedia(File file, String contactId, String type, P presenter) {
         LogUtils.e("Send MEdia "+file.getAbsolutePath()+"  "+type);
         if (presenter instanceof OneToOneActivityPresenter) {
-
             ((OneToOneActivityPresenter) presenter).sendMediaMessage(file, contactId, type);
         } else if (presenter instanceof GroupChatPresenter) {
             ((GroupChatPresenter) presenter).sendMediaMessage(file, contactId, type);
@@ -170,8 +209,9 @@ public class AttachmentHelper {
                 ((GroupChatPresenter) presenter).sendMediaMessage(file, contactId, CometChatConstants.MESSAGE_TYPE_IMAGE);
             }
         }
-
     }
+
+
     public static String saveImage(Context context,Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
@@ -179,7 +219,6 @@ public class AttachmentHelper {
         if (!wallpaperDirectory.exists()) {  // have the object build the directory structure, if needed.
             wallpaperDirectory.mkdirs();
         }
-
         try {
             File f = new File(wallpaperDirectory, Calendar.getInstance().getTimeInMillis() + ".jpg");
             f.createNewFile();
@@ -190,13 +229,14 @@ public class AttachmentHelper {
                     new String[]{"image/jpeg"}, null);
             fo.close();
             Log.d("TAG", "File Saved::---&gt;" + f.getAbsolutePath());
-
             return f.getAbsolutePath();
         } catch (IOException e1) {
             e1.printStackTrace();
         }
         return "";
     }
+
+
     private static File persistImage(Context context, Bitmap bitmap) {
         File filesDir = context.getFilesDir();
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -216,6 +256,8 @@ public class AttachmentHelper {
             return imageFile;
         }
     }
+
+
 
     public static <P> void handleCameraVideo(Context context, P presenter, Intent data, String contactId) {
         String path = MediaUtils.getVideoPath(data.getData(), context);

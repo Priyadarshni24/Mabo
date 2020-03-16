@@ -41,6 +41,12 @@ public class ForgotpasswordActivity  extends MyActivity implements View.OnClickL
         binding = DataBindingUtil.setContentView(ForgotpasswordActivity.this, R.layout.activity_forgotpassword);
         setSupportActionBar(binding.mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        binding.mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
       //  getSupportActionBar().setTitle(getString(R.string.title_comments));
         getUser();
         binding.btnEmail.setOnClickListener(this);

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_store_marker"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/marker_title"
+        android:layout_width="@dimen/dimen250"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/margin5"
+        android:text="@string/str_sendlocation"
+        android:background="@color/white"
+        android:textSize="@dimen/margin15"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/marker_text"
+        android:layout_width="@dimen/dimen250"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/margin5"
+        android:text="title"
+        android:background="@color/white"
+        android:textColor="@android:color/black"/>
+
+    <ImageView
+        android:id="@+id/marker_image"
+        android:layout_width="@dimen/dimen50"
+        android:layout_height="@dimen/dimen50"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/img_marker" />
+
+</LinearLayout>
