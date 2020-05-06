@@ -5,7 +5,7 @@
 
     <application
         android:name=".Activity.App"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:usesCleartextTraffic="true"
         android:hardwareAccelerated="true"
         android:largeHeap="true"
@@ -123,9 +123,9 @@
         <activity android:name=".Activity.ForgotpasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".Cometchat.Activity.MapActivity"
+       <!-- <activity android:name=".Cometchat.Activity.MapActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"/>-->
        <!-- <service
             android:name=".java.MyFirebaseMessagingService"
             android:exported="false">
@@ -169,15 +169,17 @@
             <action android:name="com.google.firebase.MESSAGING_EVENT"/>
         </intent-filter>
         </service>
-        <service android:name=".Services.CallNotificationService"/>
-        <receiver android:name=".Cometchat.Fragments.CallNotificationAction"/>
+        <receiver android:name=".Cometchat.Helper.CallNotificationAction"/>
+        <activity android:name="helper.CallActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:turnScreenOn="true"/>
+        <service android:name=".Services.OnClearFromRecentService" android:stopWithTask="false" />
         <!-- Comet Chat -->
-        <activity android:name=".Cometchat.Activity.MessageInfoActivity"></activity>
-        <!-- <provider -->
-        <!-- android:name="com.google.firebase.provider.FirebaseInitProvider" -->
-        <!-- android:authorities="${applicationId}.firebaseinitprovider" -->
-        <!-- tools:node="remove" -->
-        <!-- /> -->
+
+
+
+       <!-- <activity android:name=".Cometchat.Activity.MessageInfoActivity"></activity>
+
         <activity android:name=".Cometchat.Activity.BlockedUserListActivity" />
         <activity
             android:name=".Cometchat.Activity.CometChatActivity"
@@ -215,11 +217,15 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" />
         <activity android:name=".Cometchat.Activity.VideoViewActivity"  android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".Cometchat.Activity.IncomingCallActivity" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".Cometchat.Activity.CallActivity"  android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".Cometchat.Activity.IncomingCallActivity"
+            android:parentActivityName=".Activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".Cometchat.Activity.CallActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:turnScreenOn="true"/>
         <activity android:name=".Cometchat.Activity.SelectUserActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".Cometchat.Activity.GroupDetailActivity"/>
+            android:parentActivityName=".Cometchat.Activity.GroupDetailActivity"/>-->
         <receiver
             android:name = ".Services.MyNotificationPublisher" />
 

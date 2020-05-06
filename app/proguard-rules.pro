@@ -19,7 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-
+-keep class androidx.core.app.CoreComponentFactory { *; }
 -keep public class com.dylanvann.fastimage.* {*;}
 -keep public class com.dylanvann.fastimage.** {*;}
 -keep public class * implements com.bumptech.glide.module.GlideModule

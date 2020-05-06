@@ -45,8 +45,6 @@ import com.advengers.mabo.Activity.App;
 import com.advengers.mabo.Activity.DashboardActivity;
 import com.advengers.mabo.Activity.LoginActivity;
 import com.advengers.mabo.Activity.SearchActivity;
-import com.advengers.mabo.Cometchat.Activity.OneToOneChatActivity;
-import com.advengers.mabo.Cometchat.Contracts.StringContract;
 import com.advengers.mabo.Model.Post;
 import com.advengers.mabo.Model.User;
 import com.advengers.mabo.R;
@@ -86,6 +84,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import constant.StringContract;
 
 import static com.advengers.mabo.Activity.MainActivity.REQUESTUSER;
 import static com.advengers.mabo.Activity.MainActivity.SERVER_URL;
@@ -495,11 +495,11 @@ public class Tools {
                                     else
                                     {
                                         //  LogUtils.e("AVATAR "+user.getprofile_imagename());
-                                        Intent intent = new Intent(activity, OneToOneChatActivity.class);
+                                     /*   Intent intent = new Intent(activity, OneToOneChatActivity.class);
                                         intent.putExtra(StringContract.IntentStrings.USER_ID, room_Id);
                                         intent.putExtra(StringContract.IntentStrings.USER_AVATAR, profile.getprofile_imagename());
                                         intent.putExtra(StringContract.IntentStrings.USER_NAME, name);
-                                        activity.startActivity(intent);
+                                        activity.startActivity(intent);*/
                                     }
                                 }
                             });

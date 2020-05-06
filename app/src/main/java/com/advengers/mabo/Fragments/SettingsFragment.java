@@ -37,9 +37,8 @@ import com.advengers.mabo.Activity.GalleryActivity;
 import com.advengers.mabo.Activity.LoginActivity;
 import com.advengers.mabo.Activity.MainActivity;
 import com.advengers.mabo.Adapter.InterestAdapter;
-import com.advengers.mabo.Cometchat.Activity.CometChatActivity;
-import com.advengers.mabo.Cometchat.Contracts.StringContract;
 //import com.advengers.mabo.Database.MyDBHandler;
+import com.advengers.mabo.Cometchat.constants.AppConfig;
 import com.advengers.mabo.Database.MyDBHandler;
 import com.advengers.mabo.Model.Interest;
 import com.advengers.mabo.Model.User;
@@ -646,7 +645,7 @@ public class SettingsFragment extends MyFragment implements
 
 
                     if (login.getString(STATUS_JSON).equals("true")) {
-                        FirebaseMessaging.getInstance().unsubscribeFromTopic(StringContract.AppDetails.AppID_user_UID);
+                        FirebaseMessaging.getInstance().unsubscribeFromTopic(AppConfig.AppDetails.AppID_user_UID);
                         Utils.getInstance(getApplicationContext()).clearPref();
                         User.logout();
                        // intent

@@ -14,10 +14,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.advengers.mabo.Adapter.InterestAdapter;
+import com.advengers.mabo.Adapter.InterestAdapter;/*
 import com.advengers.mabo.Cometchat.Contracts.CometChatActivityContract;
 import com.advengers.mabo.Cometchat.Presenters.CometChatActivityPresenter;
-import com.advengers.mabo.Cometchat.Utils.FontUtils;
+import com.advengers.mabo.Cometchat.Utils.FontUtils;*/
 import com.advengers.mabo.Database.MyDBHandler;
 import com.advengers.mabo.Fragments.ChatFragment;
 import com.advengers.mabo.Fragments.PeoplesFragment;
@@ -39,6 +39,9 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.cometchat.pro.core.CometChat;
+import com.cometchat.pro.exceptions.CometChatException;
+import com.cometchat.pro.models.BaseMessage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -82,6 +85,7 @@ import java.util.Locale;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
+import screen.unified.CometChatUnified;
 
 import static com.advengers.mabo.Activity.MainActivity.COMETCHATURL;
 import static com.advengers.mabo.Activity.MainActivity.FCM;
@@ -100,15 +104,14 @@ import static com.advengers.mabo.Interfaces.Keys.USER;
 
 public class DashboardActivity extends MyActivity implements EasyPermissions.PermissionCallbacks,
                                                              LocationListener,
-                                                             InterestAdapter.SelectedInterest,
-                                                             CometChatActivityContract.CometChatActivityView {
+                                                             InterestAdapter.SelectedInterest{
     FragmentTransaction transaction;
     FragmentManager manager;
     ActivityDashboardBinding binding;
     private static final int RC_LOCATION = 1 ;
     LocationTrack locationTrack;
     String SelectedInterest="";
-    private CometChatActivityContract.CometChatActivityPresenter cometChatActivityPresenter;
+   // private CometChatActivityContract.CometChatActivityPresenter cometChatActivityPresenter;
     Context context;
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
@@ -142,9 +145,23 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
                         manager.beginTransaction().replace(R.id.container, new PeoplesFragment()).commit();
                     }
                     return true;
-                case R.id.navigation_fav:
+              /*  case R.id.navigation_fav:
                     binding.message.setText(R.string.title_notifications);
-                    return true;
+                    *//*CometChat.deleteMessage(788,new CometChat.CallbackListener<BaseMessage>() {
+                        @Override
+                        public void onSuccess(BaseMessage message) {
+                            Log.e(TAG, "Message deleted successfully at : " + message.getDeletedAt());
+                        }
+
+                        @Override
+                        public void onError(CometChatException e) {
+                            Log.e(TAG, e.getMessage());
+                        }
+
+                    });*//*
+                    startActivity(new Intent(DashboardActivity.this, CometChatUnified.class));
+                   *//* overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );*//*
+                    return true;*/
                 case R.id.navigation_chat:
                     manager=getSupportFragmentManager();
                     manager.beginTransaction().replace(R.id.container, new ChatFragment()).commit();
@@ -166,8 +183,7 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
         binding.navView.setSelectedItemId(R.id.navigation_trending);
 
         context = this;
-        cometChatActivityPresenter = new CometChatActivityPresenter();
-        cometChatActivityPresenter.attach(DashboardActivity.this);
+
 
         manager=getSupportFragmentManager();//create an instance of fragment manager
         transaction=manager.beginTransaction();//create an instance of Fragment-transaction
@@ -199,7 +215,7 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
 
                     }
                 });
-        new FontUtils(this);
+
         getUser();
         db = new MyDBHandler(this);
       //  db.Createfriends();
@@ -626,9 +642,9 @@ void ShowInterestAlert(JSONObject login)
     @Override
     protected void onResume() {
         super.onResume();
-        cometChatActivityPresenter.addCallEventListener(context, TAG);
+
         Log.d(TAG, "onResume: ");
-        cometChatActivityPresenter.addMessageListener(DashboardActivity.this,TAG);
+
 
     }
 
@@ -636,8 +652,7 @@ void ShowInterestAlert(JSONObject login)
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "onPause: ");
-        cometChatActivityPresenter.removeMessageListener(TAG);
-        cometChatActivityPresenter.removeCallEventListener(TAG);
+
 
     }
 

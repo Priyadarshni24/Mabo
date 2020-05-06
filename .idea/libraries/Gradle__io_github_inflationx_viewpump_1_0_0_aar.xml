@@ -4,9 +4,7 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d281565a2bdfe9d3c1f7389207f20bb3/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d281565a2bdfe9d3c1f7389207f20bb3/res" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.inflationx/viewpump/1.0.0/2181e7b9d4f148f0f7b5271f53cf986ab091c8b8/viewpump-1.0.0-javadoc.jar!/" />
-    </JAVADOC>
+    <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.inflationx/viewpump/1.0.0/f1f2752b224ba57c59ef414682d1d813b8da2c11/viewpump-1.0.0-sources.jar!/" />
     </SOURCES>

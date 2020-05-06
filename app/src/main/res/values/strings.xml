@@ -60,13 +60,13 @@
     <string name="str_save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="str_gosettings">Go Settings</string>
-    <string name="str_enable_location">Enable Location</string>
-    <string name="str_enable_location_content">Location service not enabled! Go to settings to enable it.</string>
+    <string name="str_enable_location">Enable screen.Location</string>
+    <string name="str_enable_location_content">screen.Location service not enabled! Go to settings to enable it.</string>
     <string name="action_findnearme">Find near me</string>
     <string name="str_back">Back</string>
     <string name="str_stepone">Step 1/2</string>
     <string name="str_uploaddesc">Upload your photo here</string>
-    <string name="str_addlocation">Pick Location</string>
+    <string name="str_addlocation">Pick screen.Location</string>
     <string name="str_addinterest">Post related to</string>
     <string name="str_next">Next -></string>
     <string name="str_steptwo">Step 2/2</string>
@@ -425,8 +425,10 @@
     <string name="str_forgotpassword">Forgot password</string>
     <string name="str_sendemail">Send email</string>
     <string name="err_invalidemail">Email id entered is invalid</string>
-    <string name="location">Location</string>
-    <string name="str_sendlocation">Send Location</string>
+    <string name="location">screen.Location</string>
+    <string name="str_sendlocation">Share Location</string>
+    <string name="ringing">Ringing</string>
+    <string name="str_password">Password</string>
     <string-array name="group_type">
         <item>Select Type</item>
         <item>public</item>

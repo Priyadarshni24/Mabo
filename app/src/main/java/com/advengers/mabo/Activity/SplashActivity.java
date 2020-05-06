@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.advengers.mabo.Model.User;
 import com.advengers.mabo.R;
+import com.advengers.mabo.Services.OnClearFromRecentService;
 import com.advengers.mabo.Utils.LogUtils;
 import com.advengers.mabo.Utils.Utils;
 import com.google.android.gms.common.ConnectionResult;
@@ -47,6 +48,7 @@ public class SplashActivity extends AppCompatActivity{//} implements GoogleApiCl
         gson = new Gson();
         user = new User();
         User.setUser(gson.fromJson(Utils.getInstance(SplashActivity.this).getString(USER),User.class));
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
         new Handler().postDelayed(new Runnable() {
 
             @Override
@@ -106,7 +108,7 @@ public class SplashActivity extends AppCompatActivity{//} implements GoogleApiCl
                             break;
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                             toast("Enable GPS to get into the app");
-                            // Location settings are not satisfied. But could be
+                            // screen.Location settings are not satisfied. But could be
                             // fixed by showing the user
                             // a dialog.
                             try {
@@ -121,7 +123,7 @@ public class SplashActivity extends AppCompatActivity{//} implements GoogleApiCl
                             break;
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                             toast("Setting change not allowed");
-                            // Location settings are not satisfied. However, we have
+                            // screen.Location settings are not satisfied. However, we have
                             // no way to fix the
                             // settings so we won't show the dialog.
                             break;

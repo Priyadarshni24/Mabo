@@ -24,5 +24,24 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+        <LinearLayout
+            android:background="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/margin20"
+                android:textColor="@color/black"
+                android:text="Share this location"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_location"
+                android:textSize="@dimen/textsize18"
+                />
+        </LinearLayout>
     </RelativeLayout>
 </layout>

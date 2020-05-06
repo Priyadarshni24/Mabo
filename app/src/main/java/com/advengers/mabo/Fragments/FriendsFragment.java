@@ -24,8 +24,6 @@ import com.advengers.mabo.Adapter.FriendsAdapter;
 import com.advengers.mabo.Chat.web_communication.WebCall;
 import com.advengers.mabo.Chat.web_communication.WebConstants;
 import com.advengers.mabo.Chat.web_communication.WebResponse;
-import com.advengers.mabo.Cometchat.Activity.OneToOneChatActivity;
-import com.advengers.mabo.Cometchat.Contracts.StringContract;
 import com.advengers.mabo.Database.MyDBHandler;
 import com.advengers.mabo.Model.User;
 import com.advengers.mabo.R;
@@ -52,6 +50,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import constant.StringContract;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -391,23 +390,14 @@ FragmentFriendsBinding binding;
             Tools.showDialog(true,"This user need to login again to use chat",getActivity(),getActivity());
         else
         {
-          //  LogUtils.e("AVATAR "+user.getprofile_imagename());
+      /*
             Intent intent = new Intent(getActivity(), OneToOneChatActivity.class);
             intent.putExtra(StringContract.IntentStrings.USER_ID, room_Id);
             intent.putExtra(StringContract.IntentStrings.USER_AVATAR, friends.get(position).getprofile_imagename());
             intent.putExtra(StringContract.IntentStrings.USER_NAME, name);
-            getActivity().startActivity(intent);
+            getActivity().startActivity(intent);*/
         }
-      /*  if(room_Id.isEmpty()||room_Id==null||room_Id.length()<2)
-            Tools.showDialog(true,"This user need to login again to use chat",getContext(),getActivity());
-        else
-            new WebCall(getActivity(), FriendsFragment.this, null, WebConstants.validateRoomId + room_Id, WebConstants.validateRoomIdCode, true,false).execute();*/
-        /*Intent intent = new Intent(getActivity(), ChatActivity.class);
-        intent.putExtra("token", "");
-        intent.putExtra("name",name);
-        intent.putExtra("id",id);
-        intent.putExtra("roomid",room_Id);
-        startActivity(intent);*/
+
     }
 
     @Override

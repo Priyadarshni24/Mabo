@@ -24,8 +24,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.advengers.mabo.Cometchat.Contracts.StringContract.AppDetails.API_KEY;
-import static com.advengers.mabo.Cometchat.Contracts.StringContract.AppDetails.APP_ID;
+import static com.advengers.mabo.Cometchat.constants.AppConfig.AppDetails.API_KEY;
+import static com.advengers.mabo.Cometchat.constants.AppConfig.AppDetails.APP_ID;
 import static com.advengers.mabo.Interfaces.Keys.AUTHPASSWORD;
 import static com.advengers.mabo.Interfaces.Keys.AUTHUSERNAME;
 

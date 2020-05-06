@@ -15,8 +15,6 @@ import com.advengers.mabo.Adapter.FriendsAdapter;
 import com.advengers.mabo.Chat.web_communication.WebCall;
 import com.advengers.mabo.Chat.web_communication.WebConstants;
 import com.advengers.mabo.Chat.web_communication.WebResponse;
-import com.advengers.mabo.Cometchat.Activity.OneToOneChatActivity;
-import com.advengers.mabo.Cometchat.Contracts.StringContract;
 import com.advengers.mabo.Model.User;
 import com.advengers.mabo.R;
 import com.advengers.mabo.ServerCall.MyVolleyRequestManager;
@@ -32,6 +30,7 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.cometchat.pro.constants.CometChatConstants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +39,9 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+
+import constant.StringContract;
+import screen.messagelist.CometChatMessageListActivity;
 
 import static com.advengers.mabo.Activity.MainActivity.SERVER_URL;
 import static com.advengers.mabo.Activity.MainActivity.USERSEARCH;
@@ -220,12 +222,19 @@ ActivitySearchBinding binding;
             Tools.showDialog(true,"This user need to login again to use chat",this,this);
         else
         {
+            Intent intent = new Intent(SearchActivity.this, CometChatMessageListActivity.class);
+            intent.putExtra(StringContract.IntentStrings.UID, room_Id);
+            intent.putExtra(StringContract.IntentStrings.AVATAR, Userlist.get(position).getprofile_imagename());
+            intent.putExtra(StringContract.IntentStrings.STATUS, user.getStatus());
+            intent.putExtra(StringContract.IntentStrings.NAME, name);
+            intent.putExtra(StringContract.IntentStrings.TYPE, CometChatConstants.RECEIVER_TYPE_USER);
+            startActivity(intent);
             //  LogUtils.e("AVATAR "+user.getprofile_imagename());
-            Intent intent = new Intent(SearchActivity.this, OneToOneChatActivity.class);
+          /*  Intent intent = new Intent(SearchActivity.this, OneToOneChatActivity.class);
             intent.putExtra(StringContract.IntentStrings.USER_ID, room_Id);
             intent.putExtra(StringContract.IntentStrings.USER_AVATAR, Userlist.get(position).getprofile_imagename());
             intent.putExtra(StringContract.IntentStrings.USER_NAME, name);
-            startActivity(intent);
+            startActivity(intent);*/
         }
     }
 

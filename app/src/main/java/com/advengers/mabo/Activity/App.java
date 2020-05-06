@@ -10,8 +10,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import com.advengers.mabo.Cometchat.Contracts.StringContract;
-import com.advengers.mabo.Cometchat.Utils.FontUtils;
+import com.advengers.mabo.Cometchat.constants.AppConfig;
 import com.advengers.mabo.R;
 import com.advengers.mabo.ServerCall.VolleySingleTone;
 import com.advengers.mabo.Utils.Utils;
@@ -32,7 +31,9 @@ import org.acra.annotation.ReportsCrashes;
 import java.util.HashMap;
 import java.util.Map;
 
+import listeners.CometChatCallListener;
 import timber.log.Timber;
+import utils.FontUtils;
 
 @ReportsCrashes(mailTo = "techie@advengersmedia.com",
         customReportContent = { ReportField.APP_VERSION_CODE, ReportField.APP_VERSION_NAME, ReportField.ANDROID_VERSION, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA, ReportField.STACK_TRACE, ReportField.LOGCAT },
@@ -51,7 +52,7 @@ public class App extends Application {
     public static final String CHANNEL_ID = "exampleServiceChannel";
     public static Gson gson;
     private static boolean activityVisible,callactivityVisible;
-    private static String roomid = "";
+    private static String roomid = null;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -63,7 +64,7 @@ public class App extends Application {
         requestQueue.getCache().clear();
         //mImageLoader = volleySingleTone.getImageLoader();
         FontsOverride.setDefaultFont(this, "DEFAULT", "gibsonregular.ttf");
-        new FontUtils(this);
+     //   new FontUtils(this);
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("M/d/yy hh:mm a");
@@ -72,13 +73,13 @@ public class App extends Application {
         cloudconfig.put("cloud_name", Utils.cloud_name);
         cloudconfig.put("api_key", Utils.api_key);
         cloudconfig.put("api_secret", Utils.api_secret);
-        MediaManager.init(getappContext(), cloudconfig);
+        MediaManager.init(getApplicationContext(), cloudconfig);
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 //        Logger.enableLogs("4ddd5d736cf33ca31a0b4c72ae64b6d5");
-        AppSettings appSettings=new AppSettings.AppSettingsBuilder().subscribePresenceForAllUsers().setRegion(StringContract.AppDetails.REGION).build();
-        CometChat.init(getappContext(), StringContract.AppDetails.APP_ID,appSettings,new CometChat.CallbackListener<String>() {
+        AppSettings appSettings=new AppSettings.AppSettingsBuilder().subscribePresenceForAllUsers().setRegion(AppConfig.AppDetails.REGION).build();
+        CometChat.init(getappContext(), AppConfig.AppDetails.APP_ID,appSettings,new CometChat.CallbackListener<String>() {
 
             @Override
             public void onSuccess(String s) {
@@ -93,6 +94,7 @@ public class App extends Application {
 
         });
         createNotificationChannel();
+        CometChatCallListener.addCallListener(getString(R.string.app_name),this);
     }
 
 
@@ -178,4 +180,9 @@ public class App extends Application {
 
     }
 
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        CometChatCallListener.removeCallListener(getString(R.string.app_name));
+    }
 }

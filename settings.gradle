@@ -1,2 +1,2 @@
-include ':app', ':library'
-include ':app', ':pro-android-chat-sdk'
+include ':app', ':library', ':uikit'
+

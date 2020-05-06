@@ -4,9 +4,7 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/364d5ff6f94077f49ffa4834773527ff/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/364d5ff6f94077f49ffa4834773527ff/res" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.writingminds/FFmpegAndroid/0.3.2/5d44cb53cefb28a1471928662f0f4a0c2ea902d8/FFmpegAndroid-0.3.2-javadoc.jar!/" />
-    </JAVADOC>
+    <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.writingminds/FFmpegAndroid/0.3.2/73be0f2fd8c9c2fe8a158322387aa39428cd1ad4/FFmpegAndroid-0.3.2-sources.jar!/" />
     </SOURCES>

@@ -356,7 +356,7 @@ public class PeoplesFragment extends MyFragment implements View.OnClickListener,
                 .build();
         mGoogleMaps.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(Double.valueOf(user.getLatitude()),Double.valueOf(user.getLongitude()))));
         mGoogleMaps.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 100, null);
-        mGoogleMaps.setMyLocationEnabled(true);
+//        mGoogleMaps.setMyLocationEnabled(true);
         mGoogleMaps.getUiSettings().setMyLocationButtonEnabled(true);
        /* mGoogleMaps.addMarker(new MarkerOptions().position(
                 new LatLng(Double.valueOf(user.getLatitude()),Double.valueOf(user.getLongitude())))

@@ -4,6 +4,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
     defaultConfig {
+
         applicationId "com.advengers.mabo"
         minSdkVersion 23
         targetSdkVersion 29
@@ -14,8 +15,13 @@ android {
         renderscriptSupportModeEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         useLibrary 'org.apache.http.legacy'
-    }
 
+        manifestPlaceholders = [file_provider: "com.cometchat.pro.androiduikit"]
+
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
+    }
 
     packagingOptions {
         exclude 'builddef.lst'
@@ -33,6 +39,7 @@ android {
         }
     }
     lintOptions {
+        checkReleaseBuilds false
         abortOnError false
     }
     buildTypes {
@@ -55,7 +62,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'com.google.android.material:material:1.0.0'
+   // implementation 'com.google.android.material:material:1.0.0-beta01'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
@@ -121,7 +128,7 @@ dependencies {
         transitive = true
     }*/
     //cometchat sdk
-    implementation 'com.cometchat:pro-android-chat-sdk:2.0.3'
+    implementation 'com.cometchat:pro-android-chat-sdk:2.0.4-beta1'
   //  implementation 'com.cometchat:pro-android-chat-sdk:2.0.0-beta8'
     implementation 'androidx.recyclerview:recyclerview-selection:1.0.0'
 
@@ -129,7 +136,7 @@ dependencies {
 
     implementation 'com.droidninja:filepicker:2.2.1'
 
-
+    implementation project(path: ':uikit')
 
  //   implementation 'org.webrtc:google-webrtc:1.0.22379'
 }

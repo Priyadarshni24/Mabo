@@ -30,7 +30,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Your Location"
+                        android:text="Your screen.Location"
                         android:textColor="@color/white"
                         android:textSize="10dp"/>
                     <TextView
@@ -79,8 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        android:theme="@style/AppTheme"
-        android:background="?android:attr/windowBackground"
+        android:background="@color/apptheme"
         android:backgroundTint="@color/apptheme"
         app:itemTextColor="@drawable/selector"
         app:itemIconTint="@drawable/selector"

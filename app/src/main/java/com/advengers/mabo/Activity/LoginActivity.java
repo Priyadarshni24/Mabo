@@ -1,114 +1,91 @@
 package com.advengers.mabo.Activity;
 
 import androidx.annotation.NonNull;
-        import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
-        import android.app.Dialog;
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.text.InputType;
-        import android.text.TextUtils;
-        import android.util.Log;
-        import android.view.View;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.ImageView;
-        import android.widget.Spinner;
-import android.widget.Switch;
+import android.Manifest;
+import android.app.Dialog;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.advengers.mabo.Chat.web_communication.WebCall;
-        import com.advengers.mabo.Chat.web_communication.WebConstants;
-        import com.advengers.mabo.Chat.web_communication.WebResponse;
-import com.advengers.mabo.Cometchat.Activity.CometChatActivity;
-import com.advengers.mabo.Cometchat.Contracts.StringContract;
+import com.advengers.mabo.Cometchat.constants.AppConfig;
+import com.advengers.mabo.Location.LocationTrack;
 import com.advengers.mabo.Model.User;
-        import com.advengers.mabo.Tools.MyActivity;
-        import com.advengers.mabo.Utils.LogUtils;
-        import com.advengers.mabo.Utils.NetworkUtil;
-        import com.advengers.mabo.Utils.Tools;
-        import com.advengers.mabo.Utils.Utils;
-        import com.android.volley.NetworkResponse;
-        import com.android.volley.toolbox.HttpHeaderParser;
+import com.advengers.mabo.Tools.MyActivity;
+import com.advengers.mabo.Utils.LogUtils;
+import com.advengers.mabo.Utils.NetworkUtil;
+import com.advengers.mabo.Utils.Tools;
+import com.advengers.mabo.Utils.Utils;
+import com.android.volley.NetworkResponse;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
-import com.facebook.FacebookSdk;
-        import com.facebook.appevents.AppEventsLogger;
-
-        import com.advengers.mabo.R;
-        import com.advengers.mabo.ServerCall.MyVolleyRequestManager;
-        import com.advengers.mabo.ServerCall.ServerParams;
-        import com.android.volley.Request;
-        import com.android.volley.Response;
-        import com.android.volley.VolleyError;
-        import com.facebook.AccessToken;
-        import com.facebook.CallbackManager;
-        import com.facebook.FacebookCallback;
-        import com.facebook.FacebookException;
-        import com.facebook.GraphRequest;
-        import com.facebook.GraphResponse;
-        import com.facebook.login.LoginManager;
-        import com.facebook.login.LoginResult;
-        import com.facebook.login.widget.LoginButton;
-        import com.google.android.gms.auth.api.signin.GoogleSignIn;
-        import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-        import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-        import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-        import com.google.android.gms.common.SignInButton;
-        import com.google.android.gms.common.api.ApiException;
-        import com.google.android.gms.tasks.OnCompleteListener;
-        import com.google.android.gms.tasks.Task;
-        import com.google.firebase.iid.FirebaseInstanceId;
-        import com.google.firebase.iid.InstanceIdResult;
+import com.advengers.mabo.R;
+import com.advengers.mabo.ServerCall.MyVolleyRequestManager;
+import com.advengers.mabo.ServerCall.ServerParams;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.gson.FieldNamingPolicy;
-        import com.google.gson.Gson;
-        import com.google.gson.GsonBuilder;
-        import com.google.gson.JsonObject;
+import com.google.gson.Gson;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
-        import org.json.JSONException;
-        import org.json.JSONObject;
-        import org.json.JSONTokener;
-
-        import java.io.UnsupportedEncodingException;
-        import java.util.Arrays;
-        import java.util.HashMap;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+import utils.GpsUtils;
 
 import static com.advengers.mabo.Activity.MainActivity.COMETCHATURL;
 import static com.advengers.mabo.Activity.MainActivity.LOGIN;
-        import static com.advengers.mabo.Activity.MainActivity.REGISTER;
-        import static com.advengers.mabo.Activity.MainActivity.ROOMIDUPDATE;
-        import static com.advengers.mabo.Activity.MainActivity.SERVER_URL;
-        import static com.advengers.mabo.Activity.MainActivity.USERDETAILS;
+import static com.advengers.mabo.Activity.MainActivity.REGISTER;
+import static com.advengers.mabo.Activity.MainActivity.ROOMIDUPDATE;
+import static com.advengers.mabo.Activity.MainActivity.SERVER_URL;
+import static com.advengers.mabo.Activity.MainActivity.USERDETAILS;
 import static com.advengers.mabo.Interfaces.Keys.COMET_ID;
-import static com.advengers.mabo.Interfaces.Keys.CREATED;
-        import static com.advengers.mabo.Interfaces.Keys.DATA;
-        import static com.advengers.mabo.Interfaces.Keys.DEVICEID;
-        import static com.advengers.mabo.Interfaces.Keys.DEVICEMODEL;
-        import static com.advengers.mabo.Interfaces.Keys.EMAIL;
-        import static com.advengers.mabo.Interfaces.Keys.FACEBOOKID;
-        import static com.advengers.mabo.Interfaces.Keys.FCMKEY;
-        import static com.advengers.mabo.Interfaces.Keys.FIRSTNAME;
-        import static com.advengers.mabo.Interfaces.Keys.GOOGLEID;
-        import static com.advengers.mabo.Interfaces.Keys.ID;
-        import static com.advengers.mabo.Interfaces.Keys.IPADDRESS;
-        import static com.advengers.mabo.Interfaces.Keys.LASTNAME;
-        import static com.advengers.mabo.Interfaces.Keys.LATITUDE;
-        import static com.advengers.mabo.Interfaces.Keys.LOCATION;
-        import static com.advengers.mabo.Interfaces.Keys.LOGIN_TYPE;
-        import static com.advengers.mabo.Interfaces.Keys.LONGITUDE;
-        import static com.advengers.mabo.Interfaces.Keys.MESSAGE;
-        import static com.advengers.mabo.Interfaces.Keys.MODIFIED;
-        import static com.advengers.mabo.Interfaces.Keys.PASSWORD;
-        import static com.advengers.mabo.Interfaces.Keys.PHONE;
-        import static com.advengers.mabo.Interfaces.Keys.RANGE;
-        import static com.advengers.mabo.Interfaces.Keys.STATUS;
-        import static com.advengers.mabo.Interfaces.Keys.STATUS_JSON;
-        import static com.advengers.mabo.Interfaces.Keys.USER;
-        import static com.advengers.mabo.Interfaces.Keys.USERNAME;
+import static com.advengers.mabo.Interfaces.Keys.DATA;
+import static com.advengers.mabo.Interfaces.Keys.ID;
+import static com.advengers.mabo.Interfaces.Keys.MESSAGE;
+import static com.advengers.mabo.Interfaces.Keys.RANGE;
+import static com.advengers.mabo.Interfaces.Keys.STATUS_JSON;
+import static com.advengers.mabo.Interfaces.Keys.USER;
 
-public class LoginActivity extends MyActivity {
+public class LoginActivity extends MyActivity implements EasyPermissions.PermissionCallbacks{
     public Button login, googlelogin, facebooklogin, signup;
     Dialog emailsignupdialog;
     LoginButton loginButton;
@@ -124,6 +101,8 @@ public class LoginActivity extends MyActivity {
     GoogleSignInOptions gso;
     int RC_SIGN_IN = 1022;
     String CODE = "";
+    private static final int RC_LOCATION = 1 ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,12 +110,8 @@ public class LoginActivity extends MyActivity {
         gson = new Gson();
         user = new User();
         User.setUser(gson.fromJson(Utils.getInstance(LoginActivity.this).getString(USER),User.class));
+        RequiresPermission();
 
-        if(User.getUser().isLogged())
-        {
-            startActivity(new Intent(LoginActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-            //startActivity(new Intent(LoginActivity.this, CometChatActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-        }
 
         emailsignupdialog = new Dialog(this);
 
@@ -677,12 +652,11 @@ public class LoginActivity extends MyActivity {
                 if (login.has(STATUS_JSON)) {
                      if (login.getString(STATUS_JSON).equals("true")) {
                          String uid = "mabo"+User.getUser().getId();
-                         CometChat.login(uid, StringContract.AppDetails.API_KEY, new CometChat.CallbackListener<com.cometchat.pro.models.User>() {
+                         CometChat.login(uid, AppConfig.AppDetails.API_KEY, new CometChat.CallbackListener<com.cometchat.pro.models.User>() {
                              @Override
                              public void onSuccess(com.cometchat.pro.models.User user) {
                                  onLoadDismiss();
-                            //     Log.d(TAG, "onSuccess: "+user.getUid());
-                                 FirebaseMessaging.getInstance().subscribeToTopic(StringContract.AppDetails.AppID_user_UID);
+                                FirebaseMessaging.getInstance().subscribeToTopic(AppConfig.AppDetails.AppID_user_UID);
                                  startActivity(new Intent(LoginActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                              }
 
@@ -711,5 +685,75 @@ public class LoginActivity extends MyActivity {
             }
         }
     };
+    @AfterPermissionGranted(RC_LOCATION)
+    private void RequiresPermission() {
+        String[] perms = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            GetLocation();
+        } else {
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(LoginActivity.this, getString(R.string.str_location),
+                    RC_LOCATION, perms);
+        }
+    }
+    public void GetLocation()
+    {
+        LocationTrack locationTrack = new LocationTrack(LoginActivity.this);
+        LogUtils.e(locationTrack.canGetLocation()+"");
+
+        if (locationTrack.canGetLocation()&&locationTrack.getLatitude()!=0.0&&locationTrack.getLongitude()!=0.0) {
+
+
+            double longitude = locationTrack.getLongitude();
+            double latitude = locationTrack.getLatitude();
+
+            LogUtils.e("Longitude:" + Double.toString(longitude) + "\nLatitude:" + Double.toString(latitude));//.show();
+           /* Location loc = new Location(LocationManager.GPS_PROVIDER);
+            loc.setLatitude(latitude);
+            loc.setLongitude(longitude);*/
+            if(User.getUser().isLogged())
+            {
+                startActivity(new Intent(LoginActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+            }
+
+            //    UpdateLocation(loc);
+        } else {
+
+            if(!locationTrack.isCheckGPS())
+            {
+                /*if(!locationTrack.isShowAlert())
+                    locationTrack.showSettingsAlert();*/
+                new GpsUtils(this).turnGPSOn(new GpsUtils.onGpsListener() {
+                    @Override
+                    public void gpsStatus(boolean isGPSEnable) {
+
+                    }
+                });
+            }/*else
+              GetLocation();*/
+        }
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        LogUtils.e("I aam coming");
+        GetLocation();
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
+    }
 
 }

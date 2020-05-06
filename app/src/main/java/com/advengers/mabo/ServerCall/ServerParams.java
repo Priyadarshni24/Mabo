@@ -311,7 +311,7 @@ public class ServerParams {
         map.put(MODIFIED,"");
         map.put(IPADDRESS,"");
         map.put(DEVICEMODEL,"Android");
-        map.put(FCMKEY,token);
+        map.put(FCMKEY,"");
         map.put(DEVICEID,"");
         map.put(GOOGLEID,googleid);
         map.put(FACEBOOKID,"");

@@ -4,24 +4,29 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.advengers.mabo.Activity.App;
-import com.advengers.mabo.Cometchat.Activity.GroupChatActivity;
-import com.advengers.mabo.Cometchat.Activity.OneToOneChatActivity;
-import com.advengers.mabo.Cometchat.Contracts.StringContract;
-import com.advengers.mabo.Cometchat.Fragments.CallNotificationAction;
+import com.advengers.mabo.Activity.DashboardActivity;
+import com.advengers.mabo.Activity.SearchActivity;
+import com.advengers.mabo.Cometchat.constants.AppConfig;
 import com.advengers.mabo.R;
+import com.advengers.mabo.Services.OnClearFromRecentService;
 import com.advengers.mabo.Utils.LogUtils;
 import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.core.Call;
@@ -41,35 +46,42 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 
+import constant.StringContract;
+import screen.CometChatCallActivity;
+import screen.messagelist.CometChatMessageListActivity;
+
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseService";
     private JSONObject json;
     private Intent intent;
-    private int count=0;
+    private int channelid;
     private Call call;
     private static final int REQUEST_CODE = 12;
-
-    private boolean isCall;
-
+    public static Ringtone r;
+    private boolean isCall=false;
+    NotificationCompat.Builder builder;
+    NotificationChannel channel,channelmesg;
+    int call_channelid=100;
+    int message_channelid=105;
 
     public static void subscribeUser(String UID) {
-        FirebaseMessaging.getInstance().subscribeToTopic(StringContract.AppDetails.APP_ID + "_"+ CometChatConstants.RECEIVER_TYPE_USER +"_" +
+        FirebaseMessaging.getInstance().subscribeToTopic(AppConfig.AppDetails.APP_ID + "_"+ CometChatConstants.RECEIVER_TYPE_USER +"_" +
                 UID);
     }
 
     public static void unsubscribeUser(String UID) {
-        FirebaseMessaging.getInstance().unsubscribeFromTopic(StringContract.AppDetails.APP_ID + "_"+ CometChatConstants.RECEIVER_TYPE_USER +"_" +
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(AppConfig.AppDetails.APP_ID + "_"+ CometChatConstants.RECEIVER_TYPE_USER +"_" +
                 UID);
     }
 
     public static void subscribeGroup(String GUID) {
-        FirebaseMessaging.getInstance().subscribeToTopic(StringContract.AppDetails.APP_ID + "_"+ CometChatConstants.RECEIVER_TYPE_GROUP +"_" +
+        FirebaseMessaging.getInstance().subscribeToTopic(AppConfig.AppDetails.APP_ID + "_"+ CometChatConstants.RECEIVER_TYPE_GROUP +"_" +
                 GUID);
     }
 
     public static void unsubscribeGroup(String GUID) {
-        FirebaseMessaging.getInstance().unsubscribeFromTopic(StringContract.AppDetails.APP_ID + "_"+ CometChatConstants.RECEIVER_TYPE_GROUP +"_" +
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(AppConfig.AppDetails.APP_ID + "_"+ CometChatConstants.RECEIVER_TYPE_GROUP +"_" +
                 GUID);
     }
 
@@ -78,32 +90,43 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "onNewToken: "+s);
     }
 
-    @Override
+   @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         try {
-            count++;
+           // count++;
             json = new JSONObject(remoteMessage.getData());
             Log.d(TAG, "JSONObject: "+json.toString());
             JSONObject messageData = new JSONObject(json.getString("message"));
             BaseMessage baseMessage = CometChatHelper.processMessage(new JSONObject(remoteMessage.getData().get("message")));
             if (baseMessage.getReceiverType().equals(CometChatConstants.RECEIVER_TYPE_USER))
             {
-                intent = new Intent(getApplicationContext(), OneToOneChatActivity.class);
-                intent.putExtra(StringContract.IntentStrings.USER_ID,baseMessage.getSender().getUid());
+                intent = new Intent(getApplicationContext(), CometChatMessageListActivity.class);
+                intent.putExtra(StringContract.IntentStrings.UID, baseMessage.getSender().getUid());
                 intent.putExtra(StringContract.IntentStrings.AVATAR,baseMessage.getSender().getAvatar());
-                intent.putExtra(StringContract.IntentStrings.USER_NAME,baseMessage.getSender().getName());
+                intent.putExtra(StringContract.IntentStrings.STATUS,baseMessage.getSender().getStatus());
+                intent.putExtra(StringContract.IntentStrings.NAME, baseMessage.getSender().getName());
+                intent.putExtra(StringContract.IntentStrings.TYPE, baseMessage.getReceiverType());
+
             }
             else if (baseMessage.getReceiverType().equals(CometChatConstants.RECEIVER_TYPE_GROUP)){
+/*
                 intent = new Intent(getApplicationContext(), GroupChatActivity.class);
                 intent.putExtra(StringContract.IntentStrings.INTENT_GROUP_ID,baseMessage.getReceiverUid());
                 intent.putExtra(StringContract.IntentStrings.INTENT_GROUP_NAME,((Group)baseMessage.getReceiver()).getName());
+                intent.putExtra(StringContract.IntentStrings.TYPE,baseMessage.getReceiverType());
+*/
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             if (baseMessage instanceof Call){
                 call = (Call)baseMessage;
                 isCall=true;
+            }else {
+                isCall=false;
             }
+
             showNotifcation(pendingIntent,baseMessage);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -131,27 +154,43 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             int m = (int) ((new Date().getTime()));
             String GROUP_ID = "group_id";
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"2")
+            if(isCall)
+            {
+                String message = json.getString("alert");
+                if(!message.contains("Missed")&&!message.contains("Ended")&&!message.contains("Joined"))
+                    m = call_channelid;
+                else
+                    m = message_channelid;
+            }else {
+                m = message_channelid;
+            }
+            channelid = m;
+             builder = new NotificationCompat.Builder(this,String.valueOf(m))
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(json.getString("title"))
                     .setContentText(json.getString("alert"))
-                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setContentIntent(pendingIntent)
                     .setColor(getResources().getColor(R.color.primaryColor))
                     .setLargeIcon(getBitmapFromURL(baseMessage.getSender().getAvatar()))
                     .setGroup(GROUP_ID)
-                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+                    .setAutoCancel(true)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setOngoing(false);
 
-            NotificationCompat.Builder summaryBuilder = new NotificationCompat.Builder(this,"2")
-                    .setContentTitle("CometChat")
-                    .setContentText(count+" messages")
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setGroup(GROUP_ID)
-                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                    .setGroupSummary(true);
-         //  NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+                    //.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
+
+            LogUtils.e("I am coming in notification");
+        //   NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                LogUtils.e("I am coming in notification version");
+
+                Uri sound = Settings.System.DEFAULT_RINGTONE_URI;//Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/" + R.raw.ringing);  //Here is FILE_NAME is the name of file that you want to play
+
+
                 CharSequence name = getString(R.string.app_name);
                 String description = getString(R.string.channel_description);
                 int importance = NotificationManager.IMPORTANCE_HIGH;
@@ -160,28 +199,112 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                         .setUsage(AudioAttributes.USAGE_ALARM)
                         .build();
+                if(isCall)
+                {
+                    String message = json.getString("alert");
+                    if(!message.contains("Missed")&&!message.contains("Ended")&&!message.contains("Joined"))
+                    {
+                        LogUtils.e("I am coming in notification version call");
+                        channel = new NotificationChannel(String.valueOf(m), getString(R.string.app_name), importance);
+                        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+                        channel.setLightColor(Color.BLUE);
+                        channel.enableLights(true);
+                        channel.enableVibration(true);
+                        AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-                NotificationChannel channel = new NotificationChannel("101", name, importance);
-                channel.setDescription(description);
-                channel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION), audioAttributes);
-                notificationManager.createNotificationChannel(channel);
+                        switch( audio.getRingerMode() ){
+                            case AudioManager.RINGER_MODE_NORMAL:
+                                channel.setSound(Settings.System.DEFAULT_RINGTONE_URI, audioAttributes);
+                                break;
+                            case AudioManager.RINGER_MODE_SILENT:
+                                channel.setVibrationPattern(new long[] { 1000L, 1000L });
+                                break;
+                            case AudioManager.RINGER_MODE_VIBRATE:
+                                channel.setVibrationPattern(new long[] {1000L, 1000L });
+                                break;
+                        }
+
+                        channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                        notificationManager.createNotificationChannel(channel);
+                    }else {
+                        LogUtils.e("I am coming in notification call message");
+                        channelmesg = new NotificationChannel(String.valueOf(m), getString(R.string.app_name), importance);
+                        channelmesg.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+                        channelmesg.setLightColor(Color.BLUE);
+                        channelmesg.enableLights(true);
+                        channelmesg.enableVibration(true);
+                        channelmesg.setSound(Settings.System.DEFAULT_NOTIFICATION_URI, audioAttributes);
+                        channelmesg.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                        notificationManager.createNotificationChannel(channelmesg);
+                    }
+                }else{
+                    LogUtils.e("I am coming in notification message");
+                    channelmesg = new NotificationChannel(String.valueOf(m), getString(R.string.app_name), importance);
+                    channelmesg.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+                    channelmesg.setLightColor(Color.BLUE);
+                    channelmesg.enableLights(true);
+                    channelmesg.enableVibration(true);
+                    channelmesg.setSound(Settings.System.DEFAULT_NOTIFICATION_URI, audioAttributes);
+                    channelmesg.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                    notificationManager.createNotificationChannel(channelmesg);
+                }
+               // NotificationChannel channel = new NotificationChannel("05", getString(R.string.app_name), importance);
+
+
+
+               // channel.setSound(sound, audioAttributes);
+             //   channel.setSound(null,null);
+
 
             }
+
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            boolean isScreenOn = Build.VERSION.SDK_INT >= 20 ? pm.isInteractive() : pm.isScreenOn(); // check if screen is on
+            if (!isScreenOn) {
+                PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "myApp:notificationLock");
+                wl.acquire(10000); //set your time in milliseconds
+            }
+
+            /*Intent resultIntent = new Intent(this, IncomingCallActivity.class);
+// Create the TaskStackBuilder and add the intent, which inflates the back stack
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addNextIntentWithParentStack(resultIntent);
+// Get the PendingIntent containing the entire back stack
+            PendingIntent resultPendingIntent =
+                    stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setContentIntent(resultPendingIntent);*/
             if (isCall){
                 builder.setGroup(GROUP_ID+"Call");
                 if (json.getString("alert").equals("Incoming audio call") || json.getString("alert").equals("Incoming video call")) {
-                    builder.setOngoing(true);
-                    builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
-                     builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.ring));
+                   builder.setSound(Settings.System.DEFAULT_RINGTONE_URI);
                     builder.addAction(0, "Answers", PendingIntent.getBroadcast(getApplicationContext(), REQUEST_CODE, getCallIntent("Answers"), PendingIntent.FLAG_UPDATE_CURRENT));
                     builder.addAction(0, "Decline", PendingIntent.getBroadcast(getApplicationContext(), 1, getCallIntent("Decline"), PendingIntent.FLAG_UPDATE_CURRENT));
+                    builder.setAutoCancel(false);
                 }
-                if(!App.isCallactivityVisible())
-                notificationManager.notify(05,builder.build());
+
+                if(!CometChatCallActivity.visibity)//(!App.isCallactivityVisible())
+                {
+
+                    if(!OnClearFromRecentService.apprunning)
+                    notificationManager.notify(channelid,builder.build());
+
+                }
             }
             else {
-                notificationManager.notify(baseMessage.getId(), builder.build());
-                notificationManager.notify(0, summaryBuilder.build());
+                builder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+                if(CometChatMessageListActivity.visibity)//if(App.isActivityVisible())
+                {
+                    LogUtils.e(CometChatMessageListActivity.ID+"  "+baseMessage.getId()+" "+baseMessage.getSender().getUid());
+                    if(CometChatMessageListActivity.ID==null)
+                    {
+                        notificationManager.notify(baseMessage.getId(), builder.build());
+                    }else if(!CometChatMessageListActivity.ID.equals(baseMessage.getSender().getUid()))
+                    {
+                        notificationManager.notify(baseMessage.getId(), builder.build());
+                    }
+                }else
+                    notificationManager.notify(baseMessage.getId(), builder.build());
+             //   notificationManager.notify(0, summaryBuilder.build());
             }
 
         } catch (Exception e) {
@@ -190,10 +313,42 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
+    public void playNotificationSound()
+    {
+        try
+        {
+
+            Uri alarmSound = Settings.System.DEFAULT_RINGTONE_URI;//Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/raw/ringing");
+            r = RingtoneManager.getRingtone(getApplicationContext(), alarmSound);
+            AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+            switch( audio.getRingerMode() ){
+                case AudioManager.RINGER_MODE_NORMAL:
+                  /*  if(!r.isPlaying())
+                {
+                    r.play();
+                    //  r.setLooping(true);
+                }*/
+                   builder.setSound(alarmSound,AudioManager.STREAM_NOTIFICATION);
+                    break;
+                case AudioManager.RINGER_MODE_SILENT:
+                    break;
+                case AudioManager.RINGER_MODE_VIBRATE:
+                    builder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000,1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000});
+                break;
+            }
+        }
+        catch (Exception e)
+            {
+            e.printStackTrace();
+        }
+    }
     private Intent getCallIntent(String title){
-        LogUtils.e(title);
+       LogUtils.e(" CH ID "+channelid);
+
         Intent callIntent = new Intent(getApplicationContext(), CallNotificationAction.class);
         callIntent.putExtra(StringContract.IntentStrings.SESSION_ID,call.getSessionId());
+        callIntent.putExtra(StringContract.IntentStrings.CHANNEL_ID,String.valueOf(channelid));
         callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         callIntent.setAction(title);
         return callIntent;

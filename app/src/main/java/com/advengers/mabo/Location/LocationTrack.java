@@ -19,6 +19,8 @@ import androidx.core.app.ActivityCompat;
 
 import com.advengers.mabo.Utils.LogUtils;
 
+import utils.GpsUtils;
+
 public class LocationTrack extends Service implements LocationListener {
 
     private final Context mContext;
@@ -41,7 +43,7 @@ public class LocationTrack extends Service implements LocationListener {
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
 
 
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
+    private static final long MIN_TIME_BW_UPDATES = 1000;//1000 * 60 * 1;
     protected LocationManager locationManager;
 
     public LocationTrack(Context mContext) {
@@ -62,8 +64,10 @@ public class LocationTrack extends Service implements LocationListener {
             checkNetwork = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
+
             if (!checkGPS && !checkNetwork) {
                 Toast.makeText(mContext, "No Service Provider is available", Toast.LENGTH_SHORT).show();
+
             } else {
                 this.canGetLocation = true;
                 if (checkNetwork) {
@@ -163,16 +167,22 @@ public class LocationTrack extends Service implements LocationListener {
         alertDialog = new AlertDialog.Builder(mContext);
 
 
-        alertDialog.setTitle("GPS is not Enabled!");
+        alertDialog.setTitle("Enable GPS");
 
-        alertDialog.setMessage("Do you want to turn on GPS?");
+        alertDialog.setMessage("This app require your location to load the post near you enable it!");
 
 
-        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 showingAlert = false;
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                mContext.startActivity(intent);
+                /*Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                mContext.startActivity(intent);*/
+                new GpsUtils(mContext).turnGPSOn(new GpsUtils.onGpsListener() {
+                    @Override
+                    public void gpsStatus(boolean isGPSEnable) {
+
+                    }
+                });
             }
         });
 

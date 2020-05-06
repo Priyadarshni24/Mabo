@@ -4,9 +4,7 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/52fd2b23628baa8c5103e8dfa1406b3c/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/52fd2b23628baa8c5103e8dfa1406b3c/res" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.asksira.android/bsimagepicker/1.2.2/4ef2e6f53d5a2939bcfe1f5f8a9566e82ac78c4e/bsimagepicker-1.2.2-javadoc.jar!/" />
-    </JAVADOC>
+    <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.asksira.android/bsimagepicker/1.2.2/cf9ac700bed256a7a32232dcc15e8b8dea9c8043/bsimagepicker-1.2.2-sources.jar!/" />
     </SOURCES>
