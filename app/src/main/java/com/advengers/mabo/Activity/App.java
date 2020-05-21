@@ -23,6 +23,7 @@ import com.cometchat.pro.exceptions.CometChatException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+
 import org.acra.ACRA;
 import org.acra.ReportField;
 import org.acra.ReportingInteractionMode;
@@ -32,7 +33,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import listeners.CometChatCallListener;
-import timber.log.Timber;
 import utils.FontUtils;
 
 @ReportsCrashes(mailTo = "techie@advengersmedia.com",
@@ -55,9 +55,11 @@ public class App extends Application {
     private static String roomid = null;
     @Override
     public void onCreate() {
+        ACRA.init(this);
         super.onCreate();
 
         appInstance = this;
+
         app_data_sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         volleySingleTone = VolleySingleTone.getsInstance();
         requestQueue = volleySingleTone.getMrequestqueue();
@@ -89,11 +91,11 @@ public class App extends Application {
             @Override
             public void onError(CometChatException e) {
                 Toast.makeText(App.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                Timber.d("onError: %s", e.getMessage());
+                //Timber.d("onError: %s", e.getMessage());
             }
 
         });
-        createNotificationChannel();
+        //createNotificationChannel();
         CometChatCallListener.addCallListener(getString(R.string.app_name),this);
     }
 
@@ -170,7 +172,7 @@ public class App extends Application {
             CharSequence name = getString(R.string.app_name);
             String description = getString(R.string.channel_description);
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("2", name, importance);
+            NotificationChannel channel = new NotificationChannel("2", "App Notification", importance);
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this

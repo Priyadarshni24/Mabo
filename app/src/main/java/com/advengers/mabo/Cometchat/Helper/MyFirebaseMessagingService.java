@@ -98,15 +98,38 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "JSONObject: "+json.toString());
             JSONObject messageData = new JSONObject(json.getString("message"));
             BaseMessage baseMessage = CometChatHelper.processMessage(new JSONObject(remoteMessage.getData().get("message")));
+
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+
+            if (baseMessage instanceof Call){
+                call = (Call)baseMessage;
+                isCall=true;
+            }else {
+                isCall=false;
+            }
             if (baseMessage.getReceiverType().equals(CometChatConstants.RECEIVER_TYPE_USER))
             {
-                intent = new Intent(getApplicationContext(), CometChatMessageListActivity.class);
-                intent.putExtra(StringContract.IntentStrings.UID, baseMessage.getSender().getUid());
-                intent.putExtra(StringContract.IntentStrings.AVATAR,baseMessage.getSender().getAvatar());
-                intent.putExtra(StringContract.IntentStrings.STATUS,baseMessage.getSender().getStatus());
-                intent.putExtra(StringContract.IntentStrings.NAME, baseMessage.getSender().getName());
-                intent.putExtra(StringContract.IntentStrings.TYPE, baseMessage.getReceiverType());
+                if(isCall&&call.getCallStatus().equals(CometChatConstants.CALL_STATUS_INITIATED))
+                {
+                    intent = new Intent(getApplicationContext(), CometChatCallActivity.class);
+                    intent.putExtra(StringContract.IntentStrings.NAME, baseMessage.getSender().getName());
+                    intent.putExtra(StringContract.IntentStrings.UID,baseMessage.getSender().getUid());
+                    intent.putExtra(StringContract.IntentStrings.SESSION_ID,call.getSessionId());
+                    intent.putExtra(StringContract.IntentStrings.AVATAR, baseMessage.getSender().getAvatar());
+                    intent.setAction(baseMessage.getReceiverType());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setType("incoming");
 
+                }else {
+                    intent = new Intent(getApplicationContext(), CometChatMessageListActivity.class);
+                    intent.putExtra(StringContract.IntentStrings.UID, baseMessage.getSender().getUid());
+                    intent.putExtra(StringContract.IntentStrings.AVATAR, baseMessage.getSender().getAvatar());
+                    intent.putExtra(StringContract.IntentStrings.STATUS, baseMessage.getSender().getStatus());
+                    intent.putExtra(StringContract.IntentStrings.NAME, baseMessage.getSender().getName());
+                    intent.putExtra(StringContract.IntentStrings.TYPE, baseMessage.getReceiverType());
+                }
             }
             else if (baseMessage.getReceiverType().equals(CometChatConstants.RECEIVER_TYPE_GROUP)){
 /*
@@ -116,17 +139,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 intent.putExtra(StringContract.IntentStrings.TYPE,baseMessage.getReceiverType());
 */
             }
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            if (baseMessage instanceof Call){
-                call = (Call)baseMessage;
-                isCall=true;
-            }else {
-                isCall=false;
-            }
-
             showNotifcation(pendingIntent,baseMessage);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -165,10 +178,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 m = message_channelid;
             }
             channelid = m;
+            String content = json.getString("alert");
+           /* if(isCall)
+                content = content + " " + call.getCallStatus();*/
              builder = new NotificationCompat.Builder(this,String.valueOf(m))
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(json.getString("title"))
-                    .setContentText(json.getString("alert"))
+                    .setContentText(content)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setContentIntent(pendingIntent)
                     .setColor(getResources().getColor(R.color.primaryColor))
@@ -189,27 +205,35 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 LogUtils.e("I am coming in notification version");
 
                 Uri sound = Settings.System.DEFAULT_RINGTONE_URI;//Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/" + R.raw.ringing);  //Here is FILE_NAME is the name of file that you want to play
-
-
-                CharSequence name = getString(R.string.app_name);
-                String description = getString(R.string.channel_description);
                 int importance = NotificationManager.IMPORTANCE_HIGH;
+                channel = new NotificationChannel(String.valueOf(m), "Call Notification", importance);
+                channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+                channel.setLightColor(Color.BLUE);
+                channel.enableLights(true);
+                channel.enableVibration(true);
+                channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
 
                 AudioAttributes audioAttributes = new AudioAttributes.Builder()
                         .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                         .setUsage(AudioAttributes.USAGE_ALARM)
                         .build();
+
+                channelmesg = new NotificationChannel(String.valueOf(m), "Message Notification", importance);
+                channelmesg.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+                channelmesg.setLightColor(Color.BLUE);
+                channelmesg.enableLights(true);
+                channelmesg.enableVibration(true);
+                channelmesg.setSound(Settings.System.DEFAULT_NOTIFICATION_URI, audioAttributes);
+                channelmesg.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+
+
                 if(isCall)
                 {
                     String message = json.getString("alert");
                     if(!message.contains("Missed")&&!message.contains("Ended")&&!message.contains("Joined"))
                     {
                         LogUtils.e("I am coming in notification version call");
-                        channel = new NotificationChannel(String.valueOf(m), getString(R.string.app_name), importance);
-                        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-                        channel.setLightColor(Color.BLUE);
-                        channel.enableLights(true);
-                        channel.enableVibration(true);
+
                         AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
                         switch( audio.getRingerMode() ){
@@ -224,28 +248,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 break;
                         }
 
-                        channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+
                         notificationManager.createNotificationChannel(channel);
                     }else {
                         LogUtils.e("I am coming in notification call message");
-                        channelmesg = new NotificationChannel(String.valueOf(m), getString(R.string.app_name), importance);
-                        channelmesg.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-                        channelmesg.setLightColor(Color.BLUE);
-                        channelmesg.enableLights(true);
-                        channelmesg.enableVibration(true);
-                        channelmesg.setSound(Settings.System.DEFAULT_NOTIFICATION_URI, audioAttributes);
-                        channelmesg.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+
                         notificationManager.createNotificationChannel(channelmesg);
                     }
                 }else{
                     LogUtils.e("I am coming in notification message");
-                    channelmesg = new NotificationChannel(String.valueOf(m), getString(R.string.app_name), importance);
+                    /*channelmesg = new NotificationChannel(String.valueOf(m), "Message Notification", importance);
                     channelmesg.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
                     channelmesg.setLightColor(Color.BLUE);
                     channelmesg.enableLights(true);
                     channelmesg.enableVibration(true);
                     channelmesg.setSound(Settings.System.DEFAULT_NOTIFICATION_URI, audioAttributes);
-                    channelmesg.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                    channelmesg.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});*/
                     notificationManager.createNotificationChannel(channelmesg);
                 }
                // NotificationChannel channel = new NotificationChannel("05", getString(R.string.app_name), importance);
@@ -279,14 +297,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                    builder.setSound(Settings.System.DEFAULT_RINGTONE_URI);
                     builder.addAction(0, "Answers", PendingIntent.getBroadcast(getApplicationContext(), REQUEST_CODE, getCallIntent("Answers"), PendingIntent.FLAG_UPDATE_CURRENT));
                     builder.addAction(0, "Decline", PendingIntent.getBroadcast(getApplicationContext(), 1, getCallIntent("Decline"), PendingIntent.FLAG_UPDATE_CURRENT));
-                    builder.setAutoCancel(false);
+                    builder.setAutoCancel(true);
                 }
 
                 if(!CometChatCallActivity.visibity)//(!App.isCallactivityVisible())
                 {
 
                     if(!OnClearFromRecentService.apprunning)
-                    notificationManager.notify(channelid,builder.build());
+                    {
+
+                        notificationManager.notify(channelid,builder.build());
+                    }
 
                 }
             }

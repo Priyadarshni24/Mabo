@@ -94,7 +94,8 @@ public class CallActivity extends AppCompatActivity implements CallActivityContr
         try{
         if(CometChat.getActiveCall()!=null)
         {
-            if(CometChat.getActiveCall().getAction().equalsIgnoreCase("ongoing"))
+           // Log.e("Mabo",CometChat.getActiveCall().getCallStatus()+" "+CometChat.getActiveCall().getAction());
+            if(CometChat.getActiveCall().getAction().equalsIgnoreCase("ongoing")||CometChat.getActiveCall().getAction().equalsIgnoreCase("initiated"))
             {
                 Intent serviceIntent = new Intent(this, CallNotificationService.class);
                 serviceIntent.putExtra(StringContract.IntentStrings.SESSION_ID, sessionId);

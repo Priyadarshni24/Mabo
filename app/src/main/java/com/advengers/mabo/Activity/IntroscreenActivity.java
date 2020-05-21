@@ -36,7 +36,7 @@ public class IntroscreenActivity extends AppCompatActivity implements View.OnCli
                 buttonSkip = (Button) findViewById(R.id.btn_skip);
                 buttonNext.setEnabled(true);
                 buttonSkip.setEnabled(true);
-                buttonNext.setText("Continue");
+                buttonNext.setText(getString(R.string.str_continue));
                 mDotsLayout.setVisibility(View.GONE);
 
                 sliderAdapter = new SliderAdapter(this);

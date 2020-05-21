@@ -57,6 +57,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.cometchat.pro.constants.CometChatConstants;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -86,6 +87,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import constant.StringContract;
+import screen.messagelist.CometChatMessageListActivity;
 
 import static com.advengers.mabo.Activity.MainActivity.REQUESTUSER;
 import static com.advengers.mabo.Activity.MainActivity.SERVER_URL;
@@ -494,6 +496,13 @@ public class Tools {
                                         showDialog(true,"This user need to login again to use chat",context,activity);
                                     else
                                     {
+                                        Intent intent = new Intent(activity, CometChatMessageListActivity.class);
+                                        intent.putExtra(StringContract.IntentStrings.UID, room_Id);
+                                        intent.putExtra(StringContract.IntentStrings.AVATAR, profile.getprofile_imagename());
+                                        intent.putExtra(StringContract.IntentStrings.STATUS, profile.getStatus());
+                                        intent.putExtra(StringContract.IntentStrings.NAME, name);
+                                        intent.putExtra(StringContract.IntentStrings.TYPE, CometChatConstants.RECEIVER_TYPE_USER);
+                                        activity.startActivity(intent);
                                         //  LogUtils.e("AVATAR "+user.getprofile_imagename());
                                      /*   Intent intent = new Intent(activity, OneToOneChatActivity.class);
                                         intent.putExtra(StringContract.IntentStrings.USER_ID, room_Id);

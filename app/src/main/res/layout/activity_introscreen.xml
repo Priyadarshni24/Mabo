@@ -54,9 +54,10 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textAllCaps="false"
+        android:textAllCaps="true"
+        android:textStyle="bold"
         android:background="@color/lightpurple"
         android:textColor="@color/white"
-        android:text="Continue"
+        android:text="@string/str_continue"
         android:visibility="invisible" />
 </LinearLayout>

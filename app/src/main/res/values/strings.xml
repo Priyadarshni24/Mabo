@@ -429,6 +429,7 @@
     <string name="str_sendlocation">Share Location</string>
     <string name="ringing">Ringing</string>
     <string name="str_password">Password</string>
+    <string name="str_continue">CONTINUE</string>
     <string-array name="group_type">
         <item>Select Type</item>
         <item>public</item>
