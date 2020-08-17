@@ -32,6 +32,7 @@ public class User implements Serializable {
      String interests;
      String roomid;
      String request_status;
+     boolean verify;
 
 
     public User(String id, String first_name, String last_name, String username, String email, String password, String location, String latitude, String longitude, String created, String modified, String facebook_id, String google_id, String phone, String device_model, String ip_address, String fcm_key, String device_id, String status, String login_type, String profile_imagename, String email_notify, String push_notify, String scrumble_location, String profile_display_status) {
@@ -96,7 +97,7 @@ public class User implements Serializable {
     }
 
     public static boolean isLogged() {
-        return getUser() != null && getUser().getEmail() != null && !getUser().getEmail().isEmpty();
+        return getUser() != null && getUser().getEmail() != null && !getUser().getEmail().isEmpty() && getUser().isVerify();
     }
     public String getprofile_imagename() {
         return profile_imagename;
@@ -347,5 +348,15 @@ public class User implements Serializable {
     public void setRoomid(String roomid) {
         this.roomid = roomid;
     }
+
+
+    public boolean isVerify() {
+        return verify;
+    }
+
+    public void setVerify(boolean verify) {
+        this.verify = verify;
+    }
+
 
 }

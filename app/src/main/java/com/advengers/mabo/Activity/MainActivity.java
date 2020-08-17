@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public static String GETINTREST = "Interest/viewinterest";
     public static String PUTINTREST = "Interest/update_interest";
     public static String LOADPOST = "Location/listuserdata";
+    public static String LOADNOTIFICATION = "Notification/notification_list";
     public static String USERSEARCH = "Authentication/user_search";
     public static String CREATEPOST = "Location/userpostcreate";
     public static String LIKEPOST = "Location/likeuserdata";

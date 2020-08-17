@@ -95,8 +95,7 @@ public class TrendingFragment extends MyFragment implements View.OnClickListener
                     }else
                         binding.txtAddress.setText(getString(R.string.title_home));
                 binding.fabAddpost.setOnClickListener(this);
-
-        onLoadPost();
+         onLoadPost();
         return binding.getRoot();
     }
 
@@ -140,7 +139,7 @@ public class TrendingFragment extends MyFragment implements View.OnClickListener
 
 
                     if (login.getString(STATUS_JSON).equals("true")) {
-
+                        postlist.clear();
                         binding.listpost.setVisibility(View.VISIBLE);
                         binding.txtNopost.setVisibility(View.GONE);
                         JSONArray postarray = login.getJSONObject(DATA).getJSONArray("result_posts");
@@ -150,6 +149,7 @@ public class TrendingFragment extends MyFragment implements View.OnClickListener
                             Post post = gson.fromJson(jsondata, Post.class);
                             postlist.add(post);
                         }
+                        LogUtils.e("Length of post "+postlist.size());
                       /* Collections.reverse(postlist);*/
                         adapter = new PostAdapter(getActivity(),getActivity(),postlist,user.getId());
                         adapter.setLikeCommentCallBackListener(TrendingFragment.this);

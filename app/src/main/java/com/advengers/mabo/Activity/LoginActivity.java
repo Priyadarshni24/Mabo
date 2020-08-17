@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.advengers.mabo.Cometchat.constants.AppConfig;
 import com.advengers.mabo.Location.LocationTrack;
 import com.advengers.mabo.Model.User;
+import com.advengers.mabo.Sendotp.SendotpActivity;
 import com.advengers.mabo.Tools.MyActivity;
 import com.advengers.mabo.Utils.LogUtils;
 import com.advengers.mabo.Utils.NetworkUtil;
@@ -178,6 +179,7 @@ public class LoginActivity extends MyActivity implements EasyPermissions.Permiss
         });
         //facebooksignup
         facebooklogin = (Button) findViewById(R.id.btn_facebook);
+        facebooklogin.setVisibility(View.GONE);
         loginButton = findViewById(R.id.login_button);
         facebooklogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -437,12 +439,6 @@ public class LoginActivity extends MyActivity implements EasyPermissions.Permiss
                                     Utils.getInstance(LoginActivity.this).setString(USER,jsondata);
                                     User.setUser(gson.fromJson(Utils.getInstance(LoginActivity.this).getString(USER),User.class));
                                     setRange();
-                                   /* if(User.getUser().getRoomid().isEmpty()||User.getUser().getRoomid().equals("0"))
-                                    {
-                                        //  new WebCall(LoginActivity.this, LoginActivity.this, null, WebConstants.getRoomId, WebConstants.getRoomIdCode, false, true).execute();
-                                    }else{
-                                        startActivity(new Intent(LoginActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                                    }*/
                                     CreateComet(User.getUser().getId(),User.getUser().getUsername().trim(),User.getUser().getprofile_imagename());
 
                                 }
@@ -546,12 +542,6 @@ public class LoginActivity extends MyActivity implements EasyPermissions.Permiss
                         Utils.getInstance(LoginActivity.this).setString(USER,jsondata);
                         User.setUser(gson.fromJson(Utils.getInstance(LoginActivity.this).getString(USER),User.class));
                         setRange();
-                        /*if(User.getUser().getRoomid().isEmpty()||User.getUser().getRoomid().equals("0"))
-                        {
-                          //  new WebCall(LoginActivity.this, LoginActivity.this, null, WebConstants.getRoomId, WebConstants.getRoomIdCode, false, true).execute();
-                        }else{
-                            startActivity(new Intent(LoginActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                        }*/
                         CreateComet(User.getUser().getId(),User.getUser().getUsername().trim(),User.getUser().getprofile_imagename());
                     }
                 }
@@ -587,12 +577,6 @@ public class LoginActivity extends MyActivity implements EasyPermissions.Permiss
                                 Utils.getInstance(LoginActivity.this).setString(USER,jsondata);
                                 User.setUser(gson.fromJson(Utils.getInstance(LoginActivity.this).getString(USER),User.class));
                                 setRange();
-                               /* if(User.getUser().getRoomid().isEmpty()||User.getUser().getRoomid().equals("0"))
-                                {
-                                   // new WebCall(LoginActivity.this, LoginActivity.this, null, WebConstants.getRoomId, WebConstants.getRoomIdCode, false, true).execute();
-                                }else{
-                                    startActivity(new Intent(LoginActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                                }*/
                                 CreateComet(User.getUser().getId(),User.getUser().getUsername().trim(),User.getUser().getprofile_imagename());
                             }
                         }else if(CODE.equals("CreateComet")) {
@@ -657,7 +641,8 @@ public class LoginActivity extends MyActivity implements EasyPermissions.Permiss
                              public void onSuccess(com.cometchat.pro.models.User user) {
                                  onLoadDismiss();
                                 FirebaseMessaging.getInstance().subscribeToTopic(AppConfig.AppDetails.AppID_user_UID);
-                                 startActivity(new Intent(LoginActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                               //  startActivity(new Intent(LoginActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                                 startActivity(new Intent(LoginActivity.this, SendotpActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                              }
 
                              @Override
@@ -713,7 +698,7 @@ public class LoginActivity extends MyActivity implements EasyPermissions.Permiss
             loc.setLongitude(longitude);*/
             if(User.getUser().isLogged())
             {
-                startActivity(new Intent(LoginActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+             //   startActivity(new Intent(LoginActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
             }
 
             //    UpdateLocation(loc);

@@ -74,6 +74,7 @@
         android:id="@+id/txt_name"
         android:textSize="@dimen/textsize18"
         android:focusable="false"
+        android:maxLength="35"
         android:textColor="@color/black"
         android:background="@color/white"
         android:layout_below="@+id/img_profile"

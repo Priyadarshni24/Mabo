@@ -22,6 +22,9 @@ import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.msg91.sendotpandroid.library.internal.SendOTP;
+import com.teliver.sdk.core.TLog;
+import com.teliver.sdk.core.Teliver;
 
 
 import org.acra.ACRA;
@@ -32,13 +35,15 @@ import org.acra.annotation.ReportsCrashes;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.bugfender.sdk.Bugfender;
+import com.bugfender.android.BuildConfig;
 import listeners.CometChatCallListener;
 import utils.FontUtils;
 
-@ReportsCrashes(mailTo = "techie@advengersmedia.com",
+/*@ReportsCrashes(mailTo = "techie@advengersmedia.com",
         customReportContent = { ReportField.APP_VERSION_CODE, ReportField.APP_VERSION_NAME, ReportField.ANDROID_VERSION, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA, ReportField.STACK_TRACE, ReportField.LOGCAT },
         mode = ReportingInteractionMode.TOAST,
-        resToastText = R.string.resToastText)
+        resToastText = R.string.resToastText)*/
 public class App extends Application {
 
 
@@ -55,15 +60,23 @@ public class App extends Application {
     private static String roomid = null;
     @Override
     public void onCreate() {
-        ACRA.init(this);
         super.onCreate();
-
+        Bugfender.init(this, "lL0if3tiK3aSUUNa0jGZgx7ucZLRTijg", BuildConfig.DEBUG);
+        Bugfender.enableCrashReporting();
+        Bugfender.enableUIEventLogging(this);
+        Bugfender.enableLogcatLogging(); // optional, if you want logs automatically collected from logcat
+        ACRA.init(this);
+        Teliver.init(this,"7f5d5d86c194deec1d3ba9ffde30a6a9");
+        TLog.setVisible(true);
+        SendOTP.initializeApp(this,"com.advengers.mabo");
         appInstance = this;
 
         app_data_sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         volleySingleTone = VolleySingleTone.getsInstance();
         requestQueue = volleySingleTone.getMrequestqueue();
         requestQueue.getCache().clear();
+
+      //  Teliver.init(this,"7f5d5d86c194deec1d3ba9ffde30a6a9");
         //mImageLoader = volleySingleTone.getImageLoader();
         FontsOverride.setDefaultFont(this, "DEFAULT", "gibsonregular.ttf");
      //   new FontUtils(this);

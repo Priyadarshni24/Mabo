@@ -123,6 +123,10 @@
         <activity android:name=".Activity.ForgotpasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".Sendotp.SendotpActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Sendotp.VerificationActivity"
+            android:screenOrientation="portrait"/>
        <!-- <activity android:name=".Cometchat.Activity.MapActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>-->
@@ -151,9 +155,9 @@
             android:required="false" />
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <meta-data
+       <!-- <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/API_KEY"/>
+            android:value="@string/API_KEY"/>-->
         <receiver
             android:name=".Services.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >

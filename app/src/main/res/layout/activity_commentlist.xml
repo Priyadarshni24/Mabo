@@ -36,7 +36,7 @@
             android:weightSum="2"
             android:maxHeight="@dimen/dimen200"
             android:orientation="horizontal">
-            <EditText
+            <AutoCompleteTextView
                 android:background="@drawable/background_with_shadow"
                 android:layout_weight="1.8"
                 android:maxHeight="@dimen/dimen200"

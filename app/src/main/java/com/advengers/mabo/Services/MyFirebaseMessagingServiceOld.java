@@ -161,6 +161,7 @@ public class MyFirebaseMessagingServiceOld extends FirebaseMessagingService {
                 .setLargeIcon(bitmap)*/
                 .setWhen(System.currentTimeMillis())
                 .setPriority(Notification.PRIORITY_MAX);
+        notificationManager.notify(createID(), notificationBuilder.build());
               //  db = new MyDBHandler(getBaseContext());
                // User user = new Gson().fromJson(Utils.getInstance(getBaseContext()).getString(USER),User.class);
            //     db.insertMessages(name,id, user.getId(),Config.message,RECEIVED,roomid);

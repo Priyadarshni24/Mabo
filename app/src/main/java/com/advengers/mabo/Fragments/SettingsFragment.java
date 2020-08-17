@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -97,11 +98,11 @@ import static com.advengers.mabo.Interfaces.Keys.STATUS_JSON;
 import static com.advengers.mabo.Interfaces.Keys.USER;
 
 public class SettingsFragment extends MyFragment implements
-                                                            View.OnClickListener,
-                                                            CheckBox.OnCheckedChangeListener,
-                                                            RadioGroup.OnCheckedChangeListener,
-                                                            InterestAdapter.SelectedInterest,
-                                                            EasyPermissions.PermissionCallbacks,
+        View.OnClickListener,
+        CheckBox.OnCheckedChangeListener,
+        RadioGroup.OnCheckedChangeListener,
+        InterestAdapter.SelectedInterest,
+        EasyPermissions.PermissionCallbacks,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     FragmentSettingsBinding binding;
@@ -111,9 +112,10 @@ public class SettingsFragment extends MyFragment implements
     String SelectedInterest;
     InterestAdapter adapter;
     String sim_country_code;
-    private static final int RC_PHONE = 1 ;
+    private static final int RC_PHONE = 1;
     int RESOLVE_HINT = 0;
     String message = "";
+
     @Override
     public String getTagManager() {
         return getResources().getString(R.string.app_name);
@@ -126,7 +128,7 @@ public class SettingsFragment extends MyFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding= DataBindingUtil.inflate(inflater,R.layout.fragment_settings, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false);
         getUser();
       /*  binding.txtName.setFocusable(false);
         binding.edtPhone.setFocusable(false);
@@ -140,35 +142,35 @@ public class SettingsFragment extends MyFragment implements
         binding.radioPublic.setEnabled(false);*/
         binding.txtEmail.setText(User.getUser().getEmail());
         binding.txtName.setText(User.getUser().getUsername());
-        if(user.getPhone()!=null && user.getPhone().length()>0)
+        if (user.getPhone() != null && user.getPhone().length() > 0)
             binding.edtPhone.setText(user.getPhone());
-    //    LogUtils.e(gson.toJson(user));
+        //    LogUtils.e(gson.toJson(user));
 
-        if(user.getEmail_notify()==null)
+        if (user.getEmail_notify() == null)
             binding.tglEmail.setChecked(false);
-        else if(user.getEmail_notify().equals("1"))
+        else if (user.getEmail_notify().equals("1"))
             binding.tglEmail.setChecked(true);
 
-        if(user.getPush_notify()==null)
+        if (user.getPush_notify() == null)
             binding.tglPush.setChecked(false);
-        else if(user.getPush_notify().equals("1"))
+        else if (user.getPush_notify().equals("1"))
             binding.tglPush.setChecked(true);
 
-        if(user.getScrumble_location()==null)
+        if (user.getScrumble_location() == null)
             binding.tglScrumble.setChecked(false);
-        else if(user.getScrumble_location().equals("1"))
+        else if (user.getScrumble_location().equals("1"))
             binding.tglScrumble.setChecked(true);
 
-        if(user.getEmail_notify()==null)
+        if (user.getEmail_notify() == null)
             binding.tglFavorite.setChecked(false);
-        else if(user.getEmail_notify().equals("1"))
+        else if (user.getEmail_notify().equals("1"))
             binding.tglFavorite.setChecked(true);
 
-        if(user.getProfile_display_status()==null)
+        if (user.getProfile_display_status() == null)
             binding.radioPublic.setChecked(true);
-        else if(user.getProfile_display_status().equals("1"))
+        else if (user.getProfile_display_status().equals("1"))
             binding.radioPrivate.setChecked(true);
-        if(user.getGender()!=null && user.getGender().length()>0)
+        if (user.getGender() != null && user.getGender().length() > 0)
             binding.edtGender.setText(user.getGender());
 
         binding.edtGender.setClickable(false);
@@ -177,12 +179,11 @@ public class SettingsFragment extends MyFragment implements
         binding.txtEditprofile.setOnClickListener(this);
         binding.llChangepassword.setOnClickListener(this);
         binding.imgProfile.setOnClickListener(this);
-     //   LogUtils.e(user.getprofile_imagename());
+        //   LogUtils.e(user.getprofile_imagename());
         getUser();
-        if(user.getprofile_imagename()!=null)
-        {
-            if(!user.getprofile_imagename().isEmpty())
-            Picasso.get().load(user.getprofile_imagename()).into(binding.imgProfile);
+        if (user.getprofile_imagename() != null) {
+            if (!user.getprofile_imagename().isEmpty())
+                Picasso.get().load(user.getprofile_imagename()).into(binding.imgProfile);
         }
         getInterest();
         onUpdateProfile();
@@ -192,9 +193,8 @@ public class SettingsFragment extends MyFragment implements
         binding.tglFavorite.setOnCheckedChangeListener(this);
         binding.radioGroup.setOnCheckedChangeListener(this);
         onEditProfileDone();
-        RequiresPermission();
-        if(!user.getLogin_type().equals("manual"))
-        {
+     //   RequiresPermission();
+        if (!user.getLogin_type().equals("manual")) {
             binding.llChangepassword.setVisibility(View.GONE);
         }
       /*  try {
@@ -210,7 +210,7 @@ public class SettingsFragment extends MyFragment implements
         HintRequest hintRequest = new HintRequest.Builder()
                 .setPhoneNumberIdentifierSupported(true)
                 .build();
-        if(mGoogleApiClient==null) {
+        if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                     .addConnectionCallbacks(this)
                     .enableAutoManage(getActivity(), this)
@@ -226,7 +226,7 @@ public class SettingsFragment extends MyFragment implements
 
     @AfterPermissionGranted(RC_PHONE)
     private void RequiresPermission() {
-        String[] perms = {Manifest.permission.READ_PHONE_STATE,Manifest.permission.GET_ACCOUNTS};
+        String[] perms = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.GET_ACCOUNTS};
         if (EasyPermissions.hasPermissions(getActivity(), perms)) {
             try {
               /*  TelephonyManager telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
@@ -234,10 +234,9 @@ public class SettingsFragment extends MyFragment implements
                 String getSimSerialNumber = telephonyManager.getSimSerialNumber();
                 String getSimNumber =getNoFromWatsApp();// telephonyManager.getVoiceMailNumber();//getLine1Number();
                 LogUtils.e("Countrycode " + sim_country_code + " " + getSimSerialNumber + " " + getSimNumber);*/
-            sim_country_code =  "+"+ GetCountryZipCode();
-                LogUtils.e("Countrycode " + sim_country_code );
-            }catch (SecurityException e)
-            {
+                sim_country_code = "+" + GetCountryZipCode();
+                LogUtils.e("Countrycode " + sim_country_code);
+            } catch (SecurityException e) {
                 e.printStackTrace();
             }
         } else {
@@ -252,6 +251,9 @@ public class SettingsFragment extends MyFragment implements
         String CountryZipCode = "";
 
         TelephonyManager manager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+
+        //LogUtils.e("Phonenumber " + manager.getLine1Number());
+        
         //getNetworkCountryIso
         CountryID = manager.getSimCountryIso().toUpperCase();
         String[] rl = getActivity().getResources().getStringArray(R.array.CountryCodes);
@@ -412,7 +414,7 @@ public class SettingsFragment extends MyFragment implements
             user.setInterests(SelectedInterest);
 
         App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST,
-                URL,new ServerParams().updateuser(user,sim_country_code)
+                URL,new ServerParams().updateuser(user)
                 , updatelister,update_error_listener));
     }
 
@@ -422,10 +424,10 @@ public class SettingsFragment extends MyFragment implements
         binding.txtName.setFocusable(true);
         binding.txtName.setEnabled(true);
 
-        binding.edtPhone.requestFocus();
+        /*binding.edtPhone.requestFocus();
         binding.edtPhone.setFocusableInTouchMode(true);
         binding.edtPhone.setFocusable(true);
-        binding.edtPhone.setEnabled(true);
+        binding.edtPhone.setEnabled(true);*/
 
         binding.edtGender.setFocusable(true);
         binding.edtGender.setClickable(true);

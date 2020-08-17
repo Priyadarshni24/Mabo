@@ -107,6 +107,13 @@ public class ServerParams {
         return map;
 
     }
+    public HashMap<String, String> loadNotification(String id) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(USER_ID,id);
+        LogUtils.e(map.toString());
+        return map;
+
+    }
     public HashMap<String, String> listlike(String postid) {
         HashMap<String, String> map = new HashMap<>();
         map.put(POSTID,postid);
@@ -121,11 +128,12 @@ public class ServerParams {
         return map;
     }
 
-    public HashMap<String, String> commentpost(String userid,String comment,String postid) {
+    public HashMap<String, String> commentpost(String userid,String comment,String postid,String tagid) {
         HashMap<String, String> map = new HashMap<>();
         map.put(POSTID,postid);
         map.put(USERID,userid);
         map.put(COMMENT,comment);
+        map.put(TAGPEOPLEID,tagid);
         LogUtils.e(map.toString());
         return map;
      }
@@ -173,8 +181,8 @@ public class ServerParams {
         map.put(VIDEO_URL,videourl);
         map.put(TAGINTEREST,taginterest);
         map.put(TAGLOCATION,taglocation);
-        map.put(TAGPEOPLE,tagpeople);
-        map.put(TAGPEOPLEID,tagpeopleid);
+        map.put(TAGPEOPLE,tagpeopleid);
+       /* map.put(TAGPEOPLEID,tagpeopleid);*/
         map.put(TAGPLACEID,tagplaceid);
         map.put(VIDEO_THUMBNAIL,"");
         LogUtils.e(map.toString());
@@ -326,7 +334,7 @@ public class ServerParams {
 
     }
 
-    public HashMap<String, String> updateuser(User user,String code) {
+    public HashMap<String, String> updateuser(User user) {
         HashMap<String, String> map = new HashMap<>();
         map.put(USERNAME, user.getUsername());
         map.put(FIRSTNAME,"");

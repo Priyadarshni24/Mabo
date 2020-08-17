@@ -20,6 +20,7 @@ import com.advengers.mabo.Cometchat.Presenters.CometChatActivityPresenter;
 import com.advengers.mabo.Cometchat.Utils.FontUtils;*/
 import com.advengers.mabo.Database.MyDBHandler;
 import com.advengers.mabo.Fragments.ChatFragment;
+import com.advengers.mabo.Fragments.NotificationFragment;
 import com.advengers.mabo.Fragments.PeoplesFragment;
 import com.advengers.mabo.Fragments.SettingsFragment;
 import com.advengers.mabo.Fragments.TrendingFragment;
@@ -145,9 +146,9 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
                         manager.beginTransaction().replace(R.id.container, new PeoplesFragment()).commit();
                     }
                     return true;
-              /*  case R.id.navigation_fav:
-                    binding.message.setText(R.string.title_notifications);
-                    *//*CometChat.deleteMessage(788,new CometChat.CallbackListener<BaseMessage>() {
+                case R.id.navigation_notify:
+                    //binding.message.setText(R.string.title_notifications);
+/*                    CometChat.deleteMessage(788,new CometChat.CallbackListener<BaseMessage>() {
                         @Override
                         public void onSuccess(BaseMessage message) {
                             Log.e(TAG, "Message deleted successfully at : " + message.getDeletedAt());
@@ -158,10 +159,12 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
                             Log.e(TAG, e.getMessage());
                         }
 
-                    });*//*
+                    });
                     startActivity(new Intent(DashboardActivity.this, CometChatUnified.class));
-                   *//* overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );*//*
-                    return true;*/
+                    overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );*/
+                    manager=getSupportFragmentManager();
+                    manager.beginTransaction().replace(R.id.container, new NotificationFragment()).commit();
+                    return true;
                 case R.id.navigation_chat:
                     manager=getSupportFragmentManager();
                     manager.beginTransaction().replace(R.id.container, new ChatFragment()).commit();
@@ -180,14 +183,14 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(DashboardActivity.this,R.layout.activity_dashboard);
         binding.navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        binding.navView.setSelectedItemId(R.id.navigation_trending);
+        binding.navView.setSelectedItemId(R.id.navigation_settings);
 
         context = this;
 
 
         manager=getSupportFragmentManager();//create an instance of fragment manager
         transaction=manager.beginTransaction();//create an instance of Fragment-transaction
-        transaction.add(R.id.container,new TrendingFragment());
+        transaction.add(R.id.container,new SettingsFragment());
         transaction.commitAllowingStateLoss();
         Uri data = this.getIntent().getData();
         if (data != null && data.isHierarchical()) {

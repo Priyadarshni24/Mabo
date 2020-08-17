@@ -65,7 +65,7 @@ public class MapActivity extends MyActivity implements OnMapReadyCallback,
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
+        setContentView(R.layout.activity_location);
 
         mContext = MapActivity.this;
         mToolbar = (Toolbar)findViewById(R.id.mToolbar);

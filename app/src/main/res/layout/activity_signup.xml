@@ -201,6 +201,20 @@
                     android:visibility="gone"
                     android:textColor="@color/white" />
 
+                <Button
+                    android:id="@+id/btn_otp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:text="Genarate OTP"
+                    android:textSize="16dp"
+                    android:visibility="gone"
+                    android:textColor="@color/black" />
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -36,6 +36,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthSettings;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
@@ -45,6 +50,7 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import static com.advengers.mabo.Activity.MainActivity.LOGIN;
 import static com.advengers.mabo.Activity.MainActivity.REGISTER;
@@ -54,22 +60,27 @@ import static com.advengers.mabo.Interfaces.Keys.STATUS_JSON;
 
 public class SignupActivity extends MyActivity {
     public TextView forgetten, title, subtitle, phonenosignup, emailidsignup;
-    public Button login, googlelogin, facebooklogin, signup;
+    public Button login, googlelogin, facebooklogin, signup,generateotp;
     public ImageView profile;
     public Spinner citysignup;
     Dialog emailsignupdialog;
     String token;
+    PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallback;
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseAuthSettings firebaseAuthSettings = firebaseAuth.getFirebaseAuthSettings();
     ImageView pwdview,cpwdview;
-
     EditText etusername, etpassword,etname,etcnfpassword;
-
+  //  FirebaseAuth auth;
+    private String verificationCode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+      //  auth = FirebaseAuth.getInstance();
 
         //googlesignup
         googlelogin = (Button) findViewById(R.id.btn_google);
+        generateotp = (Button) findViewById(R.id.btn_otp);
         googlelogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,8 +111,20 @@ public class SignupActivity extends MyActivity {
 
             }
         });
-
-
+        StartFirebaseLogin();
+      //  firebaseAuthSettings.setAutoRetrievedSmsCodeForPhoneNumber("+919790449694", "123456");
+        PhoneAuthProvider phoneAuthProvider = PhoneAuthProvider.getInstance();
+        generateotp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                phoneAuthProvider.verifyPhoneNumber(
+                        "+919790449694",                     // Phone number to verify
+                        60,                           // Timeout duration
+                        TimeUnit.SECONDS,                // Unit of timeout
+                        SignupActivity.this,        // Activity (for callback binding)
+                        mCallback);                      // OnVerificationStateChangedCallbacks
+            }
+        });
         //forgetten function
          etname = (EditText) findViewById(R.id.et_name);
          etusername = (EditText) findViewById(R.id.et_username);
@@ -253,7 +276,38 @@ public class SignupActivity extends MyActivity {
         }
     };
 
+    private void StartFirebaseLogin() {
 
+      //  auth = FirebaseAuth.getInstance();
+
+        mCallback = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+                Toast.makeText(SignupActivity.this,"verification completed",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+                Toast.makeText(SignupActivity.this,"verification fialed",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+//                super.onCodeSent(s, forceResendingToken);
+                verificationCode = s;
+                LogUtils.e("Code sent "+s);
+                Toast.makeText(SignupActivity.this,"Code sent",Toast.LENGTH_SHORT).show();
+                super.onCodeSent(s, forceResendingToken);
+            }
+
+            @Override
+            public void onCodeAutoRetrievalTimeOut(@NonNull String s) {
+                LogUtils.e("Timout "+s);
+                super.onCodeAutoRetrievalTimeOut(s);
+            }
+        };
+    }
 
     Response.ErrorListener register_error_listener = new Response.ErrorListener() {
         @Override
