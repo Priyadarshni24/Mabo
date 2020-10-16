@@ -48,6 +48,7 @@ import com.advengers.mabo.Adapter.NewPostPicturesListAdapter;
 import com.advengers.mabo.Adapter.TagpeopleAdapter;
 import com.advengers.mabo.Adapter.VideoSlideAdapter;
 import com.advengers.mabo.Model.Interest;
+import com.advengers.mabo.Model.Tag;
 import com.advengers.mabo.Model.User;
 import com.advengers.mabo.R;
 import com.advengers.mabo.ServerCall.MyVolleyRequestManager;
@@ -75,8 +76,12 @@ import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 //import com.iceteck.silicompressorr.SiliCompressor;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -96,6 +101,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.advengers.mabo.Activity.MainActivity.CLOUDBASEURL;
 import static com.advengers.mabo.Activity.MainActivity.CLOUDVIDEOBASEURL;
@@ -883,10 +889,13 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
                     }
                     String URL = SERVER_URL + CREATEPOST;
                     URL = URL.replaceAll(" ", "%20");
+                    JSONArray jsonArray = new JSONArray();
                     String tagpeople = "";
                     String tagpeopleid = "";
+                    LogUtils.e("Tag Size "+taglist.size());
                     if (taglist.size() > 0)
                         for (int i = 0; i < taglist.size(); i++) {
+
                             if (i == 0) {
                                 tagpeople = taglist.get(i).getUsername();
                                 tagpeopleid = taglist.get(i).getId();
@@ -895,10 +904,8 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
                                 tagpeople = tagpeople + "," + taglist.get(i).getUsername();
                                 tagpeopleid = tagpeopleid + "," + taglist.get(i).getId();
                             }
-
-                        }
-
-                    App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST, URL,
+                         }
+                                  App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST, URL,
                             new ServerParams().createPost(user.getId(),StringEscapeUtils.escapeJava(binding.edtpost.getText().toString()), user.getLatitude(), user.getLongitude(),
                                     images, "", tagplace, selectedinterest, tagpeople, tagpeopleid, tagplaceid), postlister, post_error_listener));
                     LogUtils.e("ALL Image uploaded " + imageUrls.toString());
