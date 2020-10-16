@@ -35,8 +35,8 @@ import org.acra.annotation.ReportsCrashes;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.bugfender.sdk.Bugfender;
-import com.bugfender.android.BuildConfig;
+/*import com.bugfender.sdk.Bugfender;
+import com.bugfender.android.BuildConfig;*/
 import listeners.CometChatCallListener;
 import utils.FontUtils;
 
@@ -61,10 +61,10 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Bugfender.init(this, "lL0if3tiK3aSUUNa0jGZgx7ucZLRTijg", BuildConfig.DEBUG);
+      /*  Bugfender.init(this, "lL0if3tiK3aSUUNa0jGZgx7ucZLRTijg", BuildConfig.DEBUG);
         Bugfender.enableCrashReporting();
         Bugfender.enableUIEventLogging(this);
-        Bugfender.enableLogcatLogging(); // optional, if you want logs automatically collected from logcat
+        Bugfender.enableLogcatLogging(); // optional, if you want logs automatically collected from logcat*/
         ACRA.init(this);
         Teliver.init(this,"7f5d5d86c194deec1d3ba9ffde30a6a9");
         TLog.setVisible(true);
