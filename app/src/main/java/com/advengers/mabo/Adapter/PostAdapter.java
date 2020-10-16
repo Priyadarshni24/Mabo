@@ -3,6 +3,10 @@ package com.advengers.mabo.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,26 +17,32 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.advengers.mabo.Model.Post;
+import com.advengers.mabo.Model.Tag;
 import com.advengers.mabo.Model.User;
 import com.advengers.mabo.R;
 import com.advengers.mabo.Utils.LogUtils;
 import com.advengers.mabo.Utils.Tools;
 import com.advengers.mabo.Utils.Utils;
 import com.advengers.mabo.databinding.ListPostBinding;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static com.advengers.mabo.Activity.MainActivity.CLOUDBASEURL;
+import static com.advengers.mabo.Interfaces.Keys.DATA;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private Context context;
@@ -108,14 +118,54 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
        if(!postdata.get(position).getId().equals("55"))
         holder.binding.txtPostname.setText(StringEscapeUtils.unescapeJava(postdata.get(position).getPost_title()));
         holder.binding.txtPostdistance.setText(Utils.df2.format(Double.parseDouble(postdata.get(position).getDistance())*1.6)+" "+context.getString(R.string.str_kms));
-        if(!postdata.get(position).getTag_people().isEmpty())
-        {
-            holder.binding.txtPostdesc.setText(context.getString(R.string.str_with)+" "+postdata.get(position).getTag_people());
-        }
+        String content = "";
         if(!postdata.get(position).getTag_location().isEmpty())
         {
-            holder.binding.txtPostdesc.setText(holder.binding.txtPostdesc.getText()+" @"+postdata.get(position).getTag_location());
+            content = "@"+postdata.get(position).getTag_location();
+            holder.binding.txtPostdesc.setText(content);
         }
+        if(!postdata.get(position).getTag_people().isEmpty())
+        {
+
+            String tagpeople = "";
+
+            List<Tag> tagpeoples = postdata.get(position).getTagpeopledata();
+                for(int i=0;i<tagpeoples.size();i++) {
+                    if(i==0)
+                        tagpeople = tagpeoples.get(0).getUsername();
+                    else
+                        tagpeople = tagpeople+" "+tagpeoples.get(i).getUsername();
+                }
+             content = content+" with "+tagpeople;
+                tagpeople = "";
+                LogUtils.e(content);
+            SpannableStringBuilder ssBuilder = new SpannableStringBuilder(content);
+            ClickableSpan[] clickableSpans = new ClickableSpan[tagpeoples.size()];
+            for (int i=0;i<tagpeoples.size();i++)
+            {
+                int finalI = i;
+                clickableSpans[i] = new ClickableSpan() {
+                @Override
+                public void onClick(@NonNull View widget) {
+                    LogUtils.e(""+tagpeoples.get(finalI).getUsername());
+                    mLikeCommentcallback.onProfile(tagpeoples.get(finalI).getId());
+                }
+            }; }
+            for(int i =0;i<tagpeoples.size();i++)
+                ssBuilder.setSpan(
+                        clickableSpans[i],
+                        content.indexOf(tagpeoples.get(i).getUsername()),
+                        content.indexOf(tagpeoples.get(i).getUsername()) + String.valueOf(tagpeoples.get(i).getUsername()).length(),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                );
+            // Display the spannable text to TextView
+            holder.binding.txtPostdesc.setText(ssBuilder);
+
+            // Specify the TextView movement method
+            holder.binding.txtPostdesc.setMovementMethod(LinkMovementMethod.getInstance());
+
+        }
+
         holder.binding.likecount.setText(postdata.get(position).getLikecount()+" "+context.getString(R.string.str_likes));
         if(postdata.get(position).getLikedbyme()==null)
         {
@@ -178,7 +228,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             @Override
             public void onClick(View view) {
              //   Tools.showUserProfile(R.style.Animation_Design_BottomSheetDialog, User.getUser(),context,context);
-                mLikeCommentcallback.onProfile(position);
+                mLikeCommentcallback.onProfile(postdata.get(position).getUser_id());
             }
         });
         holder.binding.likecount.setOnClickListener(new View.OnClickListener() {
@@ -213,7 +263,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         public void onComment(int position,String postid);
         public void onDirection(int position);
         public void onShare(int position);
-        public void onProfile(int position);
+        public void onProfile(String userid);
         public void onLikeList(String postid);
     }
 }
