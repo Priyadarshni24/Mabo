@@ -171,6 +171,14 @@ public class ServerParams {
         return map;
     }
 
+    public HashMap<String, String> UpdatePhonenumber(String userid,String phone) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(USERID,userid);
+        map.put(PHONE, phone);
+        LogUtils.e(map.toString());
+        return map;
+    }
+
     public HashMap<String, String> createPost(String id,String title,String latitude,String longitude,String imageurl,String videourl,String taglocation,String taginterest,String tagpeople,String tagpeopleid,String tagplaceid) {
         HashMap<String, String> map = new HashMap<>();
         map.put(USERID,id);

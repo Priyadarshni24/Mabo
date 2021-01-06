@@ -4,11 +4,21 @@ public class Notification {
 
     String id;
     String user_id;
+
+    String post_id;
     String notification_msg;
     String status;
     String sender_user_id;
     String date;
     String category;
+
+    public String getPost_id() {
+        return post_id;
+    }
+
+    public void setPost_id(String post_id) {
+        this.post_id = post_id;
+    }
 
     public String getId() {
         return id;

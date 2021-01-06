@@ -23,7 +23,7 @@
             android:visibility="gone"
             android:src="@drawable/cc_ic_group" />
 
-        <com.advengers.mabo.Cometchat.CustomView.CircleImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageViewUserAvatar"
             android:layout_width="45dp"
             android:layout_height="45dp"

@@ -65,7 +65,7 @@ public class SendotpActivity extends AppCompatActivity {
     private void tryAndPrefillPhoneNumber() {
         if (checkCallingOrSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
             TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-            mPhoneNumber.setText(manager.getLine1Number());
+          //  mPhoneNumber.setText(manager.getLine1Number());
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 0);
         }

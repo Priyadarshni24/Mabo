@@ -59,6 +59,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
         holder.binding.txtName.setText(likelist.get(position).getNotification_msg());
         holder.binding.imgProfile.setVisibility(View.GONE);
+        holder.binding.rlRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                profilecallback.onItem(position);
+            }
+        });
         /*if(!likelist.get(position).getProfile_imagename().isEmpty())
             Picasso.get().load(likelist.get(position).getProfile_imagename()).placeholder(R.drawable.ic_avatar).into(holder.binding.imgProfile);
         holder.binding.imgProfile.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +99,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     public interface ProfileClick
     {
-        public void onProfile(int position);
+        public void onItem(int position);
     }
 }
 

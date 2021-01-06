@@ -116,7 +116,7 @@ public class LocationTrack extends Service implements LocationListener {
                                 .getLastKnownLocation(LocationManager.GPS_PROVIDER);
                       /*  if(loc==null)
                             getLocation();*/
-                        Log.e("location ",loc.toString());
+//                        Log.e("location ",loc.toString());
                         if (loc != null) {
                             latitude = loc.getLatitude();
                             longitude = loc.getLongitude();

@@ -8,12 +8,12 @@
     android:orientation="vertical">
     <TextView
         android:id="@+id/marker_title"
-        android:layout_width="@dimen/dimen250"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="@dimen/margin5"
         android:text="@string/str_sendlocation"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:textSize="@dimen/margin15"
         android:visibility="gone"
         android:textColor="@android:color/black"
@@ -21,12 +21,13 @@
 
     <TextView
         android:id="@+id/marker_text"
-        android:layout_width="@dimen/dimen250"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
         android:padding="@dimen/margin5"
         android:visibility="gone"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:textColor="@android:color/black"/>
 
     <ImageView

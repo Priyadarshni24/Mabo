@@ -66,9 +66,9 @@ public class App extends Application {
         Bugfender.enableUIEventLogging(this);
         Bugfender.enableLogcatLogging(); // optional, if you want logs automatically collected from logcat*/
         ACRA.init(this);
-        Teliver.init(this,"7f5d5d86c194deec1d3ba9ffde30a6a9");
+        Teliver.init(this,"cde1cb937533fe59df3f1e1af9f6d3e3");
         TLog.setVisible(true);
-        SendOTP.initializeApp(this,"com.advengers.mabo");
+        SendOTP.initializeApp(this,"335467AbkkMMivnJ5f1996d6P1");//"com.advengers.mabo");
         appInstance = this;
 
         app_data_sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

@@ -110,133 +110,133 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             }
             sliderAdapter = new PosrSliderAdapter(activity,context,listimage,Videoimage);
             holder.binding.slideViewpager.setAdapter(sliderAdapter);
-        }
-        holder.binding.txtName.setText(postdata.get(position).getUserdetails().getUsername());
-        holder.binding.txtAddress.setText(Tools.getAddress(context,Double.parseDouble(postdata.get(position).getLatitude()),Double.parseDouble(postdata.get(position).getLongitude())));
-       if(!postdata.get(position).getUserdetails().getProfile_imagename().isEmpty())
-        Picasso.get().load(postdata.get(position).getUserdetails().getProfile_imagename()).placeholder(R.drawable.ic_avatar).into(holder.binding.imgProfile);
-       if(!postdata.get(position).getId().equals("55"))
-        holder.binding.txtPostname.setText(StringEscapeUtils.unescapeJava(postdata.get(position).getPost_title()));
-        holder.binding.txtPostdistance.setText(Utils.df2.format(Double.parseDouble(postdata.get(position).getDistance())*1.6)+" "+context.getString(R.string.str_kms));
-        String content = "";
-        if(!postdata.get(position).getTag_location().isEmpty())
-        {
-            content = "@"+postdata.get(position).getTag_location();
-            holder.binding.txtPostdesc.setText(content);
-        }
-        if(!postdata.get(position).getTag_people().isEmpty())
-        {
+        }try {
+            if (postdata.get(position).getUserdetails().getUsername() != null)
+                holder.binding.txtName.setText(postdata.get(position).getUserdetails().getUsername());
+            holder.binding.txtAddress.setText(Tools.getAddress(context, Double.parseDouble(postdata.get(position).getLatitude()), Double.parseDouble(postdata.get(position).getLongitude())));
+            if (!postdata.get(position).getUserdetails().getProfile_imagename().isEmpty())
+                Picasso.get().load(postdata.get(position).getUserdetails().getProfile_imagename()).placeholder(R.drawable.ic_avatar).into(holder.binding.imgProfile);
+            if (!postdata.get(position).getId().equals("55"))
+                holder.binding.txtPostname.setText(StringEscapeUtils.unescapeJava(postdata.get(position).getPost_title()));
+            holder.binding.txtPostdistance.setText(Utils.df2.format(Double.parseDouble(postdata.get(position).getDistance()) * 1.6) + " " + context.getString(R.string.str_kms));
+            String content = "";
+            if (!postdata.get(position).getTag_location().isEmpty()) {
+                content = "@" + postdata.get(position).getTag_location();
+                holder.binding.txtPostdesc.setText(content);
+            }
+            if (!postdata.get(position).getTag_people().isEmpty()) {
 
-            String tagpeople = "";
+                String tagpeople = "";
 
-            List<Tag> tagpeoples = postdata.get(position).getTagpeopledata();
-                for(int i=0;i<tagpeoples.size();i++) {
-                    if(i==0)
+                List<Tag> tagpeoples = postdata.get(position).getTagpeopledata();
+                for (int i = 0; i < tagpeoples.size(); i++) {
+                    if (i == 0)
                         tagpeople = tagpeoples.get(0).getUsername();
                     else
-                        tagpeople = tagpeople+" "+tagpeoples.get(i).getUsername();
+                        tagpeople = tagpeople + " " + tagpeoples.get(i).getUsername();
                 }
-             content = content+" with "+tagpeople;
+                content = content + " with " + tagpeople;
                 tagpeople = "";
                 LogUtils.e(content);
-            SpannableStringBuilder ssBuilder = new SpannableStringBuilder(content);
-            ClickableSpan[] clickableSpans = new ClickableSpan[tagpeoples.size()];
-            for (int i=0;i<tagpeoples.size();i++)
-            {
-                int finalI = i;
-                clickableSpans[i] = new ClickableSpan() {
+                SpannableStringBuilder ssBuilder = new SpannableStringBuilder(content);
+                ClickableSpan[] clickableSpans = new ClickableSpan[tagpeoples.size()];
+                for (int i = 0; i < tagpeoples.size(); i++) {
+                    int finalI = i;
+                    clickableSpans[i] = new ClickableSpan() {
+                        @Override
+                        public void onClick(@NonNull View widget) {
+                            LogUtils.e("" + tagpeoples.get(finalI).getUsername());
+                            mLikeCommentcallback.onProfile(tagpeoples.get(finalI).getId());
+                        }
+                    };
+                }
+                for (int i = 0; i < tagpeoples.size(); i++)
+                    ssBuilder.setSpan(
+                            clickableSpans[i],
+                            content.indexOf(tagpeoples.get(i).getUsername()),
+                            content.indexOf(tagpeoples.get(i).getUsername()) + String.valueOf(tagpeoples.get(i).getUsername()).length(),
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    );
+                // Display the spannable text to TextView
+                holder.binding.txtPostdesc.setText(ssBuilder);
+
+                // Specify the TextView movement method
+                holder.binding.txtPostdesc.setMovementMethod(LinkMovementMethod.getInstance());
+
+            }
+
+            holder.binding.likecount.setText(postdata.get(position).getLikecount() + " " + context.getString(R.string.str_likes));
+            if (postdata.get(position).getLikedbyme() == null) {
+                postdata.get(position).setLikedbyme("0");
+            }
+            if (postdata.get(position).getLikedbyme().equals("0"))
+                holder.binding.imdLike.setImageResource(R.drawable.ic_unlike);
+            else
+                holder.binding.imdLike.setImageResource(R.drawable.fav);
+            holder.binding.imdLike.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(@NonNull View widget) {
-                    LogUtils.e(""+tagpeoples.get(finalI).getUsername());
-                    mLikeCommentcallback.onProfile(tagpeoples.get(finalI).getId());
+                public void onClick(View view) {
+                    int Count = Integer.parseInt(postdata.get(position).getLikecount());
+                    if (postdata.get(position).getLikedbyme().equals("0")) {
+                        postdata.get(position).setLikedbyme("1");
+                        holder.binding.imdLike.setImageResource(R.drawable.fav);
+                        Count = Count + 1;
+                        postdata.get(position).setLikecount(String.valueOf(Count));
+                    } else {
+                        postdata.get(position).setLikedbyme("0");
+                        holder.binding.imdLike.setImageResource(R.drawable.ic_unlike);
+                        Count = Count - 1;
+                        postdata.get(position).setLikecount(String.valueOf(Count));
+                    }
+                    mLikeCommentcallback.onLike(position, postdata.get(position).getId(), postdata.get(position).getLikedbyme());
+                    holder.binding.likecount.setText(postdata.get(position).getLikecount() + " " + context.getString(R.string.str_likes));
+
                 }
-            }; }
-            for(int i =0;i<tagpeoples.size();i++)
-                ssBuilder.setSpan(
-                        clickableSpans[i],
-                        content.indexOf(tagpeoples.get(i).getUsername()),
-                        content.indexOf(tagpeoples.get(i).getUsername()) + String.valueOf(tagpeoples.get(i).getUsername()).length(),
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                );
-            // Display the spannable text to TextView
-            holder.binding.txtPostdesc.setText(ssBuilder);
-
-            // Specify the TextView movement method
-            holder.binding.txtPostdesc.setMovementMethod(LinkMovementMethod.getInstance());
-
-        }
-
-        holder.binding.likecount.setText(postdata.get(position).getLikecount()+" "+context.getString(R.string.str_likes));
-        if(postdata.get(position).getLikedbyme()==null)
+            });
+            if (userid.equals(postdata.get(position).getUser_id()))
+                holder.binding.imdForward.setVisibility(View.GONE);
+            holder.binding.commentcount.setText(postdata.get(position).getCommentcount() + " " + context.getString(R.string.title_comments));
+            holder.binding.imdComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mLikeCommentcallback.onComment(position, postdata.get(position).getId());
+                }
+            });
+            holder.binding.commentcount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mLikeCommentcallback.onComment(position, postdata.get(position).getId());
+                }
+            });
+            holder.binding.imdForward.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mLikeCommentcallback.onDirection(position);
+                }
+            });
+            holder.binding.imdShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mLikeCommentcallback.onShare(position);
+                }
+            });
+            holder.binding.imgProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //   Tools.showUserProfile(R.style.Animation_Design_BottomSheetDialog, User.getUser(),context,context);
+                    mLikeCommentcallback.onProfile(postdata.get(position).getUser_id());
+                }
+            });
+            holder.binding.likecount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mLikeCommentcallback.onLikeList(postdata.get(position).getId());
+                }
+            });
+        }catch (Exception e)
         {
-            postdata.get(position).setLikedbyme("0");
+            e.printStackTrace();
         }
-        if(postdata.get(position).getLikedbyme().equals("0"))
-            holder.binding.imdLike.setImageResource(R.drawable.ic_unlike);
-        else
-            holder.binding.imdLike.setImageResource(R.drawable.fav);
-        holder.binding.imdLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int Count = Integer.parseInt(postdata.get(position).getLikecount());
-                if(postdata.get(position).getLikedbyme().equals("0"))
-                {
-                    postdata.get(position).setLikedbyme("1");
-                    holder.binding.imdLike.setImageResource(R.drawable.fav);
-                    Count = Count + 1;
-                    postdata.get(position).setLikecount(String.valueOf(Count));
-                }else
-                {
-                    postdata.get(position).setLikedbyme("0");
-                    holder.binding.imdLike.setImageResource(R.drawable.ic_unlike);
-                    Count = Count - 1;
-                    postdata.get(position).setLikecount(String.valueOf(Count));
-                }
-                mLikeCommentcallback.onLike(position,postdata.get(position).getId(),postdata.get(position).getLikedbyme());
-                holder.binding.likecount.setText(postdata.get(position).getLikecount()+" "+context.getString(R.string.str_likes));
-
-            }
-        });
-        if(userid.equals(postdata.get(position).getUser_id()))
-            holder.binding.imdForward.setVisibility(View.GONE);
-        holder.binding.commentcount.setText(postdata.get(position).getCommentcount()+" "+context.getString(R.string.title_comments));
-        holder.binding.imdComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mLikeCommentcallback.onComment(position,postdata.get(position).getId());
-            }
-        });
-        holder.binding.commentcount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mLikeCommentcallback.onComment(position,postdata.get(position).getId());
-            }
-        });
-        holder.binding.imdForward.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              mLikeCommentcallback.onDirection(position);
-            }
-        });
-        holder.binding.imdShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mLikeCommentcallback.onShare(position);
-            }
-        });
-        holder.binding.imgProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-             //   Tools.showUserProfile(R.style.Animation_Design_BottomSheetDialog, User.getUser(),context,context);
-                mLikeCommentcallback.onProfile(postdata.get(position).getUser_id());
-            }
-        });
-        holder.binding.likecount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mLikeCommentcallback.onLikeList(postdata.get(position).getId());
-            }
-        });
     }
 
     @Override

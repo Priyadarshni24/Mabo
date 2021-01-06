@@ -7,7 +7,7 @@
     android:padding="8dp">
 
 
-    <com.advengers.mabo.Cometchat.CustomView.CircleImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imgAvatar"
         android:layout_width="24dp"
         android:layout_height="24dp"

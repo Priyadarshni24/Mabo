@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/go_img_message"
                     android:text="@string/places_cancel"
-                    android:textColor="@color/white"
+                    android:textColor="@android:color/white"
                     android:padding="@dimen/margin5"
                     android:id="@+id/txt_place"/>
             </RelativeLayout>

@@ -9,12 +9,9 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-
 import com.cometchat.pro.uikit.R;
 
 import constant.StringContract;
-
-
 
 
 public class CallNotificationService extends Service {

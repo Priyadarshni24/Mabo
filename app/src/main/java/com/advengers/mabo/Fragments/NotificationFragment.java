@@ -1,13 +1,17 @@
 package com.advengers.mabo.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import androidx.databinding.DataBindingUtil;
 
 import com.advengers.mabo.Activity.App;
+import com.advengers.mabo.Activity.DashboardActivity;
+import com.advengers.mabo.Activity.SinglePostActivity;
 import com.advengers.mabo.Adapter.NotificationAdapter;
 import com.advengers.mabo.Adapter.PostAdapter;
 import com.advengers.mabo.Model.Notification;
@@ -30,15 +34,17 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static com.advengers.mabo.Activity.MainActivity.LOADNOTIFICATION;
 import static com.advengers.mabo.Activity.MainActivity.LOADPOST;
 import static com.advengers.mabo.Activity.MainActivity.SERVER_URL;
 import static com.advengers.mabo.Interfaces.Keys.DATA;
 import static com.advengers.mabo.Interfaces.Keys.MESSAGE;
+import static com.advengers.mabo.Interfaces.Keys.POSTID;
 import static com.advengers.mabo.Interfaces.Keys.STATUS_JSON;
 
-public class NotificationFragment extends MyFragment  {
+public class NotificationFragment extends MyFragment implements NotificationAdapter.ProfileClick {
     public static ArrayList<Notification> postlist = new ArrayList<>();
     FragmentNotificationBinding binding;
     NotificationAdapter adapter;
@@ -86,11 +92,12 @@ public class NotificationFragment extends MyFragment  {
                             postlist.add(post);
                         }
                         LogUtils.e("Length of post "+postlist.size());
-                        /* Collections.reverse(postlist);*/
+                         Collections.reverse(postlist);
                         adapter = new NotificationAdapter(getActivity(),postlist);
-                     //   adapter.setLikeCommentCallBackListener(TrendingFragment.this);
+                        adapter.CallBackListener(NotificationFragment.this);
 
                         binding.listpost.setAdapter(adapter);
+
 
                     }else
                     {
@@ -132,4 +139,12 @@ public class NotificationFragment extends MyFragment  {
             }
         }
     };
+
+
+    @Override
+    public void onItem(int position) {
+        Intent post = new Intent(getApplicationContext(), SinglePostActivity.class);
+        post.putExtra(POSTID,postlist.get(position).getPost_id());
+        startActivity(post);
+    }
 }

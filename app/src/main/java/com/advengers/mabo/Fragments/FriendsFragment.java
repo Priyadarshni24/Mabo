@@ -38,6 +38,7 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.cometchat.pro.constants.CometChatConstants;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -53,11 +54,13 @@ import java.util.regex.Pattern;
 import constant.StringContract;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
+import screen.messagelist.CometChatMessageListActivity;
 
 import static com.advengers.mabo.Activity.MainActivity.FRIENDSLIST;
 import static com.advengers.mabo.Activity.MainActivity.SERVER_URL;
 import static com.advengers.mabo.Interfaces.Keys.DATA;
 import static com.advengers.mabo.Interfaces.Keys.STATUS_JSON;
+import static constant.StringContract.IntentStrings.MYUID;
 
 public class FriendsFragment extends MyFragment implements  EasyPermissions.PermissionCallbacks,FriendsAdapter.ProfileClick {
 FragmentFriendsBinding binding;
@@ -86,17 +89,20 @@ FragmentFriendsBinding binding;
         dialog.setCancelable(false);
         db = new MyDBHandler(getContext());
         friends = db.getFriendsList();
-
+        if(db.getFriendsList().size()==0)
+        binding.fabRefresh.setVisibility(View.GONE);
         binding.fabRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onLoadProgress(getActivity());
+
                 checkeddata = 0;
                 remain = 0;
                 start = 0;
                 range = 100;
                 phonedata.clear();
                 phonenumbers.clear();
+
                 new Handler().postDelayed(new Runnable() {
 
                     @Override
@@ -230,6 +236,7 @@ FragmentFriendsBinding binding;
 
                     @Override
                     public void run() {
+                        binding.fabRefresh.setVisibility(View.VISIBLE);
                         getContactList();
                     }},1000);
             }
@@ -396,10 +403,23 @@ FragmentFriendsBinding binding;
             intent.putExtra(StringContract.IntentStrings.USER_AVATAR, friends.get(position).getprofile_imagename());
             intent.putExtra(StringContract.IntentStrings.USER_NAME, name);
             getActivity().startActivity(intent);*/
+            com.cometchat.pro.models.User user = new com.cometchat.pro.models.User();
+            user.setUid(room_Id);
+            user.setAvatar(friends.get(position).getprofile_imagename());
+            user.setName(name);
+            startUserIntent(user);
         }
 
     }
-
+    private void startUserIntent(com.cometchat.pro.models.User user) {
+        Intent intent = new Intent(getActivity(), CometChatMessageListActivity.class);
+        intent.putExtra(MYUID, "mabo"+id);
+        intent.putExtra(StringContract.IntentStrings.UID, user.getUid());
+        intent.putExtra(StringContract.IntentStrings.AVATAR, user.getAvatar());
+        intent.putExtra(StringContract.IntentStrings.STATUS, user.getStatus());
+        intent.putExtra(StringContract.IntentStrings.TYPE, CometChatConstants.RECEIVER_TYPE_USER);
+        startActivity(intent);
+    }
     @Override
     public void onCallClick(int position) {
         type = "call";

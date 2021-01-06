@@ -51,7 +51,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.25" />
 
-    <com.advengers.mabo.Cometchat.CustomView.CircleImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_message_status"
         android:layout_width="10dp"
         android:layout_height="10dp"

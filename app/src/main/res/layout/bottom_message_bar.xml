@@ -65,7 +65,7 @@
             android:textColorHint="#cccccc"/>
 
 
-            <com.advengers.mabo.Cometchat.CustomView.RecordMicButton
+          <!--  <RecordMicButton
                 android:id="@+id/record_button"
                 android:layout_width="45dp"
                 android:layout_height="30dp"
@@ -86,7 +86,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-            </com.advengers.mabo.Cometchat.CustomView.RecordAudio>
+            </com.advengers.mabo.Cometchat.CustomView.RecordAudio>--><!--  <RecordMicButton
+                android:id="@+id/record_button"
+                android:layout_width="45dp"
+                android:layout_height="30dp"
+                android:visibility="visible"
+                android:src="@drawable/ic_mic_24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/buttonSendMessage"
+                android:background="@android:color/transparent">
+            </com.advengers.mabo.Cometchat.CustomView.RecordMicButton>
+
+
+            <com.advengers.mabo.Cometchat.CustomView.RecordAudio
+                android:id="@+id/record_audio_view"
+                android:layout_toStartOf="@id/record_button"
+                android:layout_toEndOf="@id/iv_attchment"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </com.advengers.mabo.Cometchat.CustomView.RecordAudio>-->
 
     </RelativeLayout>
 

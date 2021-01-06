@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <com.advengers.mabo.Cometchat.CustomView.CircleImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivAvatar"
         tools:src="@tools:sample/avatars"
         android:layout_marginStart="16dp"

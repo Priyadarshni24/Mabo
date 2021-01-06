@@ -86,6 +86,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+
 import constant.StringContract;
 import screen.messagelist.CometChatMessageListActivity;
 
@@ -283,7 +284,7 @@ public class Tools {
     }
 
 
-
+/*
     public static void showDialog(Boolean isWarning, String stringRes, Context context, Activity activity) {
         int title = R.string.app_name;
         if (isWarning) {
@@ -317,9 +318,48 @@ public class Tools {
             }
             b.show();
         }
+        
+    }*/
+
+    public static void showDialog(Boolean isWarning, String stringRes, Context context, Activity activity) {
+        int title = R.string.app_name;
+        if (isWarning) {
+            title = R.string.warning;
+        }
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+
+        LayoutInflater inflater = activity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_warning, null);
+        dialogBuilder.setView(dialogView);
+
+        TextView txt_title = (TextView) dialogView.findViewById(R.id.txt_title);
+        Button btn_ok = (Button)dialogView.findViewById(R.id.btn_ok);
+        btn_ok.setText(context.getString(R.string.ok));
+        TextView txt_content = (TextView) dialogView.findViewById(R.id.txt_content);
+        txt_title.setText(activity.getString(title));
+        txt_content.setText(stringRes);
+        final AlertDialog b = dialogBuilder.create();
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isWarning)
+                    b.dismiss();
+                else
+                {
+                    activity.finish();
+                }
+            }
+        });
+        if(!b.isShowing())
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            b.show();
+        }
     }
-
-
   public static User findUser(String id,ArrayList<User> listCarnet) {
         for(User carnet : listCarnet) {
             if(carnet.getId().equals(id)) {
@@ -498,6 +538,7 @@ public class Tools {
                                     {
                                         Intent intent = new Intent(activity, CometChatMessageListActivity.class);
                                         intent.putExtra(StringContract.IntentStrings.UID, room_Id);
+                                        intent.putExtra(StringContract.IntentStrings.MYUID, "mabo"+myid);
                                         intent.putExtra(StringContract.IntentStrings.AVATAR, profile.getprofile_imagename());
                                         intent.putExtra(StringContract.IntentStrings.STATUS, profile.getStatus());
                                         intent.putExtra(StringContract.IntentStrings.NAME, name);
@@ -726,3 +767,4 @@ public class Tools {
 
     }
 }
+

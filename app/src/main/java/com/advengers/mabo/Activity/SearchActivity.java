@@ -218,12 +218,14 @@ ActivitySearchBinding binding;
         room_Id = Userlist.get(position).getRoomid();
         name = Userlist.get(position).getUsername();
         id = Userlist.get(position).getId();
+        String myuid = "mabo"+user.getId();
         if(room_Id.isEmpty()||room_Id==null||room_Id.length()<2||!room_Id.contains("mabo"))
             Tools.showDialog(true,"This user need to login again to use chat",this,this);
         else
         {
             Intent intent = new Intent(SearchActivity.this, CometChatMessageListActivity.class);
             intent.putExtra(StringContract.IntentStrings.UID, room_Id);
+            intent.putExtra(StringContract.IntentStrings.MYUID, myuid);
             intent.putExtra(StringContract.IntentStrings.AVATAR, Userlist.get(position).getprofile_imagename());
             intent.putExtra(StringContract.IntentStrings.STATUS, user.getStatus());
             intent.putExtra(StringContract.IntentStrings.NAME, name);

@@ -68,14 +68,19 @@ public class SinglePostActivity extends MyActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.title_post));
         getUser();
-        String URI = getIntent().getStringExtra("URI");
-        try{
-            LogUtils.e("SinglePost "+URI.split("postdata/")[1]);
-            postid = URI.split("postdata/")[1];
-            GetPost(postid);
-        }catch (Exception e)
+        if(getIntent().getStringExtra("URI")!=null) {
+            String URI = getIntent().getStringExtra("URI");
+            try {
+                LogUtils.e("SinglePost " + URI.split("postdata/")[1]);
+                postid = URI.split("postdata/")[1];
+                GetPost(postid);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else if(getIntent().getStringExtra(POSTID)!=null)
         {
-            e.printStackTrace();
+            postid = getIntent().getStringExtra(POSTID);
+            GetPost(postid);
         }
     }
     public boolean onOptionsItemSelected(MenuItem item)

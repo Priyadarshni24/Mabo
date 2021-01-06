@@ -1,5 +1,7 @@
 package com.advengers.mabo.Model;
 
+import java.util.List;
+
 public class Commentlist {
     String id;
     String user_id;
@@ -9,6 +11,16 @@ public class Commentlist {
     String email;
     String username;
     String profile_imagename;
+    List<Tag> tagpeopledata;
+
+
+    public List<Tag> getTagpeopledata() {
+        return tagpeopledata;
+    }
+
+    public void setTagpeopledata(List<Tag> tagpeopledata) {
+        this.tagpeopledata = tagpeopledata;
+    }
 
     public String getId() {
         return id;

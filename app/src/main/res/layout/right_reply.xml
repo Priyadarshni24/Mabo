@@ -220,7 +220,7 @@
 
     </RelativeLayout>
 
-    <com.advengers.mabo.Cometchat.CustomView.CircleImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/messageStatus"
         android:layout_width="10dp"
         android:layout_height="10dp"

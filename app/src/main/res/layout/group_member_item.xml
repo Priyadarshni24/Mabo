@@ -10,7 +10,7 @@
     style="@style/SelectableItemBackground">
 
 
-    <com.advengers.mabo.Cometchat.CustomView.CircleImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageViewUserAvatar"
         android:layout_width="35dp"
         android:layout_height="35dp"

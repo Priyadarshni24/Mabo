@@ -8,13 +8,14 @@ import android.widget.Toast;
 
 import androidx.core.app.NotificationManagerCompat;
 
-import helper.CallActivity;
 import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.core.Call;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
 
 import constant.StringContract;
+import helper.CallActivity;
+import screen.CometChatCallActivity;
 
 public class CallNotificationAction extends BroadcastReceiver {
 

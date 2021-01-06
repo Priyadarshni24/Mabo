@@ -9,7 +9,6 @@ import android.widget.RelativeLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-
 import com.cometchat.pro.core.Call;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
@@ -17,26 +16,23 @@ import com.cometchat.pro.helpers.Logger;
 import com.cometchat.pro.models.User;
 import com.cometchat.pro.uikit.R;
 
-
 import constant.StringContract;
 
 import static utils.Utils.isMyServiceRunning;
 
-public class CallActivity extends AppCompatActivity implements CallActivityContract.CallActivityView {
+
+public class CallActivity extends AppCompatActivity {
 
     private RelativeLayout callView;
     private String sessionId;
     private static final String TAG = "CallActivity";
     private boolean isFirstLaunch;
-    private CallActivityPresenter callActivityPresenter;
     boolean backpressed = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        callActivityPresenter = new CallActivityPresenter();
-        callActivityPresenter.attach(this);
 
         callView = findViewById(R.id.call_view);
 
@@ -49,7 +45,7 @@ public class CallActivity extends AppCompatActivity implements CallActivityContr
         Logger.error(TAG, " sessionId " + sessionId);
         //Logger.error(TAG, " sessionId " + sessionId);
         Intent serviceIntent = new Intent(this, CallNotificationService.class);
-        if(isMyServiceRunning(CallNotificationService.class,CallActivity.this))
+        if(isMyServiceRunning(CallNotificationService.class, CallActivity.this))
         stopService(serviceIntent);
         CometChat.startCall(CallActivity.this, sessionId, callView, new CometChat.OngoingCallListener() {
             @Override
@@ -79,7 +75,6 @@ public class CallActivity extends AppCompatActivity implements CallActivityContr
     @Override
     protected void onPause() {
         super.onPause();
-        callActivityPresenter.removeCallListener(TAG);
     }
 
     @Override

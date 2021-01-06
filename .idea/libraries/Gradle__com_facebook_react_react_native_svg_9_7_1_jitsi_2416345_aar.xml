@@ -1,8 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.facebook.react:react-native-svg:9.7.1-jitsi-2416345@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/44ac62f88fd9bb6d3ee9669848ba14cb/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/44ac62f88fd9bb6d3ee9669848ba14cb/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/defa34b0b9c9ed43bd289cfb76ec3de2/jetified-react-native-svg-9.7.1-jitsi-2416345/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/defa34b0b9c9ed43bd289cfb76ec3de2/jetified-react-native-svg-9.7.1-jitsi-2416345/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/defa34b0b9c9ed43bd289cfb76ec3de2/jetified-react-native-svg-9.7.1-jitsi-2416345/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

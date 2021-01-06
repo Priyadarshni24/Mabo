@@ -1,8 +1,6 @@
 package viewmodel;
 
-import com.google.firebase.database.IgnoreExtraProperties;
 
-@IgnoreExtraProperties
 public class UserModel {
 
     public String uid;
@@ -17,7 +15,7 @@ public class UserModel {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public UserModel(String uid, String username, String avatar, String latitude, String longitude, String duration,String time) {
+    public UserModel(String uid, String username, String avatar, String latitude, String longitude, String duration, String time) {
         this.uid = uid;
         this.username = username;
         this.avatar = avatar;

@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto">
     <RelativeLayout
+        android:id="@+id/rl_row"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

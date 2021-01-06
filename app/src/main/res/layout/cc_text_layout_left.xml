@@ -31,7 +31,7 @@
         app:layout_constraintWidth_default="wrap"
         tools:text="Message" />
 
-    <com.advengers.mabo.Cometchat.CustomView.CircleImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imgAvatar"
         android:layout_width="35dp"
         android:layout_height="35dp"

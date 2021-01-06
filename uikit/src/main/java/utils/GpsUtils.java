@@ -1,4 +1,5 @@
 package utils;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -19,7 +20,10 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
 import static android.content.ContentValues.TAG;
+import static com.google.android.gms.location.LocationServices.*;
+
 public class GpsUtils {
     public static int GPS_REQUEST = 1005;
     private Context context;
@@ -30,7 +34,7 @@ public class GpsUtils {
     public GpsUtils(Context context) {
         this.context = context;
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        mSettingsClient = LocationServices.getSettingsClient(context);
+        mSettingsClient = getSettingsClient(context);
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(10 * 1000);

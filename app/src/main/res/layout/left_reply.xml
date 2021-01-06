@@ -19,7 +19,7 @@
         android:textSize="@dimen/small_text"
         tools:text="10:00 AM" />
 
-    <com.advengers.mabo.Cometchat.CustomView.CircleImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivContact"
         android:layout_width="24dp"
         android:layout_height="24dp"

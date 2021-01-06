@@ -49,19 +49,18 @@ public class SplashActivity extends AppCompatActivity{//} implements GoogleApiCl
         user = new User();
         User.setUser(gson.fromJson(Utils.getInstance(SplashActivity.this).getString(USER),User.class));
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+        if(User.getUser().isLogged())
+        {
+            startActivity(new Intent(SplashActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+        }else
         new Handler().postDelayed(new Runnable() {
 
             @Override
             public void run() {
-                if(User.getUser().isLogged())
-                {
-                    startActivity(new Intent(SplashActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                }else
-                {
                     Intent i = new Intent(SplashActivity.this, IntroscreenActivity.class);
                     startActivity(i);
                     finish();
-                }
+
             }
         }, 3000);
        /* locationManager = (LocationManager) getSystemService(Service.LOCATION_SERVICE);

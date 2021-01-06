@@ -1,6 +1,10 @@
 package com.advengers.mabo.Adapter;
 
 import android.content.Context;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +14,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.advengers.mabo.Model.Commentlist;
+import com.advengers.mabo.Model.Tag;
 import com.advengers.mabo.R;
 import com.advengers.mabo.Utils.LogUtils;
 import com.advengers.mabo.databinding.ListCommentBinding;
@@ -22,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
     private Context context;
@@ -60,12 +66,47 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         holder.binding.txtName.setText(likelist.get(position).getUsername());
         if(!likelist.get(position).getProfile_imagename().isEmpty())
         Picasso.get().load(likelist.get(position).getProfile_imagename()).placeholder(R.drawable.ic_avatar).into(holder.binding.imgProfile);
-        holder.binding.txtComment.setText(StringEscapeUtils.unescapeJava(likelist.get(position).getComment()));
+
+
+        String content = likelist.get(position).getComment();
+        holder.binding.txtComment.setText(content);
+        List<Tag> tagpeoples = likelist.get(position).getTagpeopledata();
+       /* for(int t=0;t<tagpeoples.size();t++)
+        LogUtils.e(tagpeoples.get(t).getUsername());*/
+        SpannableStringBuilder ssBuilder = new SpannableStringBuilder(content);
+       //     LogUtils.e(content+ " "+tagpeoples.size());
+        ClickableSpan[] clickableSpans = new ClickableSpan[tagpeoples.size()];
+        for (int i=0;i<tagpeoples.size();i++)
+        {
+            int finalI = i;
+            clickableSpans[i] = new ClickableSpan() {
+                @Override
+                public void onClick(@NonNull View widget) {
+                    profilecallback.onProfile(tagpeoples.get(finalI).getId());
+                }
+            };
+        }
+        for(int i =0;i<tagpeoples.size();i++)
+        {
+            ssBuilder.setSpan(
+                    clickableSpans[i],
+                    content.indexOf(tagpeoples.get(i).getUsername()),
+                    content.indexOf(tagpeoples.get(i).getUsername()) + String.valueOf(tagpeoples.get(i).getUsername()).length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+        }
+
+        // Display the spannable text to TextView
+        holder.binding.txtComment.setText(ssBuilder);
+
+        // Specify the TextView movement method
+        holder.binding.txtComment.setMovementMethod(LinkMovementMethod.getInstance());
+        content = "";
         holder.binding.imgProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                profilecallback.onProfile(position);
+                profilecallback.onProfile(likelist.get(position).getId());
             }
         });
     }
@@ -93,7 +134,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     public interface ProfileClick
     {
-        public void onProfile(int position);
+        public void onProfile(String id);
     }
 }
 

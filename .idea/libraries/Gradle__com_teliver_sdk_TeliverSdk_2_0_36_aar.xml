@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.teliver.sdk:TeliverSdk:2.0.36@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8b5773bb6ed5e96c45b58bcb84024c80/jetified-TeliverSdk-2.0.36/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8b5773bb6ed5e96c45b58bcb84024c80/jetified-TeliverSdk-2.0.36/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8b5773bb6ed5e96c45b58bcb84024c80/jetified-TeliverSdk-2.0.36/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.teliver.sdk/TeliverSdk/2.0.36/f18283b2ffba8b5e8db6e770176cb8c9201921e7/TeliverSdk-2.0.36-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.teliver.sdk/TeliverSdk/2.0.36/e8ca7fbcdb27495b4113fd82fb60dfa77167e8a2/TeliverSdk-2.0.36-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

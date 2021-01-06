@@ -29,7 +29,7 @@
             android:layout_height="wrap_content">
 
 
-            <com.advengers.mabo.Cometchat.CustomView.CircleImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/contact_pic"
                 android:layout_width="35dp"
                 android:transitionName="profilePic"

@@ -642,7 +642,7 @@ public class LoginActivity extends MyActivity implements EasyPermissions.Permiss
                                  onLoadDismiss();
                                 FirebaseMessaging.getInstance().subscribeToTopic(AppConfig.AppDetails.AppID_user_UID);
                                //  startActivity(new Intent(LoginActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                                 startActivity(new Intent(LoginActivity.this, SendotpActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                                startActivity(new Intent(LoginActivity.this, SendotpActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                              }
 
                              @Override

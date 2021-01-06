@@ -7,20 +7,6 @@
     android:padding="8dp">
 
 
-    <com.advengers.mabo.Cometchat.CustomView.CircleImageView
-        android:id="@+id/imgAvatar"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="4dp"
-       android:layout_marginTop="8dp"
-        android:background="@drawable/default_avatar"
-        app:civ_circle_background_color="@color/secondaryColor"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/senderName"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/default_avatar" />
 
     <TextView
         android:id="@+id/senderName"

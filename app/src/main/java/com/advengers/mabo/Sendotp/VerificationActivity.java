@@ -42,6 +42,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 import static com.advengers.mabo.Activity.MainActivity.SERVER_URL;
+import static com.advengers.mabo.Activity.MainActivity.UPDATEPHONENUMBER;
 import static com.advengers.mabo.Activity.MainActivity.UPDATEUSER;
 import static com.advengers.mabo.Interfaces.Keys.MESSAGE;
 import static com.advengers.mabo.Interfaces.Keys.STATUS_JSON;
@@ -105,7 +106,7 @@ public class VerificationActivity extends MyActivity implements
             phoneNumber = intent.getStringExtra(SendotpActivity.INTENT_PHONENUMBER);
             countryCode = intent.getIntExtra(SendotpActivity.INTENT_COUNTRY_CODE, 0);
             TextView phoneText = (TextView) findViewById(R.id.numberText);
-            phoneText.setText("+" + countryCode + phoneNumber);
+            phoneText.setText(countryCode + phoneNumber);
             createVerification(phoneNumber, countryCode);
         }
     }
@@ -213,12 +214,12 @@ public class VerificationActivity extends MyActivity implements
                     hideProgressBarAndShowMessage(R.string.verified);
                     showCompleted(responseCode == SendOTPResponseCode.DIRECT_VERIFICATION_SUCCESSFUL_FOR_NUMBER);
                     getUser();
-                    user.setVerify(true);
+
                     user.setPhone("+"+countryCode+phoneNumber);
                     setUser();
-                    String URL = SERVER_URL+UPDATEUSER+user.getId();
+                    String URL = SERVER_URL+UPDATEPHONENUMBER;
                     App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST,
-                            URL,new ServerParams().updateuser(user)
+                            URL,new ServerParams().UpdatePhonenumber(user.getId(),user.getPhone())
                             , updatelister,update_error_listener));
 
                 } else if (responseCode == SendOTPResponseCode.READ_OTP_SUCCESS) {
@@ -254,7 +255,12 @@ public class VerificationActivity extends MyActivity implements
 
                 if (login.has(STATUS_JSON)) {
                     if (login.getString(STATUS_JSON).equals("true")) {
+                        user.setVerify(true);
+                        setUser();
                         startActivity(new Intent(VerificationActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                    }else{
+                        //setUser();
+                        showWarning(login.getString(MESSAGE),VerificationActivity.this,VerificationActivity.this);
                     }
                 }
 

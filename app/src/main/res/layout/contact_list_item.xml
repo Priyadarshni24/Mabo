@@ -24,14 +24,6 @@
             android:visibility="gone"
             android:src="@drawable/cc_ic_group" />
 
-        <com.advengers.mabo.Cometchat.CustomView.CircleImageView
-            android:id="@+id/imageViewUserAvatar"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:transitionName="profilePic"
-            android:layout_centerVertical="true"
-            android:layout_margin="6dp"
-            tools:src="@tools:sample/avatars" />
 
         <TextView
             android:id="@+id/textviewUserName"

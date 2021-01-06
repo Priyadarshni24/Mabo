@@ -25,6 +25,7 @@ import androidx.core.app.NotificationCompat;
 import com.advengers.mabo.Activity.App;
 import com.advengers.mabo.Activity.DashboardActivity;
 import com.advengers.mabo.Activity.SearchActivity;
+import com.advengers.mabo.Activity.SinglePostActivity;
 import com.advengers.mabo.Cometchat.constants.AppConfig;
 import com.advengers.mabo.R;
 import com.advengers.mabo.Services.Config;
@@ -51,6 +52,8 @@ import java.util.Date;
 import constant.StringContract;
 import screen.CometChatCallActivity;
 import screen.messagelist.CometChatMessageListActivity;
+
+import static com.advengers.mabo.Interfaces.Keys.POSTID;
 
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -111,6 +114,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         intent = new Intent(getApplicationContext(), CometChatCallActivity.class);
                         intent.putExtra(StringContract.IntentStrings.NAME, baseMessage.getSender().getName());
                         intent.putExtra(StringContract.IntentStrings.UID, baseMessage.getSender().getUid());
+                        intent.putExtra(StringContract.IntentStrings.MYUID,baseMessage.getReceiverUid());
                         intent.putExtra(StringContract.IntentStrings.SESSION_ID, call.getSessionId());
                         intent.putExtra(StringContract.IntentStrings.AVATAR, baseMessage.getSender().getAvatar());
                         intent.setAction(baseMessage.getReceiverType());
@@ -120,6 +124,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     } else {
                         intent = new Intent(getApplicationContext(), CometChatMessageListActivity.class);
                         intent.putExtra(StringContract.IntentStrings.UID, baseMessage.getSender().getUid());
+                        intent.putExtra(StringContract.IntentStrings.MYUID,baseMessage.getReceiverUid());
                         intent.putExtra(StringContract.IntentStrings.AVATAR, baseMessage.getSender().getAvatar());
                         intent.putExtra(StringContract.IntentStrings.STATUS, baseMessage.getSender().getStatus());
                         intent.putExtra(StringContract.IntentStrings.NAME, baseMessage.getSender().getName());
@@ -147,7 +152,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SinglePostActivity.class);
+        intent.putExtra(POSTID,json.getString("subtitle"));
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent,0);
 
@@ -208,7 +214,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             {
                 String message = json.getString("alert");
                 if(!message.contains("Missed")&&!message.contains("Ended")&&!message.contains("Joined"))
+                {
+                    LogUtils.e("Coming in call notification");
                     m = call_channelid;
+                }
                 else
                     m = message_channelid;
             }else {
@@ -233,11 +242,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                     //.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
 
-            LogUtils.e("I am coming in notification");
+            LogUtils.e("I am coming in notification Mysdk"+Build.VERSION.SDK_INT +" Oreo"+ Build.VERSION_CODES.O);
         //   NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
                 LogUtils.e("I am coming in notification version");
 
@@ -308,7 +317,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
          if (isCall){
                 builder.setGroup(GROUP_ID+"Call");
-                if (json.getString("alert").equals("Incoming audio call") || json.getString("alert").equals("Incoming video call")) {
+                LogUtils.e("Coming in call case");
+                if (json.getString("alert").equalsIgnoreCase("Incoming audio call") || json.getString("alert").equalsIgnoreCase("Incoming video call")) {
+                    LogUtils.e("Coming inside incoming");
                    builder.setSound(Settings.System.DEFAULT_RINGTONE_URI);
                     builder.addAction(0, "Answers", PendingIntent.getBroadcast(getApplicationContext(), REQUEST_CODE, getCallIntent("Answers"), PendingIntent.FLAG_UPDATE_CURRENT));
                     builder.addAction(0, "Decline", PendingIntent.getBroadcast(getApplicationContext(), 1, getCallIntent("Decline"), PendingIntent.FLAG_UPDATE_CURRENT));

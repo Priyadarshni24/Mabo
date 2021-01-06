@@ -285,15 +285,9 @@ public class TrendingFragment extends MyFragment implements View.OnClickListener
     }
 
     @Override
-    public void onProfile(int position) {
-       /* User profile = new User();
-        profile.setUsername(postlist.get(position).getUserdetails().getUsername());
-        profile.setprofile_imagename(postlist.get(position).getUserdetails().getProfile_imagename());
-        profile.setEmail(postlist.get(position).getUserdetails().getEmail());
-       */
-        Tools.showUserProfile(R.style.Animation_Design_BottomSheetDialog, user.getId(),postlist.get(position).getUser_id(),getContext(),getActivity());
-     //  Tools.UserDetails(postlist.get(position).getUser_id(),getContext(),getActivity());
-    }
+    public void onProfile(String postuserid) {
+         Tools.showUserProfile(R.style.Animation_Design_BottomSheetDialog, user.getId(),postuserid,getContext(),getActivity());
+     }
 
     @Override
     public void onLikeList(String postid) {

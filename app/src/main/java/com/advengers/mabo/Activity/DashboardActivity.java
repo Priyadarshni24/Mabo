@@ -27,9 +27,11 @@ import com.advengers.mabo.Fragments.TrendingFragment;
 import com.advengers.mabo.Location.LocationTrack;
 import com.advengers.mabo.Model.Apiresponse;
 import com.advengers.mabo.Model.Interest;
+import com.advengers.mabo.Model.User;
 import com.advengers.mabo.R;
 import com.advengers.mabo.ServerCall.MyVolleyRequestManager;
 import com.advengers.mabo.ServerCall.ServerParams;
+import com.advengers.mabo.Services.NotificationService;
 import com.advengers.mabo.Tools.MyActivity;
 import com.advengers.mabo.Utils.LogUtils;
 import com.advengers.mabo.Utils.Utils;
@@ -40,6 +42,7 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.BaseMessage;
@@ -57,6 +60,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
@@ -68,7 +72,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,11 +89,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import constant.StringContract;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
+import screen.messagelist.CometChatMessageScreen;
 import screen.unified.CometChatUnified;
 
+import static android.view.View.GONE;
 import static com.advengers.mabo.Activity.MainActivity.COMETCHATURL;
 import static com.advengers.mabo.Activity.MainActivity.FCM;
 import static com.advengers.mabo.Activity.MainActivity.GETINTREST;
@@ -117,7 +126,11 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
+    private RelativeLayout onGoingCallView;
 
+    private TextView onGoingCallTxt;
+
+    private ImageView onGoingCallClose;
 
     LocationManager locationManager;
     Location loc;
@@ -167,7 +180,12 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
                     return true;
                 case R.id.navigation_chat:
                     manager=getSupportFragmentManager();
-                    manager.beginTransaction().replace(R.id.container, new ChatFragment()).commit();
+                    getUser();
+                    Fragment fragment = new ChatFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(StringContract.IntentStrings.MYUID, "mabo"+ user.getId());
+                    fragment.setArguments(bundle);
+                    manager.beginTransaction().replace(R.id.container, fragment).commit();
                     return true;
                 case R.id.navigation_settings:
                     manager=getSupportFragmentManager();
@@ -237,8 +255,55 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
         RequiresPermission();
         getInterest();
       //  getCometUserList();
-
+        //Check Ongoing Call
+        View ongoingview = (RelativeLayout)findViewById(R.id.ongoing_call_view);
+        onGoingCallView =(RelativeLayout) ongoingview.findViewById(R.id.ongoing_call_view);
+        onGoingCallClose = (ImageView)ongoingview.findViewById(R.id.close_ongoing_view);
+        onGoingCallTxt = (TextView)ongoingview.findViewById(R.id.ongoing_call);
+        checkOnGoingCall();
     }
+    private void checkOnGoingCall() {
+        LogUtils.e(CometChat.getActiveCall()+" check ongoing call");
+     //   onGoingCallView.setVisibility(View.VISIBLE);
+        if(CometChat.getActiveCall()!=null && CometChat.getActiveCall().getCallStatus().equals(CometChatConstants.CALL_STATUS_ONGOING) && CometChat.getActiveCall().getSessionId()!=null) {
+          //  Utils.showToast("Coming in ongoing call",context);
+
+           if(onGoingCallView!=null)
+           {
+               onGoingCallView.setVisibility(View.VISIBLE);
+           }
+            if(onGoingCallTxt!=null) {
+                onGoingCallTxt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onGoingCallView.setVisibility(View.GONE);
+                        utils.Utils.joinOnGoingCall(context);
+                    }
+                });
+            }
+            if(onGoingCallClose!=null) {
+                onGoingCallClose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onGoingCallView.setVisibility(GONE);
+                    }
+                });
+            }
+        } else if (CometChat.getActiveCall()!=null){
+            if (onGoingCallView!=null)
+                onGoingCallView.setVisibility(GONE);
+            Utils.showToast("No ongoing call",context);
+            Log.e(TAG, "checkOnGoingCall: "+CometChat.getActiveCall().toString());
+        }
+        //onGoingCallView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        startService( new Intent( this, NotificationService. class )) ;
+    }
+
     void openLocationSettings()
     {
         final android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(this);
@@ -645,7 +710,7 @@ void ShowInterestAlert(JSONObject login)
     @Override
     protected void onResume() {
         super.onResume();
-
+        checkOnGoingCall();
         Log.d(TAG, "onResume: ");
 
 

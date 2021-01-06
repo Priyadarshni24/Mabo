@@ -1,5 +1,8 @@
 package com.advengers.mabo.Model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Post {
    public class userdetails {
 
@@ -67,7 +70,18 @@ public class Post {
     String commentcount;
     String likecount;
     String likedbyme;
+    List<Tag> tagpeopledata;
+
     userdetails userdetails;
+
+
+    public List<Tag> getTagpeopledata() {
+        return tagpeopledata;
+    }
+
+    public void setTagpeopledata(List<Tag> tagpeopledata) {
+        this.tagpeopledata = tagpeopledata;
+    }
 
 
 

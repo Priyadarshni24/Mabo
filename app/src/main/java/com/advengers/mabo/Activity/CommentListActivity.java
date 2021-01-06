@@ -20,6 +20,7 @@ import com.advengers.mabo.Adapter.TagpeopleAdapter;
 import com.advengers.mabo.Fragments.TrendingFragment;
 import com.advengers.mabo.Model.Commentlist;
 import com.advengers.mabo.Model.Likelist;
+import com.advengers.mabo.Model.Tag;
 import com.advengers.mabo.Model.User;
 import com.advengers.mabo.R;
 import com.advengers.mabo.ServerCall.MyVolleyRequestManager;
@@ -68,6 +69,7 @@ public class CommentListActivity extends MyActivity implements View.OnClickListe
     CommentAdapter adapter;
     private Handler handler;
     OnCommented commentcallback;
+    ArrayList<Tag> tagpeopledata = new ArrayList<>();
     ArrayList<User> Userlist = new ArrayList<>();
     ArrayList<User> taglist = new ArrayList<>();
     private static final int TRIGGER_AUTO_COMPLETE = 100;
@@ -339,7 +341,8 @@ public class CommentListActivity extends MyActivity implements View.OnClickListe
 
 
                     if (login.getString(STATUS_JSON).equals("true")) {
-                        JSONArray listarray = login.getJSONArray(DATA);
+                        JSONObject data = login.getJSONObject(DATA);
+                        JSONArray listarray = data.getJSONArray("result_posts");
                         for(int i=0;i<listarray.length();i++) {
                             String jsondata = listarray.get(i).toString();
                              LogUtils.e(jsondata);
@@ -389,6 +392,14 @@ public class CommentListActivity extends MyActivity implements View.OnClickListe
                         String Datetime = formatter.format(new Date());
                         LogUtils.e(Datetime);
                         post.setCreated(Datetime);//gson.fromJson(jsondata, Commentlist.class);
+                        post.setTagpeopledata(tagpeopledata);
+
+                        LogUtils.e(tagpeopledata.size()+"");
+                        for(int i=0;i<tagpeopledata.size();i++)
+                        {
+                            LogUtils.e(tagpeopledata.get(i).getId()+" "+tagpeopledata.get(i).getUsername());
+                        }
+
                         listdata.add(post);
                         if(listdata.size()==1)
                         {
@@ -401,6 +412,7 @@ public class CommentListActivity extends MyActivity implements View.OnClickListe
                             adapter.notifyDataSetChanged();
                             binding.edtPost.setText("");
                          TrendingFragment.onCommented(postid);
+                         tagpeopledata.clear();
                        /// commentcallback.onCommented(postid);
                     }
                 }
@@ -414,8 +426,8 @@ public class CommentListActivity extends MyActivity implements View.OnClickListe
     };
 
     @Override
-    public void onProfile(int position) {
-        Tools.showUserProfile(R.style.Animation_Design_BottomSheetDialog,user.getId(),listdata.get(position).getId(),CommentListActivity.this,CommentListActivity.this);
+    public void onProfile(String id) {
+        Tools.showUserProfile(R.style.Animation_Design_BottomSheetDialog,user.getId(),id,CommentListActivity.this,CommentListActivity.this);
     }
 
     @Override
@@ -424,6 +436,7 @@ public class CommentListActivity extends MyActivity implements View.OnClickListe
         if(!binding.edtPost.getText().toString().trim().isEmpty())
         {
             String tagpeopleid="";
+
             if(taglist.size()>0)
                 for(int i=0;i<taglist.size();i++)
                 {
@@ -431,14 +444,23 @@ public class CommentListActivity extends MyActivity implements View.OnClickListe
                     {
                         if(binding.edtPost.getText().toString().contains(taglist.get(i).getUsername()))
                             tagpeopleid = taglist.get(i).getId();
+                            Tag tag = new Tag();
+                            tag.setId(taglist.get(i).getId());
+                            tag.setUsername(taglist.get(i).getUsername());
+                            tagpeopledata.add(tag);
 
                     }else
                     {
                         if(binding.edtPost.getText().toString().contains(taglist.get(i).getUsername()))
                             tagpeopleid = tagpeopleid+","+taglist.get(i).getId();
+                            Tag tag = new Tag();
+                            tag.setId(taglist.get(i).getId());
+                            tag.setUsername(taglist.get(i).getUsername());
+                            tagpeopledata.add(tag);
                     }
 
                 }
+            LogUtils.e("Tag ids "+tagpeopleid);
             onComment(user.getId(), StringEscapeUtils.escapeJava(binding.edtPost.getText().toString()),postid,tagpeopleid);
         }
     }
