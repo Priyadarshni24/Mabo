@@ -55,6 +55,15 @@ public class ServerParams {
 
     }
 
+    public HashMap<String, String> SendOtp(String authkey, String tempid, String mobile) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(AUTHKEY, authkey);
+        map.put(TEMPID, tempid);
+        map.put(MOBILE,mobile);
+        Log.d("LOGIN", "" + map);
+        return map;
+
+    }
     public HashMap<String, String> putFcm(String id,String token) {
         HashMap<String, String> map = new HashMap<>();
         map.put(ID,id);

@@ -449,4 +449,6 @@
     <string name="proceed">Proceed</string>
     <string name="successful">Successful!</string>
     <string name="str_nonotification">No notifications for you</string>
+    <string name="str_contacts">Contacts</string>
+    <string name="str_chats">chats</string>
 </resources>

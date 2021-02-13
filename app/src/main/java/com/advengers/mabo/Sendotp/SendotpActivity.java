@@ -33,6 +33,7 @@ public class SendotpActivity extends AppCompatActivity {
     private TextView mSmsButton;
     private String mCountryIso;
     private TextWatcher mNumberTextWatcher;
+    private TextView mCountrycode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +42,11 @@ public class SendotpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sendotp);
         mPhoneNumber = findViewById(R.id.phoneNumber);
         mSmsButton = findViewById(R.id.smsVerificationButton);
-
+        mCountrycode = findViewById(R.id.txt_countrycode);
         mCountryIso = PhoneNumberUtils.getDefaultCountryIso(this);
+
         final String defaultCountryName = new Locale("", mCountryIso).getDisplayName();
+        mCountrycode.setText("+"+Iso2Phone.getPhone(mCountryIso));
         final CountrySpinner spinner = (CountrySpinner) findViewById(R.id.spinner);
         spinner.init(defaultCountryName);
         spinner.addCountryIsoSelectedListener(new CountrySpinner.CountryIsoSelectedListener() {
@@ -53,7 +56,9 @@ public class SendotpActivity extends AppCompatActivity {
                     mCountryIso = selectedIso;
                     resetNumberTextWatcher(mCountryIso);
                     // force update:
+                    mCountrycode.setText("+"+Iso2Phone.getPhone(mCountryIso)+"");
                     mNumberTextWatcher.afterTextChanged(mPhoneNumber.getText());
+
                 }
             }
         });

@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Mabo.iml" filepath="$PROJECT_DIR$/Mabo.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Mabo.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Mabo.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/Mabo.library.iml" filepath="$PROJECT_DIR$/.idea/modules/library/Mabo.library.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/uikit/Mabo.uikit.iml" filepath="$PROJECT_DIR$/.idea/modules/uikit/Mabo.uikit.iml" />
     </modules>
   </component>

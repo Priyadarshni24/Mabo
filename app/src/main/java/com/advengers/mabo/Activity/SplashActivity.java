@@ -72,6 +72,8 @@ public class SplashActivity extends AppCompatActivity{//} implements GoogleApiCl
         }*/
 
     }
+
+
  /*   private void EnableGPSAutoMatically() {
         GoogleApiClient googleApiClient = null;
         if (googleApiClient == null) {

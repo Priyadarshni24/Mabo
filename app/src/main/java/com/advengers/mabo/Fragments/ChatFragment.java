@@ -239,8 +239,8 @@ public class ChatFragment extends MyFragment implements OnAlertDialogButtonClick
         fragment.setArguments(bundle);
 
         Adapter adapter = new Adapter(getChildFragmentManager());
-        adapter.addFragment(new FriendsFragment(), getString(R.string.str_friends));
-        adapter.addFragment(fragment, getString(R.string.str_followers));
+        adapter.addFragment(new FriendsFragment(), getString(R.string.str_contacts));
+        adapter.addFragment(fragment, getString(R.string.str_chats));
        // adapter.addFragment(new RecentsFragment(), getString(R.string.str_followers));
     //    adapter.addFragment(new GroupListFragment(),getString(R.string.str_groups));
         viewPager.setAdapter(adapter);

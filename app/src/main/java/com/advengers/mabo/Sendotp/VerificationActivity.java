@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -18,6 +19,7 @@ import androidx.core.content.ContextCompat;
 
 import com.advengers.mabo.Activity.App;
 import com.advengers.mabo.Activity.DashboardActivity;
+import com.advengers.mabo.Activity.LoginActivity;
 import com.advengers.mabo.Activity.SplashActivity;
 import com.advengers.mabo.R;
 import com.advengers.mabo.ServerCall.MyVolleyRequestManager;
@@ -41,6 +43,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 
+import static com.advengers.mabo.Activity.MainActivity.LOGIN;
 import static com.advengers.mabo.Activity.MainActivity.SERVER_URL;
 import static com.advengers.mabo.Activity.MainActivity.UPDATEPHONENUMBER;
 import static com.advengers.mabo.Activity.MainActivity.UPDATEUSER;
@@ -56,6 +59,10 @@ public class VerificationActivity extends MyActivity implements
     int countryCode;
     String phoneNumber;
     private OtpEditText mOtpEditText;
+
+    String URL = "https://api.msg91.com/api/v5/otp";
+    String authkey = "335467A4I8Tzy96017ddabP1";
+    String tempid = "6017d207aadf7653df3d3304";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,17 +95,108 @@ public class VerificationActivity extends MyActivity implements
                 .setOtpExpireInMinute(5)//default value is one day
                 .setOtpHits(3) //number of otp request per number
                 .setOtpHitsTimeOut(0L)//number of otp request time out reset in milliseconds default is 24 hours
-                .setSenderId("ABCDEF")
+                .setSenderId("MABOVERIFY")
                 .setMessage("##OTP## is Your verification digits.")
                 .setOtpLength(OTP_LNGTH)
                 .setVerificationCallBack(this).build();
 
-        SendOTP.getInstance().getTrigger().initiate();
+      //  SendOTP.getInstance().getTrigger().initiate();
 
 
     }
 
+    private void sendotp(String mobile) {
 
+        String finalurl = URL+"?authkey="+authkey+"&template_id="+tempid+"&mobile="+mobile;
+        App.requestQueue.add(MyVolleyRequestManager.getmsgStringRequest(Request.Method.GET,
+                finalurl,fcm_lister,fcm_error_listener));
+      }
+
+    Response.Listener fcm_lister = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+
+            Log.e("FBLogin Response", "" + response);
+
+            try {
+                JSONObject login = new JSONObject(response.toString());
+                if(login.getString("type").equals("success"))
+                {
+                    DataManager.getInstance().hideProgressMessage();
+                    if(login.getString("message").equalsIgnoreCase("OTP verified success"))
+                    {
+
+                    enableInputField(false);
+                    hideKeypad();
+                    TextView textView2 = (TextView) findViewById(R.id.textView2);
+                    TextView textView1 = (TextView) findViewById(R.id.textView1);
+                    TextView messageText = (TextView) findViewById(R.id.textView);
+                    ImageView topImg = (ImageView) findViewById(R.id.topImg);
+                    TextView phoneText = (TextView) findViewById(R.id.numberText);
+                    RelativeLayout topLayout = findViewById(R.id.topLayout);
+                    if (android.os.Build.VERSION.SDK_INT > 16)
+                        topLayout.setBackgroundDrawable(ContextCompat.getDrawable(VerificationActivity.this, R.drawable.gradient_bg_white));
+                    else
+                        topLayout.setBackgroundResource(R.drawable.gradient_bg_white);
+                    messageText.setVisibility(View.GONE);
+                    phoneText.setVisibility(View.GONE);
+                    topImg.setVisibility(View.INVISIBLE);
+                    textView1.setVisibility(View.VISIBLE);
+                    textView2.setVisibility(View.VISIBLE);
+                        showCompleted(false);
+                    hideProgressBarAndShowMessage(R.string.verified);
+
+                    getUser();
+
+                    user.setPhone("+"+countryCode+phoneNumber);
+                    setUser();
+                    String URL = SERVER_URL+UPDATEPHONENUMBER;
+                    App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST,
+                            URL,new ServerParams().UpdatePhonenumber(user.getId(),user.getPhone())
+                            , updatelister,update_error_listener));
+                    }else if(login.getString("message").equalsIgnoreCase("retry send successfully"))
+                    {
+
+                    }
+                }else if(login.getString("type").equals("error"))
+                {
+                    DataManager.getInstance().hideProgressMessage();
+                    hideKeypad();
+                    hideProgressBarAndShowMessage(R.string.failed);
+                    Toast.makeText(VerificationActivity.this,login.getString("message"),Toast.LENGTH_LONG).show();
+                    enableInputField(true);
+                }
+
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+    Response.ErrorListener fcm_error_listener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+            NetworkResponse response = error.networkResponse;
+            if (error instanceof ServerError && response != null) {
+                try {
+                    String res = new String(response.data,
+                            HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                    // Now you can use any deserializer to make sense of data
+                    LogUtils.e(res);
+                    JSONObject obj = new JSONObject(res);
+                } catch (UnsupportedEncodingException e1) {
+                    // Couldn't properly decode data to string
+                    e1.printStackTrace();
+                } catch (JSONException e2) {
+                    // returned data is not JSONObject?
+                    e2.printStackTrace();
+                }
+            }
+        }
+    };
     void initiateVerification() {
         Intent intent = getIntent();
         if (intent != null) {
@@ -106,14 +204,19 @@ public class VerificationActivity extends MyActivity implements
             phoneNumber = intent.getStringExtra(SendotpActivity.INTENT_PHONENUMBER);
             countryCode = intent.getIntExtra(SendotpActivity.INTENT_COUNTRY_CODE, 0);
             TextView phoneText = (TextView) findViewById(R.id.numberText);
-            phoneText.setText(countryCode + phoneNumber);
-            createVerification(phoneNumber, countryCode);
+            phoneText.setText(phoneNumber);
+            sendotp(countryCode+phoneNumber);
+         //   createVerification(phoneNumber, countryCode);
         }
     }
 
     public void ResendCode() {
         startTimer();
-        SendOTP.getInstance().getTrigger().resend(RetryType.VOICE);
+        String verifyurl = URL+"/retry?mobile="+countryCode+phoneNumber+"&authkey="+authkey;
+        App.requestQueue.add(MyVolleyRequestManager.getmsgStringRequest(Request.Method.POST,
+                verifyurl,fcm_lister,fcm_error_listener));
+    //    SendOTP.getInstance().getTrigger().resend(RetryType.VOICE);
+
     }
 
     public void onSubmitClicked(View view) {
@@ -178,7 +281,11 @@ public class VerificationActivity extends MyActivity implements
     }
 
     public void verifyOtp(String otp) {
-        SendOTP.getInstance().getTrigger().verify(otp);
+
+        String verifyurl = URL+"/verify?mobile="+countryCode+phoneNumber+"&authkey="+authkey+"&otp="+otp;
+        App.requestQueue.add(MyVolleyRequestManager.getmsgStringRequest(Request.Method.POST,
+                verifyurl,fcm_lister,fcm_error_listener));
+      //  SendOTP.getInstance().getTrigger().verify(otp);
     }
 
 
@@ -246,7 +353,7 @@ public class VerificationActivity extends MyActivity implements
     Response.Listener updatelister = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
-            onLoadDismiss();
+          //  onLoadDismiss();
 
             LogUtils.e(response.toString());
 
@@ -277,7 +384,7 @@ public class VerificationActivity extends MyActivity implements
     Response.ErrorListener update_error_listener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            onLoadDismiss();
+        //    onLoadDismiss();
             NetworkResponse response = error.networkResponse;
             if (error instanceof ServerError && response != null) {
                 try {
@@ -328,6 +435,6 @@ public class VerificationActivity extends MyActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        SendOTP.getInstance().getTrigger().stop();
+       // SendOTP.getInstance().getTrigger().stop();
     }
 }

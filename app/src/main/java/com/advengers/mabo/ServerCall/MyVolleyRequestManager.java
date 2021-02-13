@@ -258,4 +258,68 @@ public class MyVolleyRequestManager {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         return  stringRequest;
     }
+
+    public static StringRequest createmsgStringRequest(int method, String serverURL, final HashMap<String, String> payload, Response.Listener responseListener, Response.ErrorListener errorListener) {
+
+        Log.e("Server Url",serverURL);
+
+
+        StringRequest stringRequest = new StringRequest(method, serverURL, responseListener, errorListener)
+        {
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                String parsed;
+                Log.e("Server Response",response.toString());
+                try {
+                    parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                    return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));
+
+                } catch (UnsupportedEncodingException e) {
+                    return Response.error(new VolleyError(e.getLocalizedMessage()));
+
+                }
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type","application/x-www-form-urlencoded");
+                LogUtils.e(params.toString());
+                return params;
+
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return payload;
+            }
+        };
+
+
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                request_time,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        return  stringRequest;
+    }
+    public static JsonObjectRequest  getmsgStringRequest(int method, final String serverURL, Response.Listener responseListener, Response.ErrorListener errorListener)
+    {
+        LogUtils.e(serverURL);
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(method, serverURL,null, responseListener, errorListener)
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+
+
+                LogUtils.e(params.toString());
+                return params;
+
+            }
+
+
+        };
+        return stringRequest;
+    }
 }

@@ -75,4 +75,9 @@ public interface Keys {
     public static final String USER_ID = "user_id";
     public static final String NEWPASSWORD = "newpassword";
     public static final String CONFIRMPASSWORD = "confirmpassword";
+    public static final String AUTHKEY = "authkey";
+    public static final String TEMPID = "template_id";
+    public static final String MOBILE = "mobile";
+
+
 }

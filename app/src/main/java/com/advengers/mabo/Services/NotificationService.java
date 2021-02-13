@@ -83,13 +83,13 @@ public class NotificationService extends Service {
                     public void run() {
                         if (CometChat.getActiveCall() != null && CometChat.getActiveCall().getCallStatus().equals(CometChatConstants.CALL_STATUS_ONGOING) && CometChat.getActiveCall().getSessionId() != null) {
                             try{
-                                JsonObject jsonObject = new JsonParser().parse(CometChat.getActiveCall().getSender().toString()).getAsJsonObject();
-                                LogUtils.e("Name : "+jsonObject.get("name").getAsString());
+                             //   JsonObject jsonObject = new JsonParser().parse(CometChat.getActiveCall().getSender().toString()).getAsJsonObject();
+                                LogUtils.e("Name : "+CometChat.getActiveCall().getReceiver().toString());
                             }catch (Exception e)
                             {
                                 e.printStackTrace();
                             }
-                            createNotification("Name","Tap to join ongoing call");
+                            createNotification(getString(R.string.app_name),"Tap to join ongoing call");
 
                         } else
                             stopSelf();
@@ -140,7 +140,7 @@ public class NotificationService extends Service {
           //  if (ACTION_1.equals(action)) {
                 // TODO: handle action 1.
                 // If you want to cancel the notification: NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID);
-                utils.Utils.joinOnGoingCall(getApplicationContext());
+           //     utils.Utils.joinOnGoingCall(getApplicationContext());
          //   }
         }
     }

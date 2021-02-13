@@ -59,6 +59,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -641,8 +642,35 @@ public class LoginActivity extends MyActivity implements EasyPermissions.Permiss
                              public void onSuccess(com.cometchat.pro.models.User user) {
                                  onLoadDismiss();
                                 FirebaseMessaging.getInstance().subscribeToTopic(AppConfig.AppDetails.AppID_user_UID);
-                               //  startActivity(new Intent(LoginActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                                CometChat.registerTokenForPushNotification(token, new CometChat.CallbackListener<String>() {
+                                    @Override
+                                    public void onSuccess(String s) {
+                                        Log.e( "onSuccessPN: ",s );
+                                    }
+                                    @Override
+                                    public void onError(CometChatException e) {
+                                        Log.e("onErrorPN: ",e.getMessage() );
+                                    }
+                                });
                                 startActivity(new Intent(LoginActivity.this, SendotpActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                             /*    NexmoClient client = new NexmoClient.Builder()
+                                         .apiKey("761804fc")
+                                         .apiSecret("sv1DAfQloM1Ymt2y")
+                                         .build();
+                                 VerifyClient verifyClient = client.getVerifyClient();
+                                 VerifyRequest request = new VerifyRequest("919790449694", "Vonage");
+                                 request.setLength(4);
+
+                                 VerifyResponse response = verifyClient.verify(request);
+
+                                 if (response.getStatus() == VerifyStatus.OK) {
+                                     System.out.printf("RequestID: %s", response.getRequestId());
+                                 } else {
+                                     System.out.printf("ERROR! %s: %s",
+                                             response.getStatus(),
+                                             response.getErrorText()
+                                     );*/
+                               //  }
                              }
 
                              @Override

@@ -20,6 +20,7 @@ import com.cloudinary.android.MediaManager;
 import com.cometchat.pro.core.AppSettings;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
+import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.msg91.sendotpandroid.library.internal.SendOTP;
@@ -68,9 +69,12 @@ public class App extends Application {
         ACRA.init(this);
         Teliver.init(this,"cde1cb937533fe59df3f1e1af9f6d3e3");
         TLog.setVisible(true);
-        SendOTP.initializeApp(this,"335467AbkkMMivnJ5f1996d6P1");//"com.advengers.mabo");
-        appInstance = this;
+        SendOTP.initializeApp(this,"335467A4I8Tzy96017ddabP1");//"com.advengers.mabo");
 
+
+        
+        appInstance = this;
+        PRDownloader.initialize(getApplicationContext());
         app_data_sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         volleySingleTone = VolleySingleTone.getsInstance();
         requestQueue = volleySingleTone.getMrequestqueue();
