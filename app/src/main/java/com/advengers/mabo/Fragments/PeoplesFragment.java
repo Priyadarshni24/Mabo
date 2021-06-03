@@ -202,7 +202,7 @@ public class PeoplesFragment extends MyFragment implements View.OnClickListener,
             public void onProgressChanged(SeekBar seekBar, int progress,
                                           boolean fromUser) {
             //    Toast.makeText(getApplicationContext(),"seekbar progress: "+progress, Toast.LENGTH_SHORT).show();
-                int minvalue = 25;
+                int minvalue = 1000;
                 if(progress>minvalue)
                     minvalue = progress;
                 Utils.getInstance(getActivity()).setInt(RANGE,minvalue);
@@ -265,17 +265,20 @@ public class PeoplesFragment extends MyFragment implements View.OnClickListener,
                         for(int i=0; i<userarr.length(); i++)
                         {
                             String p = userarr.getString(i);
-                        //    LogUtils.e(i+" "+p);
-                         //   User persons = new User();
-                           User persons = gson.fromJson(p,User.class);
-
-                          // LogUtils.e(persons.getUsername()+" "+persons.getLatitude()+" "+persons.getLongitude()+" "+persons.getprofile_imagename());
-                           if(persons.getprofile_imagename().isEmpty())
+                            User persons = gson.fromJson(p,User.class);
+                            if(persons.getprofile_imagename().isEmpty())
                                persons.setprofile_imagename(LOADAVATAR);
                             if(Tools.findUser(persons.getId(), UserList)==null)
                             {
                                 UserList.add(persons);
-                                mClusterManager.addItem(new Person(new LatLng(Double.parseDouble(persons.getLatitude()),Double.parseDouble(persons.getLongitude())), persons.getUsername(),persons.getId(),persons.getprofile_imagename()));
+                                if(persons.getScrumble_location().equals("1"))
+                                {
+                                    double dither=0.001;
+                                    double lat = Double.parseDouble(persons.getLatitude()) + (Math.random()-0.5)*dither;
+                                    double lng = Double.parseDouble(persons.getLongitude()) + (Math.random()-0.5)*dither;
+                                    mClusterManager.addItem(new Person(new LatLng(lat,lng), persons.getUsername(),persons.getId(),persons.getprofile_imagename()));
+                                }else
+                                    mClusterManager.addItem(new Person(new LatLng(Double.parseDouble(persons.getLatitude()),Double.parseDouble(persons.getLongitude())), persons.getUsername(),persons.getId(),persons.getprofile_imagename()));
                             }
 
 
@@ -415,8 +418,8 @@ public class PeoplesFragment extends MyFragment implements View.OnClickListener,
     @Override
     public void onClusterItemInfoWindowClick(Person person) {
         //   Utils.showToast(person.getId(),getContext());
-
-        Tools.showUserProfile(R.style.Animation_Design_BottomSheetDialog, user.getId(),person.id, getContext(), getActivity());
+        callback.onProfile(person.id);
+       // Tools.showUserProfile(R.style.Animation_Design_BottomSheetDialog, user.getId(),person.id, getContext(), getActivity());
     }
     @Override
     public boolean onClusterItemClick(Person person) {
@@ -516,6 +519,15 @@ public class PeoplesFragment extends MyFragment implements View.OnClickListener,
 
     private void addItems() {
      //   for(int i=0;i<5;i++)
+        if(user.getprofile_imagename().isEmpty())
+            user.setprofile_imagename(LOADAVATAR);
+        if(user.getScrumble_location().equals("1"))
+        {
+            double dither=0.001;
+            double lat = Double.parseDouble(user.getLatitude()) + (Math.random()-0.5)*dither;
+            double lng = Double.parseDouble(user.getLongitude()) + (Math.random()-0.5)*dither;
+            mClusterManager.addItem(new Person(new LatLng(lat,lng), user.getUsername(),user.getId(),user.getprofile_imagename()));
+        }else
          mClusterManager.addItem(new Person(new LatLng(Double.parseDouble(user.getLatitude()),Double.parseDouble(user.getLongitude())), user.getUsername(),user.getId(),user.getprofile_imagename()));
     }
     private LatLng position() {

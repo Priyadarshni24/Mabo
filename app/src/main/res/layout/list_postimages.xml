@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.cardview.widget.CardView
+            android:layout_width="@dimen/dimen100"
+            android:layout_height="@dimen/dimen100"
+            card_view:cardCornerRadius="8dp"
+            android:id="@+id/cardimage"
+            android:layout_margin="5dp"
+            android:elevation="10dp">
+
+            <ImageView
+                android:id="@+id/roundedImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:scaleType="centerCrop"
+                />
+        </androidx.cardview.widget.CardView>
+        <RelativeLayout
+            android:layout_toRightOf="@+id/cardimage"
+            android:layout_toLeftOf="@+id/txt_percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="@dimen/dimen200"
+            android:textColor="@color/black"
+            android:id="@+id/txt_imagename"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_size"
+            android:layout_below="@+id/txt_imagename"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/margin30"
+            android:id="@+id/btn_delete"
+            android:background="@color/red"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:text="@string/strdelete"
+            android:layout_marginTop="@dimen/margin20"
+            android:layout_below="@+id/txt_size"/>
+
+        </RelativeLayout>
+        <TextView
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_percentage"/>
+    </RelativeLayout>
+</RelativeLayout>
+</layout>

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.advengers.mabo.Model.User;
 import com.advengers.mabo.R;
 import com.advengers.mabo.Services.OnClearFromRecentService;
+import com.advengers.mabo.Tools.MyActivity;
 import com.advengers.mabo.Utils.LogUtils;
 import com.advengers.mabo.Utils.Utils;
 import com.google.android.gms.common.ConnectionResult;
@@ -35,9 +36,8 @@ import com.google.gson.Gson;
 
 import static com.advengers.mabo.Interfaces.Keys.USER;
 
-public class SplashActivity extends AppCompatActivity{//} implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class SplashActivity extends MyActivity {//} implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     Gson gson;
-    User user;
     LocationManager locationManager;
     RelativeLayout lyt;
     @Override
@@ -46,11 +46,17 @@ public class SplashActivity extends AppCompatActivity{//} implements GoogleApiCl
         setContentView(R.layout.activity_splash);
         lyt = (RelativeLayout)findViewById(R.id.baselayout);
         gson = new Gson();
-        user = new User();
         User.setUser(gson.fromJson(Utils.getInstance(SplashActivity.this).getString(USER),User.class));
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+
+      //   LogUtils.e("Verification "+user.isVerify()+"");
+        // getUser();
+      //  setUser();
+        //getUser();
         if(User.getUser().isLogged())
         {
+           // getUser();
+
             startActivity(new Intent(SplashActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         }else
         new Handler().postDelayed(new Runnable() {

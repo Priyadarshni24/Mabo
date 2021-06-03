@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.a914-gowtham:Android-video-trimmer:1.5.2@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/043b39b244c9207c0dd88f831e96d4fb/jetified-Android-video-trimmer-1.5.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/043b39b244c9207c0dd88f831e96d4fb/jetified-Android-video-trimmer-1.5.2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/043b39b244c9207c0dd88f831e96d4fb/jetified-Android-video-trimmer-1.5.2/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.a914-gowtham/Android-video-trimmer/1.5.2/912d6d294fb24d8d43cf02ea872eedc37136a75d/Android-video-trimmer-1.5.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

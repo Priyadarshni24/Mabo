@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.advengers.mabo.Adapter.SliderAdapter;
 import com.advengers.mabo.R;
+import com.advengers.mabo.Sendotp.SendotpActivity;
 
 public class IntroscreenActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -107,11 +108,11 @@ public class IntroscreenActivity extends AppCompatActivity implements View.OnCli
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.btn_next:
-                        startActivity(new Intent(IntroscreenActivity.this, LoginActivity.class));
+                        startActivity(new Intent(IntroscreenActivity.this, SendotpActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                         finish();
                         break;
                     case R.id.btn_skip:
-                        startActivity(new Intent(IntroscreenActivity.this, LoginActivity.class));
+                        startActivity(new Intent(IntroscreenActivity.this, SendotpActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                         finish();
                         break;
                     default: break;

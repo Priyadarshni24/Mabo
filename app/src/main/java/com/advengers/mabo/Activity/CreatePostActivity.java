@@ -23,6 +23,8 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,14 +44,19 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.advengers.mabo.Adapter.AutoSuggestAdapter;
+import com.advengers.mabo.Adapter.ImageUploadAdapter;
 import com.advengers.mabo.Adapter.ImageUploadSlideAdapter;
 import com.advengers.mabo.Adapter.InterestAdapter;
 import com.advengers.mabo.Adapter.NewPostPicturesListAdapter;
 import com.advengers.mabo.Adapter.TagpeopleAdapter;
 import com.advengers.mabo.Adapter.VideoSlideAdapter;
+import com.advengers.mabo.Adapter.VideoUploadAdapter;
 import com.advengers.mabo.Model.Interest;
 import com.advengers.mabo.Model.Tag;
 import com.advengers.mabo.Model.User;
+import com.advengers.mabo.Multipleimageselect.activities.AlbumSelectActivity;
+import com.advengers.mabo.Multipleimageselect.helpers.Constants;
+import com.advengers.mabo.Multipleimageselect.models.Image;
 import com.advengers.mabo.R;
 import com.advengers.mabo.ServerCall.MyVolleyRequestManager;
 import com.advengers.mabo.ServerCall.ServerParams;
@@ -66,7 +73,6 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.asksira.bsimagepicker.BSImagePicker;
 import com.cloudinary.Cloudinary;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
@@ -82,6 +88,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 //import com.iceteck.silicompressorr.SiliCompressor;
 import com.google.gson.reflect.TypeToken;
+import com.gowtham.library.utils.TrimType;
+import com.gowtham.library.utils.TrimVideo;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -119,13 +127,13 @@ import static com.advengers.mabo.Interfaces.Keys.STATUS_JSON;
 import static com.advengers.mabo.Interfaces.Keys.USER;
 import static com.advengers.mabo.Interfaces.Keys.USERNAME;
 
-public class CreatePostActivity extends MyActivity implements View.OnClickListener,
-                                        BSImagePicker.OnMultiImageSelectedListener,
-                                        BSImagePicker.ImageLoaderDelegate,
+public class CreatePostActivity extends MyActivity implements
+                                        View.OnClickListener,
                                         InterestAdapter.SelectedInterest,
                                         TagpeopleAdapter.TagPeople,
                                         ImageUploadSlideAdapter.TagImages,
-                                        VideoSlideAdapter.TagVideo
+                                        VideoUploadAdapter.CloseClick,
+                                        ImageUploadAdapter.CloseClick
 {
     ActivityCreatepostBinding binding;
     private static final int REQUEST_PLACE_PICKER = 10;
@@ -150,10 +158,11 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
     ArrayList<User> taglist = new ArrayList<>();
     ArrayList<User> Userlist = new ArrayList<>();
     TagpeopleAdapter tagAdapter;
-    ArrayList<Uri> list;
-    ImageUploadSlideAdapter imgAdapter;
+    ArrayList<Image> list;
+   // ImageUploadSlideAdapter imgAdapter;
+    ImageUploadAdapter imguploadAdapter;
     VideoSlideAdapter videoAdapter;
-
+    VideoUploadAdapter videoUploadAdapter;
     Cloudinary cloudinary;
     ArrayList<String> imageUrls = new ArrayList<>();
     ArrayList<String> videoUrls = new ArrayList<>();
@@ -226,7 +235,32 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
         }
 
         binding.btnAddvideo.setOnClickListener(this);
-        binding.lytUpload.setOnClickListener(this);
+        binding.txtupload.setOnClickListener(this);
+        binding.edtpost.setLinkTextColor(R.color.blue);
+        binding.edtpost.setLinksClickable(true);
+        binding.edtpost.setAutoLinkMask(Linkify.WEB_URLS);
+        binding.edtpost.setMovementMethod(LinkMovementMethod.getInstance());
+        binding.edtpost.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                Linkify.addLinks(s, Linkify.WEB_URLS);
+
+            }
+        });
+//If the edit text contains previous text with potential links
+        Linkify.addLinks(binding.edtpost, Linkify.WEB_URLS);
       /*  pAdapter = new NewPostPicturesListAdapter(this);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         binding.newPostImageList.setLayoutManager(mLayoutManager);
@@ -417,14 +451,18 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
                 else
                     showInfo("Can't add more than 2 videos",CreatePostActivity.this,CreatePostActivity.this);
                 break;
-            case R.id.lyt_upload:
-                BSImagePicker pickerDialog = new BSImagePicker.Builder("com.asksira.imagepickersheetdemo.fileprovider")
+            case R.id.txtupload:
+                Intent intent = new Intent(this, AlbumSelectActivity.class);
+                //set limit on number of images that can be selected, default is 10
+                intent.putExtra(Constants.INTENT_EXTRA_LIMIT, 3);
+                startActivityForResult(intent, Constants.REQUEST_CODE);
+              /*  BSImagePicker pickerDialog = new BSImagePicker.Builder("com.asksira.imagepickersheetdemo.fileprovider")
                         .setMaximumDisplayingImages(Integer.MAX_VALUE)
                         .isMultiSelect()
                         .setMinimumMultiSelectCount(1)
                         .setMaximumMultiSelectCount(3)
                         .build();
-                pickerDialog.show(getSupportFragmentManager(), "picker");
+                pickerDialog.show(getSupportFragmentManager(), "picker");*/
                 break;
             case R.id.txt_nextone:
                 binding.rlPageone.setVisibility(View.GONE);
@@ -453,7 +491,7 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
                     if(uploadimagesize>0)
                     {
 
-                        String path= FileUtils.getPath(CreatePostActivity.this,list.get(uploadimagesize-1));
+                        String path= list.get(uploadimagesize-1).path;//FileUtils.getPath(CreatePostActivity.this,Uri.parse(list.get(uploadimagesize-1).path));
                         new UploadImage().execute(path);
                     }else if(uploadvideosize>0)
                     {
@@ -547,10 +585,18 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
     }*/
 
     private void startTrimActivity(@NonNull Uri uri) {
-        Intent intent = new Intent(this, TrimmerActivity.class);
+        TrimVideo.activity(String.valueOf(uri))
+                .setTrimType(TrimType.MIN_MAX_DURATION)
+//        .setCompressOption(new CompressOption()) //empty constructor for default compress option
+                .setMinToMax(5,30)
+                .setHideSeekBar(true)
+                .setDestination("/storage/emulated/0/DCIM/TESTFOLDER")  //default output path /storage/emulated/0/DOWNLOADS
+                .start(this);
+
+      /*  Intent intent = new Intent(this, TrimmerActivity.class);
         intent.putExtra(Utils.EXTRA_VIDEO_PATH, FileUtils.getPath(this, uri));
         intent.putExtra(Utils.VIDEO_TOTAL_DURATION, getMediaDuration(uri));
-        startActivityForResult(intent,GET_VIDEO_INTENT);
+        startActivityForResult(intent,GET_VIDEO_INTENT);*/
     }
 
     private int  getMediaDuration(Uri uriOfFile)  {
@@ -630,11 +676,16 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
                 Toast.makeText(CreatePostActivity.this, R.string.toast_cannot_retrieve_selected_video, Toast.LENGTH_SHORT).show();
             }
         }
-        }else if(requestCode == GET_VIDEO_INTENT && resultCode == RESULT_OK && data != null)
+        }else if (requestCode == TrimVideo.VIDEO_TRIMMER_REQ_CODE && data != null) {
+            Uri uri = Uri.parse(TrimVideo.getTrimmedVideoPath(data));
+            videopath.add(String.valueOf(uri));
+            addVideoAdapter(videopath);
+
+         }else if(requestCode == GET_VIDEO_INTENT && resultCode == RESULT_OK && data != null)
         {
            videopath.add(data.getStringExtra(Utils.VIDEOURL));
-            try {
-             //   videothumbbnails.add(ThumbnailUtils.createVideoThumbnail(videopath.get(0), MediaStore.Video.Thumbnails.MINI_KIND));//retriveVideoFrameFromVideo(videopath.get(0)));
+           addVideoAdapter(videopath);
+            /*try {
                 videoAdapter = new VideoSlideAdapter(CreatePostActivity.this,videopath);
                 binding.slideViewpagervideo.setVisibility(View.VISIBLE);
                 binding.slideViewpagervideo.setAdapter(videoAdapter);
@@ -645,15 +696,38 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
 
                 File file = new File(filePath);
                 file.getParentFile().mkdirs();
-               // String Compresspath = SiliCompressor.with(CreatePostActivity.this).compressVideo(data.getStringExtra(Utils.VIDEOURL), filePath);
-              LogUtils.e(data.getStringExtra(Utils.VIDEOURL));
-         //       new UploadVideo().execute(Compresspath);
-            } catch (Throwable throwable) {
+             } catch (Throwable throwable) {
                 throwable.printStackTrace();
-            }
+            }*/
 
-        }
+        } if (requestCode == Constants.REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            //The array list has the image paths of the selected images
+            ArrayList<Image> images = data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
+            list = new ArrayList<Image>();
+            list.addAll(images);
+            for(int i=0;i<images.size();i++)
+                LogUtils.e("Path "+images.get(i).path);
+            onMultiImageSelected(images);
+      }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+    public void addVideoAdapter(ArrayList<String> videopath)
+    {
+        try {
+            videoUploadAdapter = new VideoUploadAdapter(CreatePostActivity.this,videopath);
+            binding.slideViewpagervideo.setVisibility(View.VISIBLE);
+            binding.slideViewpagervideo.setLayoutManager(new LinearLayoutManager(this));
+            binding.slideViewpagervideo.setAdapter(videoUploadAdapter);
+            videoUploadAdapter.CallBackListener(CreatePostActivity.this);
+            final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+            final String fileName = "MP4_" + timeStamp + ".mp4";
+            final String filePath = getDestinationPath() + fileName;
+            File file = new File(filePath);
+            file.getParentFile().mkdirs();
+
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
     private String getDestinationPath() {
         String mFinalPath;
@@ -707,16 +781,16 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
     }
     @Override
     public void onBackPressed() {
-        if(binding.rlPagetwo.getVisibility()==View.VISIBLE)
+       /* if(binding.rlPagetwo.getVisibility()==View.VISIBLE)
         {
             binding.rlPageone.setVisibility(View.VISIBLE);
             binding.rlPagetwo.setVisibility(View.GONE);
             binding.btnPost.setVisibility(View.GONE);
 
         }else
-        {
+        {*/
             super.onBackPressed();
-        }
+      //  }
 
     }
     void newPostPOIPick() {
@@ -738,47 +812,34 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
         }
     }
 
-    @Override
-    public void onMultiImageSelected(List<Uri> uriList, String tag) {
-        LogUtils.e(uriList.toString());
-        for (int i = 0; i < uriList.size(); i++) {
-            InputStream imageStream = null;
-            try {
-                imageStream = getContentResolver().openInputStream(uriList.get(i));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
 
-            list = new ArrayList<>(uriList.size());
-            list.addAll(uriList);
-       //     Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
-             imgAdapter = new ImageUploadSlideAdapter(CreatePostActivity.this,list);
+    public void onMultiImageSelected(ArrayList<Image> uriList) {
+       LogUtils.e(uriList.toString());
+      //  for (int i = 0; i < uriList.size(); i++) {
+          //  list = new ArrayList<>(uriList.size());
+          //  list.addAll(uriList);
+           /*  imgAdapter = new ImageUploadSlideAdapter(CreatePostActivity.this,uriList);
             imgAdapter.tagImageCallBackListener(CreatePostActivity.this);
-            binding.slideViewpager.setVisibility(View.VISIBLE);
-            binding.lytUpload.setVisibility(View.GONE);
-            binding.slideViewpager.setAdapter(imgAdapter);
-           /* if (bitmap != null) {
-                final NewPostPicture newPostPicture = new NewPostPicture(Tools.scaleBitmap(bitmap), null, false);
-                newPostPicture.onClickDelete = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        newPostPictures.remove(newPostPicture);
-                        pAdapter.update();
-                    }
-                };
-                newPostPictures.add(newPostPicture);
-                binding.newPostImageList.setVisibility(View.VISIBLE);
-                pAdapter.update();
-            }*/
-        }
+            binding.slideViewpager.setVisibility(View.VISIBLE);*/
+            binding.txtupload.setVisibility(View.GONE);
+            binding.newPostImageList.setVisibility(View.VISIBLE);
+            imguploadAdapter = new ImageUploadAdapter(CreatePostActivity.this,uriList);
+            imguploadAdapter.CallBackListener(CreatePostActivity.this);
+            binding.newPostImageList.setLayoutManager(new LinearLayoutManager(this));
+            binding.newPostImageList.setAdapter(imguploadAdapter);
+
+            //binding.slideViewpager.setAdapter(imgAdapter);
+
+     //   }
     }
 
-    @Override
+   /* @Override
     public void loadImage(File imageFile, ImageView ivImage) {
        // LogUtils.e(imageFile.getAbsolutePath());
         //Glide.with(MainActivity.this).load(imageFile).into(ivImage);
         Picasso.get().load(imageFile).into(ivImage);
-    }
+    }*/
+
 
     @Override
     public void onSelect(String interest) {
@@ -802,18 +863,18 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
         LogUtils.e(list.get(position).toString());*/
         list.remove(position);
       //  imgAdapter.notifyDataSetChanged();
-        imgAdapter = new ImageUploadSlideAdapter(CreatePostActivity.this,list);
+    /*    imgAdapter = new ImageUploadSlideAdapter(CreatePostActivity.this,list);
         imgAdapter.tagImageCallBackListener(CreatePostActivity.this);
-        binding.slideViewpager.setAdapter(imgAdapter);
+        binding.slideViewpager.setAdapter(imgAdapter);*/
         LogUtils.e(list.toString());
         if(list.size()==0)
         {
-            binding.lytUpload.setVisibility(View.VISIBLE);
+            binding.txtupload.setVisibility(View.VISIBLE);
             binding.slideViewpager.setVisibility(View.GONE);
         }
     }
 
-    @Override
+   /* @Override
     public void onVideoTag(int position) {
         if(videopath.size()>0)
         {
@@ -823,7 +884,38 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
             videoAdapter.tagVideoCallBackListener(CreatePostActivity.this);
             if(videopath.size()==0)
             {
-                binding.lytVideo.setVisibility(View.GONE);
+                binding.slideViewpagervideo.setVisibility(View.GONE);
+            }
+        }
+    }*/
+
+    @Override
+    public void onClose(int position) {
+        list.remove(position);
+        imguploadAdapter.notifyDataSetChanged();
+        imguploadAdapter = new ImageUploadAdapter(CreatePostActivity.this,list);
+        imguploadAdapter.CallBackListener(CreatePostActivity.this);
+        binding.newPostImageList.setAdapter(imguploadAdapter);
+        LogUtils.e(list.toString());
+        if(list.size()==0)
+        {
+            binding.txtupload.setVisibility(View.VISIBLE);
+            binding.newPostImageList.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onCloseVideo(int position) {
+        if(videopath.size()>0)
+        {
+            videopath.remove(position);
+            videoUploadAdapter = new VideoUploadAdapter(CreatePostActivity.this,videopath);
+            binding.slideViewpagervideo.setLayoutManager(new LinearLayoutManager(this));
+            binding.slideViewpagervideo.setAdapter(videoUploadAdapter);
+            videoUploadAdapter.CallBackListener(CreatePostActivity.this);
+            if(videopath.size()==0)
+            {
+                binding.slideViewpagervideo.setVisibility(View.GONE);
             }
         }
     }
@@ -912,7 +1004,7 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
                 }
             }else
             {
-                String path= FileUtils.getPath(CreatePostActivity.this,list.get(uploadimagesize-1));
+                String path= list.get(uploadimagesize-1).path;//FileUtils.getPath(CreatePostActivity.this,Uri.parse(list.get(uploadimagesize-1).path));
                 new UploadImage().execute(path);
 
             }
@@ -1012,7 +1104,7 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
                 App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST,URL,
                         new ServerParams().createPost(user.getId(),StringEscapeUtils.escapeJava(binding.edtpost.getText().toString()),user.getLatitude(),user.getLongitude(),
                                 images,videos,tagplace,selectedinterest,tagpeople,tagpeopleid,tagplaceid ),postlister,post_error_listener));
-                LogUtils.e("ALL Image uploaded "+imageUrls.toString());
+                LogUtils.e("ALL Video uploaded "+imageUrls.toString());
             }else
             {
                 new UploadVideo().execute(videopath.get(uploadvideosize-1));
@@ -1060,7 +1152,7 @@ public class CreatePostActivity extends MyActivity implements View.OnClickListen
                             @Override
                             public void onClick(View view) {
                                 b.dismiss();
-
+                              //  callback.onClosecall();
                                 finish();
                             }
                         });

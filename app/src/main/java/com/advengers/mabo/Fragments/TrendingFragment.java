@@ -1,19 +1,31 @@
 package com.advengers.mabo.Fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.advengers.mabo.Activity.App;
 import com.advengers.mabo.Activity.CommentListActivity;
 import com.advengers.mabo.Activity.CreatePostActivity;
+import com.advengers.mabo.Activity.DashboardActivity;
 import com.advengers.mabo.Activity.LikelistActivity;
 import com.advengers.mabo.Activity.MapDirectionActivity;
 import com.advengers.mabo.Adapter.PostAdapter;
@@ -53,6 +65,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import static com.advengers.mabo.Activity.MainActivity.DELETEPOST;
 import static com.advengers.mabo.Activity.MainActivity.DISLIKEPOST;
 import static com.advengers.mabo.Activity.MainActivity.LIKEPOST;
 import static com.advengers.mabo.Activity.MainActivity.LOADPOST;
@@ -65,7 +78,9 @@ import static com.advengers.mabo.Interfaces.Keys.IMAGENAME;
 import static com.advengers.mabo.Interfaces.Keys.LATITUDE;
 import static com.advengers.mabo.Interfaces.Keys.LONGITUDE;
 import static com.advengers.mabo.Interfaces.Keys.MESSAGE;
+import static com.advengers.mabo.Interfaces.Keys.POSTDATA;
 import static com.advengers.mabo.Interfaces.Keys.POSTID;
+import static com.advengers.mabo.Interfaces.Keys.RANGE;
 import static com.advengers.mabo.Interfaces.Keys.STATUS_JSON;
 import static com.advengers.mabo.Interfaces.Keys.USER;
 import static com.advengers.mabo.Interfaces.Keys.USERNAME;
@@ -77,11 +92,35 @@ public class TrendingFragment extends MyFragment implements View.OnClickListener
     CreatePostActivity ClosecallActivity;
     CommentListActivity commentListActivity;
     public static PostAdapter adapter;
+    boolean postdelete = false;
+    Post postdlt;
+    int movelist=0;
+    public boolean isLoading = false;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_trending, container, false);
         ClosecallActivity = new CreatePostActivity();
         ClosecallActivity.CallBackListener(this);
+        binding.mToolbar.inflateMenu(R.menu.menu_trending);
+        binding.mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId())
+                {
+                    case R.id.action_addpost:
+                        startActivityForResult(new Intent(getActivity(), CreatePostActivity.class),01);
+                        break;
+
+                }
+                return true;
+            }
+        });
        /* commentListActivity = new CommentListActivity();
         commentListActivity.setOnCommentedListener(this);*/
         getUser();
@@ -95,10 +134,37 @@ public class TrendingFragment extends MyFragment implements View.OnClickListener
                     }else
                         binding.txtAddress.setText(getString(R.string.title_home));
                 binding.fabAddpost.setOnClickListener(this);
-         onLoadPost();
+                initScrollListener();
+
+         onLoadPost(0);
+
         return binding.getRoot();
     }
+    private void initScrollListener() {
+        binding.listpost.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
 
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                if (!isLoading) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == postlist.size() - 1) {
+                        //bottom of list!
+                        onLoadPost(postlist.size()+1);
+                        isLoading = true;
+                    }
+                }
+            }
+        });
+
+
+    }
     @Override
     public String getTagManager() {
         return null;
@@ -108,21 +174,29 @@ public class TrendingFragment extends MyFragment implements View.OnClickListener
     public void onClick(View view) {
         if(view.getId()==R.id.fab_addpost)
         {
-            startActivity(new Intent(getActivity(), CreatePostActivity.class));
+            startActivityForResult(new Intent(getActivity(), CreatePostActivity.class),01);
         }
     }
-
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_trending, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
     @Override
     public void onResume() {
         super.onResume();
     }
 
-    private void onLoadPost() {
+    private void onLoadPost(int start) {
         onLoadProgress(getActivity());
+        movelist = start;
+        if(movelist == 0)
+            postlist.clear();
         String URL = SERVER_URL+LOADPOST;
         URL = URL.replaceAll(" ", "%20");
         App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST,
-                URL,new ServerParams().loadPost(user.getId(),user.getLatitude(),user.getLongitude())
+                URL,new ServerParams().loadPost(user.getId(),user.getLatitude(),user.getLongitude(),String.valueOf(Utils.getInstance(getActivity()).getInt(RANGE)),String.valueOf(start))
                 , lister,error_listener));
     }
     Response.Listener lister = new Response.Listener() {
@@ -139,22 +213,32 @@ public class TrendingFragment extends MyFragment implements View.OnClickListener
 
 
                     if (login.getString(STATUS_JSON).equals("true")) {
-                        postlist.clear();
+
                         binding.listpost.setVisibility(View.VISIBLE);
                         binding.txtNopost.setVisibility(View.GONE);
                         JSONArray postarray = login.getJSONObject(DATA).getJSONArray("result_posts");
-                        for(int i=0;i<postarray.length();i++) {
-                            String jsondata = postarray.get(i).toString();
-                           // LogUtils.e(jsondata);
-                            Post post = gson.fromJson(jsondata, Post.class);
-                            postlist.add(post);
-                        }
-                        LogUtils.e("Length of post "+postlist.size());
-                      /* Collections.reverse(postlist);*/
-                        adapter = new PostAdapter(getActivity(),getActivity(),postlist,user.getId());
-                        adapter.setLikeCommentCallBackListener(TrendingFragment.this);
+                     //   int movelist = postlist.size();
+                        if(postarray.length()>0) {
+                            for (int i = 0; i < postarray.length(); i++) {
+                                String jsondata = postarray.get(i).toString();
+                                // LogUtils.e(jsondata);
+                                Post post = gson.fromJson(jsondata, Post.class);
+                                postlist.add(post);
+                            }
+                            LogUtils.e("Length of post " + postlist.size());
+                            /* Collections.reverse(postlist);*/
+                            if(movelist==0) {
+                                adapter = new PostAdapter(getActivity(), getActivity(), postlist, user.getId());
+                                adapter.setLikeCommentCallBackListener(TrendingFragment.this);
+                                binding.listpost.setAdapter(adapter);
+                            }else
+                                adapter.notifyDataSetChanged();
+                            isLoading = false;
 
-                        binding.listpost.setAdapter(adapter);
+                        }else if(postlist.size()==0){
+                            binding.txtNopost.setVisibility(View.VISIBLE);
+                            binding.listpost.setVisibility(View.GONE);
+                        }
 
                     }else
                     {
@@ -213,7 +297,12 @@ public class TrendingFragment extends MyFragment implements View.OnClickListener
 
                     if (login.getString(STATUS_JSON).equals("true")) {
 
-
+                        if(postdelete)
+                        {
+                            postlist.remove(postdlt);
+                            adapter.notifyDataSetChanged();
+                            postdelete = false;
+                        }
                     }
                 }
 
@@ -245,7 +334,13 @@ public class TrendingFragment extends MyFragment implements View.OnClickListener
 
     @Override
     public void onClosecall() {
-        onLoadPost();
+   //     onLoadPost();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        onLoadPost(0);
     }
 
     @Override
@@ -261,6 +356,7 @@ public class TrendingFragment extends MyFragment implements View.OnClickListener
       //  new CommentListActivity().setOnCommentedListener(this);
         Intent commentintent = new Intent(getActivity(), CommentListActivity.class);
         commentintent.putExtra(POSTID,postid);
+        commentintent.putExtra(POSTDATA,postlist.get(position));
         getActivity().startActivity(commentintent);
     }
 
@@ -277,16 +373,19 @@ public class TrendingFragment extends MyFragment implements View.OnClickListener
 
     @Override
     public void onShare(int position) {
-        String shareBody = "http://maboapp/postdata/"+postlist.get(position).getId();//"http://www.maboapp.com/post?"+postlist.get(position).getId();
+        String shareBody = "<a href='http://www.mabo.com/postdata/"+postlist.get(position).getId()+"'>"+"http://www.mabo.com/postdata/"+postlist.get(position).getId()+" </a>";//"http://www.maboapp.com/post?"+postlist.get(position).getId();
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        sharingIntent.setType("text/html");
+        LogUtils.e(Html.fromHtml(shareBody).toString());
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Mabo");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, Html.fromHtml(shareBody).toString());
         startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
     }
 
     @Override
     public void onProfile(String postuserid) {
-         Tools.showUserProfile(R.style.Animation_Design_BottomSheetDialog, user.getId(),postuserid,getContext(),getActivity());
+     //  Tools.showUserProfile(R.style.Animation_Design_BottomSheetDialog, user.getId(),postuserid,getContext(),getActivity());
+        callback.onProfile(postuserid);
      }
 
     @Override
@@ -294,6 +393,38 @@ public class TrendingFragment extends MyFragment implements View.OnClickListener
         Intent likeintent = new Intent(getActivity(), LikelistActivity.class);
         likeintent.putExtra(POSTID,postid);
         getActivity().startActivity(likeintent);
+    }
+
+    @Override
+    public void onDeletePost(int position) {
+        if(user.getId().equals(postlist.get(position).getUser_id())) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            AlertDialog dialog = builder.create();
+            builder.setMessage(R.string.str_deletepost)
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Utils.getInstance(getMyActivty()).setBoolean(Utils.PREF_PROFILE_FILL, true);
+                    /*    if(callBackListener != null)
+                            callBackListener.onPeopleCallBack();*/
+                            dialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            onLoadProgress(getActivity());
+                            postdelete = true;
+                            String URL = SERVER_URL + DELETEPOST;
+                            URL = URL.replaceAll(" ", "%20");
+                            App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST,
+                                    URL, new ServerParams().LikePost(user.getId(), postlist.get(position).getId())
+                                    , likelister, error_listener)); // FIRE ZE MISSILES!
+                            postdlt = postlist.get(position);
+                            dialog.dismiss();
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            builder.show();
+        }
     }
 
     public static void onCommented(String postid) {

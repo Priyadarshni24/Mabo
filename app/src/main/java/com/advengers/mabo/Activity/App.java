@@ -16,10 +16,13 @@ import com.advengers.mabo.ServerCall.VolleySingleTone;
 import com.advengers.mabo.Utils.Utils;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
+import com.bugfender.android.BuildConfig;
+import com.bugfender.sdk.Bugfender;
 import com.cloudinary.android.MediaManager;
 import com.cometchat.pro.core.AppSettings;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
+import com.cometchat.pro.uikit.ui_components.calls.call_manager.listener.CometChatCallListener;
 import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,8 +41,6 @@ import java.util.Map;
 
 /*import com.bugfender.sdk.Bugfender;
 import com.bugfender.android.BuildConfig;*/
-import listeners.CometChatCallListener;
-import utils.FontUtils;
 
 /*@ReportsCrashes(mailTo = "techie@advengersmedia.com",
         customReportContent = { ReportField.APP_VERSION_CODE, ReportField.APP_VERSION_NAME, ReportField.ANDROID_VERSION, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA, ReportField.STACK_TRACE, ReportField.LOGCAT },
@@ -62,10 +63,10 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-      /*  Bugfender.init(this, "lL0if3tiK3aSUUNa0jGZgx7ucZLRTijg", BuildConfig.DEBUG);
+        Bugfender.init(this, "lL0if3tiK3aSUUNa0jGZgx7ucZLRTijg", BuildConfig.DEBUG);
         Bugfender.enableCrashReporting();
         Bugfender.enableUIEventLogging(this);
-        Bugfender.enableLogcatLogging(); // optional, if you want logs automatically collected from logcat*/
+        Bugfender.enableLogcatLogging(); // optional, if you want logs automatically collected from logcat
         ACRA.init(this);
         Teliver.init(this,"cde1cb937533fe59df3f1e1af9f6d3e3");
         TLog.setVisible(true);
@@ -82,7 +83,7 @@ public class App extends Application {
 
       //  Teliver.init(this,"7f5d5d86c194deec1d3ba9ffde30a6a9");
         //mImageLoader = volleySingleTone.getImageLoader();
-        FontsOverride.setDefaultFont(this, "DEFAULT", "gibsonregular.ttf");
+        FontsOverride.setDefaultFont(this, "DEFAULT", "poppinsregular.ttf");
      //   new FontUtils(this);
 
         GsonBuilder gsonBuilder = new GsonBuilder();

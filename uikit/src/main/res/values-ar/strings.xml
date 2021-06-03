@@ -184,13 +184,7 @@
     <string name="add_reaction">إضافة رد فعل</string>
     <string name="no_stickers_found">لم يتم العثور على ملصقات</string>
     <string name="reply_in_thread">الرد في موضوع</string>
-    <string name="sunday">الأحد</string>
-    <string name="monday">الاثنين</string>
-    <string name="tuesday">الثلاثاء</string>
-    <string name="wednesday">الأربعاء</string>
-    <string name="thursday">الخميس</string>
-    <string name="friday">الجمعة</string>
-    <string name="saturday">السبت</string>
+
     <string name="message">اكتب رسالة</string>
     <string name="block_user_list_error">فشل استرجاع المستخدم المحظور</string>
     <string name="you_wont_be_able_send_or_receive_messages">لن تتمكن من إرسال الرسائل أو تلقيها</string>
@@ -346,4 +340,101 @@
     <string name="custom_message_meeting">مكالمة جماعية 📹</string>
     <string name="start_group_call">ابدأ مكالمة جماعية</string>
     <string name="you_created_group_call">لقد قمت بإنشاء مكالمة جماعية.</string>
+    <string name="voted_success">تم التصويت على النجاح</string>
+    <string name="uploading">تحميل</string>
+    <string name="retry">أعد المحاولة</string>
+    <string name="updating">التحديث</string>
+    <string name="conversation_title">المحادثات</string>
+    <string name = "updated_user_successfully"> تم تحديث المستخدم بنجاح </string>
+    <string name = "user_left"> "مستخدم اليسار" </string>
+    <string name = "user_joined"> انضمام المستخدم </string>
+    <string name = "connection_connected"> تم الاتصال بنجاح </string>
+    <string name = "connection_in_progress"> الاتصال قيد التقدم </string>
+    <string name = "connection_disconnected"> أنت غير متصل. </string>
+    <string name = "no_internet_available"> لا يتوفر إنترنت </string>
+    <string name = "you_have_blocked_by"> تم حظرك بواسطة </string>
+
+    <!--Error Messages-->
+    <string name = "server_error"> خطأ في الخادم </string>
+    <string name = "err_no_question"> \ "السؤال \" للاستطلاع مفقود </string>
+    <string name = "err_no_receiver"> \ "المتلقي \" (UID / GUID) مفقود </string>
+    <string name = "err_no_receiver_type"> \ "نوع جهاز الاستقبال \" مفقود </string>
+    <string name = "err_no_options"> \ "الخيارات \" للاستطلاع إما مفقودة أو غير صالحة </string>
+    <string name = "err_poll_not_found"> ​​الاستطلاع غير موجود </string>
+    <string name = "err_no_poll_id"> الاستطلاع \ "id \" مفقود </string>
+    <string name = "err_not_poll_creator"> أنت لست منشئ الاستطلاع </string>
+
+    <string name="err_init_not_called">يرجى الاتصال بطريقة CometChat.init () ويفضل أن تكون في طريقة onCreate () لفئة التطبيق قبل استدعاء أي طرق أخرى متعلقة بـ CometChat</string>
+    <string name="err_password_missing_message">كلمة المرور إلزامية لمجموعة محمية</string>
+    <string name="err_limit_exceed_message">تجاوز الحد الحد الأقصى لـ ٪s</string>
+    <string name="err_user_not_logged_in_message">يرجى تسجيل الدخول إلى CometChat قبل استدعاء هذه الطريقة</string>
+    <string name="err_invalid_guid_message">الرجاء تقديم GUID صالح</string>
+    <string name="err_invalid_uid_message">الرجاء تقديم UID صالح</string>
+    <string name="err_blank_uid_message">لا يمكن أن يكون المعرف الفريد فارغًا. يرجى تقديم UID صالح</string>
+    <string name="err_uid_with_space_message">لا يمكن أن يحتوي المعرف الفريد على مسافات. يرجى تقديم UID صالح</string>
+    <string name="err_default_message">هناك خطأ ما</string>
+    <string name="err_call_not_initiated_message">لا يمكن إلغاء المكالمة دون بدء المكالمة</string>
+    <string name="err_call_message">حدث خطأ ما أثناء الاتصال</string>
+    <string name="err_call_session_mismatch_message">عدم تطابق جلسة الاتصال. يرجى التحقق من معرف الجلسة</string>
+    <string name="err_uid_guid_not_specified_message">لم يتم تحديد كل من UID و GUID يرجى تحديد المعرف الفريد العمومي (UID) أو المعرف الفريد العمومي (GUID) التي تحتاج الرسالة إلى جلبها</string>
+    <string name="err_internet_unavailable">لا يوجد اتصال بالإنترنت الرجاء المحاولة مرة أخرى</string>
+    <string name="err_request_in_progress_message">الطلب قيد التقدم بالفعل</string>
+    <string name="err_filters_missing_message">الطابع الزمني &quot;أو&quot; MessageId &quot;أو&quot; updatedAfter &quot;مطلوبان لاستخدام طريقة&quot; fetchNext () &quot;</string>
+    <string name="err_blank_auth_token_message">Auth token لايمكن ان يكون فارغا يرجى تقديم ملف صالح auth token</string>
+    <string name="extension_is_not_enabled">التمديد معطل. يرجى تمكين الامتداد من CometChat Dashboard</string>
+    <string name="err_invalid_messageid_message">معرف الرسالة المقدم غير صالح يرجى تقديم معرف رسالة صالح</string>
+    <string name="err_invalid_message_type_message">يمكن تحرير TextMessage أو CustomMessage فقط. يرجى تقديم رسالة صالحة</string>
+    <string name="err_list_empty_message">القائمة المقدمة فارغة. الرجاء تقديم قائمة صالحة</string>
+    <string name="err_updatesonly_without_updatedafter_message">لا يمكن استخدام الطريقة `updatesOnly()` بدون الطريقة `setUpdatedAfter()`</string>
+    <string name="err_json_message">خطأ أثناء تحليل JSON</string>
+    <string name="err_logout_fail_message">خطأ أثناء تسجيل الخروج</string>
+    <string name="err_empty_appid_message">لا يمكن أن يكون معرف التطبيق فارغًا. الرجاء تحديد معرف تطبيق صالح</string>
+    <string name="err_non_positive_limit_message">يجب أن يكون الحد المحدد رقمًا موجبًا</string>
+    <string name="err_region_missing_message">المنطقة غير محددة. يرجى تحديد المنطقة في فئة AppSettingsBuilder باستخدام طريقة `setRegion()`</string>
+    <string name="err_app_settings_null_message">لا يمكن أن تكون AppSettings خالية</string>
+    <string name="err_api_key_not_found_message">لا يمكن أن يكون ApiKey فارغًا أو فارغًا. يرجى تقديم مفتاح Api صالح</string>
+    <string name="err_invalid_sending_message_type_message">نوع الرسالة الذي أدخلته غير صالح للإجراء التالي</string>
+    <string name="err_message_text_empty_message">لا يمكن أن يكون نص الرسالة فارغًا</string>
+    <string name="err_file_object_invalid_message">لا يمكن أن يكون كائن الملف فارغًا أو أن مسار الملف غير موجود</string>
+    <string name="err_file_url_empty_message">تم تعيين عنوان URL لرسالة الوسائط على أنه فارغ أو فارغ</string>
+    <string name="err_empty_custom_data_message">لا يمكن أن يكون حقل البيانات المخصصة فارغًا أو فارغًا</string>
+    <string name="err_empty_group_name_message">لا يمكن أن يكون اسم المجموعة فارغًا أو فارغًا</string>
+    <string name="err_empty_group_type_message">لا يمكن أن يكون نوع المجموعة فارغًا أو فارغًا</string>
+    <string name="err_login_in_progress_message">تسجيل الدخول قيد التقدم. يرجى الانتظار حتى ينتهي طلب تسجيل الدخول</string>
+    <string name="err_invalid_message_message">لا يمكن أن تكون الرسالة فارغة. الرجاء تمرير كائن &quot;BaseMessage&quot; صالح</string>
+    <string name="err_invalid_group_message">لا يمكن أن تكون المجموعة فارغة. الرجاء تمرير كائن &quot;Group&quot; صالح</string>
+    <string name="err_invalid_call_message">لا يمكن أن تكون المكالمة خالية. الرجاء تمرير كائن &quot;Call&quot; صالح</string>
+    <string name="err_invalid_call_type_message">نوع المكالمة غير صالح. يرجى تقديم نوع اتصال صالح</string>
+    <string name="err_invalid_receiver_type_message">نوع جهاز الاستقبال غير صالح. يرجى تقديم نوع جهاز استقبال صالح</string>
+    <string name="err_invalid_session_id_message">نوع معرف جلسة غير صالح. يرجى تقديم معرف جلسة صالح</string>
+    <string name="err_activity_null_message">لا يمكن أن يكون النشاط المقدم فارغًا.</string>
+    <string name="err_view_null_message">لا يمكن أن يكون مخطط RelativeLayout المقدم فارغًا</string>
+    <string name="err_invalid_fcm_token_message">لا يمكن أن يكون رمز FCM المميز المقدم فارغًا أو فارغًا. يرجى تقديم رمز FCM مميز صالح</string>
+    <string name="err_invalid_group_type_message">لا يمكن أن يكون نوع المجموعة المقدم فارغًا أو فارغًا</string>
+    <string name="err_call_in_progress_message">الاتصال قيد التقدم. يرجى إنهاء المكالمة السابقة لإجراء هذه العملية</string>
+    <string name="err_incorrect_initiator_message">لا يمكن إلغاء المكالمة التي بدأها شخص آخر. الرجاء استخدام الحالة &quot;مرفوض&quot; بدلاً من ذلك</string>
+    <string name="err_invalid_user_name_message">تم توفير اسم غير صالح للمستخدم. الرجاء إدخال اسم صالح</string>
+    <string name="err_invalid_user_message">لا يمكن أن يكون كائن المستخدم فارغًا. يرجى تقديم كائن مستخدم صالح</string>
+    <string name="err_invalid_group_name_message">لا يمكن أن يكون اسم المجموعة فارغًا. يرجى تقديم اسم مجموعة صالح</string>
+    <string name="err_invalid_timestamp_message">يجب أن يكون الطابع الزمني موجبًا. يرجى تقديم طابع زمني صالح</string>
+    <string name="err_invalid_category_message">فئة غير صالحة. الرجاء تقديم فئة صالحة</string>
+    <string name="err_empty_icon_message">أيقونة فارغة. الرجاء تقديم رمز صالح</string>
+    <string name="err_empty_description_message">وصف فارغ. الرجاء تقديم وصف صحيح</string>
+    <string name="err_empty_metadata_message">البيانات الوصفية الفارغة. يرجى تقديم بيانات وصفية صالحة</string>
+    <string name="err_empty_scope_message">النطاق غير صالح. يرجى تقديم نطاق صالح</string>
+    <string name="err_invalid_scope_message">النطاق غير صالح. يرجى تقديم نطاق صالح</string>
+    <string name="err_invalid_conversation_with_message">محادثة غير صحيحة مع. يرجى تقديم قيمة صالحة لـ ConversWith</string>
+    <string name="err_invalid_conversation_type_message">نوع محادثة غير صالح. يرجى تقديم قيمة صالحة لـ ConversWith</string>
+    <string name="err_invalid_media_message">رسالة وسائط غير صالحة. الرجاء توفير كائن ملف صالح أو تفاصيل المرفق.</string>
+    <string name="err_invalid_attachment_message">لا يمكن أن يكون المرفق فارغًا. يرجى تقديم تفاصيل صحيحة للمرفقات</string>
+    <string name="err_invalid_file_name_message">اسم الملف غير صالح. الرجاء إدخال اسم ملف صالح</string>
+    <string name="err_invalid_file_extension_message">ملحق الملف غير صالح. يرجى تقديم امتداد ملف صالح</string>
+    <string name="err_invalid_file_mime_type_message">نوع ملف Mime غير صالح. الرجاء تقديم نوع ملف mime صالح</string>
+    <string name="err_invalid_file_url_message">URL ملف غير صالح. يرجى تقديم عنوان URL صالح للملف</string>
+    <string name="err_conversation_not_found_message">لم يتم العثور على محادثة لـ  conversationWith ٪s  و ConverstionType ٪s</string>
+    <string name="err_settings_not_found_message">الإعدادات غير موجودة.</string>
+    <string name="err_invalid_feature_message">لا يمكن أن يكون العنصر المقدم فارغًا أو فارغًا. الرجاء تقديم ميزة صالحة</string>
+    <string name="err_invalid_extension_message">لا يمكن أن يكون الامتداد المقدم فارغًا أو فارغًا.</string>
+    <string name="err_feature_not_found">الميزة المقدمة غير موجودة.</string>
+    <string name="extension_not_found">تعذر العثور على الامتداد المقدم.</string>
 </resources>

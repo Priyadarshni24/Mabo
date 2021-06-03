@@ -33,10 +33,14 @@ public interface Keys {
     public static final String ROOMID = "roomid";
     public static final String STATUS_JSON = "status";
     public static final String MESSAGE = "message";
+    public static final String ACCOUNTID = "accountid";
     public static final String PHONE = "phone";
+    public static final String PHONENUMBER = "phonenumber";
     public static final String USER = "user";
     public static final String FCM = "fcm";
     public static final String IMAGENAME ="imagename";
+    public static final String POSTDATA ="postdata";
+    public static final String TAGDATA ="tagdata";
     public static final String TYPE ="type";
     public static final String SEARCHTEXT = "search_text";
     public static final String EMAILNOTIFY = "email_notify";
@@ -47,6 +51,7 @@ public interface Keys {
     public static final String INTERESTS = "interests";
     public static final String USERID = "userid";
     public static final String POSTID = "postid";
+    public static final String REPLY = "reply";
     public static final String INTERESTJSON = "interestjson";
     public static final String TITLE = "title";
     public static final String IMAGE_URL="image_url";
@@ -55,6 +60,7 @@ public interface Keys {
     public static final String TAGINTEREST = "tag_interest";
     public static final String TAGPEOPLE = "tag_people";
     public static final String TAGPEOPLEID = "tag_peopleid";
+    public static final String COMMENTID = "commentid";
     public static final String TAGPLACEID = "tag_placeid";
     public static final String VIDEO_THUMBNAIL = "video_thumbnail";
     public static final String COMMENT = "comment";
@@ -64,6 +70,7 @@ public interface Keys {
     public static final String CONTACTS = "contacts";
     public static final String REQUESTID = "request_id";
     public static final String RANGE = "range";
+    public static final String START = "start";
     public static final String FRIENDID = "friendid";
     public static final String PROFILE_IMAGENAME = "profile_imagename";
     public static final String RECEIVED = "received";
@@ -78,6 +85,6 @@ public interface Keys {
     public static final String AUTHKEY = "authkey";
     public static final String TEMPID = "template_id";
     public static final String MOBILE = "mobile";
-
+    public static final String PIN = "pin";
 
 }

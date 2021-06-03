@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.JagarYousef:ChatVoicePlayer:1.0.7@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0b2aa5bf9bae4c7af0e38dca7dd50415/jetified-ChatVoicePlayer-1.0.7/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0b2aa5bf9bae4c7af0e38dca7dd50415/jetified-ChatVoicePlayer-1.0.7/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0b2aa5bf9bae4c7af0e38dca7dd50415/jetified-ChatVoicePlayer-1.0.7/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.JagarYousef/ChatVoicePlayer/1.0.7/1e01a2f411f63a8058d7532387077457626a44f8/ChatVoicePlayer-1.0.7-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

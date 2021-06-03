@@ -15,6 +15,8 @@
             android:src="@drawable/ic_avatar"
             android:id="@+id/img_profile"/>
         <LinearLayout
+            android:id="@+id/ll_details"
+            android:layout_centerVertical="true"
             android:layout_toRightOf="@id/img_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,15 +28,21 @@
                 android:id="@+id/txt_name"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                android:textSize="@dimen/textsize18"
+                android:textSize="@dimen/textsize14"
                 />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_date"
                 android:textColor="@color/black"
-                android:textSize="@dimen/textsize14"
+                android:textSize="@dimen/textsize12"
                 />
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_grey"
+            android:layout_margin="@dimen/margin10"
+            android:layout_below="@id/ll_details"/>
     </RelativeLayout>
 </layout>

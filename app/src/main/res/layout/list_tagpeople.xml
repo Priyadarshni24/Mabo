@@ -2,28 +2,30 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto">
 <RelativeLayout
+    android:layout_margin="@dimen/margin5"
     android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:background="@drawable/button_background"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
 <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:fontFamily="@font/gibsonregular"
+    android:fontFamily="@font/poppinsregular"
     android:id="@+id/txtpeoplename"
-    android:hint="@string/str_tagpeoplpe"
+    android:text="@string/str_tagpeoplpe"
     android:gravity="center"
-    android:layout_marginTop="@dimen/margin5"
-    android:background="@drawable/background_with_shadow"
-    android:textSize="@dimen/textsize16"
-    android:textColor="@color/black"/>
+    android:padding="@dimen/margin5"
+    android:background="@drawable/button_background"
+    android:textColor="@color/white"/>
     <ImageView
-        android:layout_width="@dimen/margin25"
-        android:layout_height="@dimen/margin25"
+        android:layout_width="@dimen/margin10"
+        android:layout_height="@dimen/margin30"
         android:id="@+id/btnclose"
-        android:layout_marginLeft="-18dp"
+        android:layout_marginRight="@dimen/margin5"
+        android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/txtpeoplename"
-        android:src="@drawable/ic_closeblack"
+        android:src="@drawable/ic_close"
         />
 </RelativeLayout>
 </layout>

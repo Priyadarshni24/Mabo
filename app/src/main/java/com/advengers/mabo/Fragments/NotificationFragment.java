@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.advengers.mabo.Activity.App;
 import com.advengers.mabo.Activity.DashboardActivity;
+import com.advengers.mabo.Activity.LikelistActivity;
 import com.advengers.mabo.Activity.SinglePostActivity;
 import com.advengers.mabo.Adapter.NotificationAdapter;
 import com.advengers.mabo.Adapter.PostAdapter;
@@ -20,6 +21,7 @@ import com.advengers.mabo.R;
 import com.advengers.mabo.ServerCall.MyVolleyRequestManager;
 import com.advengers.mabo.ServerCall.ServerParams;
 import com.advengers.mabo.Utils.LogUtils;
+import com.advengers.mabo.Utils.Tools;
 import com.advengers.mabo.databinding.FragmentNotificationBinding;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -88,11 +90,13 @@ public class NotificationFragment extends MyFragment implements NotificationAdap
                         for(int i=0;i<postarray.length();i++) {
                             String jsondata = postarray.get(i).toString();
                             // LogUtils.e(jsondata);
-                            Notification post = gson.fromJson(jsondata, Notification.class);
-                            postlist.add(post);
+                            if(jsondata.contains("details")) {
+                                Notification post = gson.fromJson(jsondata, Notification.class);
+                                postlist.add(post);
+                            }
                         }
                         LogUtils.e("Length of post "+postlist.size());
-                         Collections.reverse(postlist);
+                       ///  Collections.reverse(postlist);
                         adapter = new NotificationAdapter(getActivity(),postlist);
                         adapter.CallBackListener(NotificationFragment.this);
 
@@ -146,5 +150,11 @@ public class NotificationFragment extends MyFragment implements NotificationAdap
         Intent post = new Intent(getApplicationContext(), SinglePostActivity.class);
         post.putExtra(POSTID,postlist.get(position).getPost_id());
         startActivity(post);
+    }
+
+    @Override
+    public void onProfile(int position) {
+       // Tools.showUserProfile(R.style.Animation_Design_BottomSheetDialog,user.getId(),postlist.get(position).getUser_id(), getContext(),getActivity());
+        callback.onProfile(postlist.get(position).getDetails().getUser_id());
     }
 }

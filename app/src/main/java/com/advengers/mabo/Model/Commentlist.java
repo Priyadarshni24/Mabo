@@ -1,8 +1,10 @@
 package com.advengers.mabo.Model;
 
+
+import java.io.Serializable;
 import java.util.List;
 
-public class Commentlist {
+public class Commentlist implements Serializable {
     String id;
     String user_id;
     String post_id;
@@ -12,6 +14,16 @@ public class Commentlist {
     String username;
     String profile_imagename;
     List<Tag> tagpeopledata;
+
+    List<Reply> replydetails;
+
+    public List<Reply> getReplydetails() {
+        return replydetails;
+    }
+
+    public void setReplydetails(List<Reply> replydetails) {
+        this.replydetails = replydetails;
+    }
 
 
     public List<Tag> getTagpeopledata() {

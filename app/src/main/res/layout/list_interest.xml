@@ -11,8 +11,7 @@
         android:id="@+id/checkid"
         android:text="@string/ok"
         android:textColor="@color/black"
-        android:textSize="@dimen/textsize16"
-        android:fontFamily="@font/gibsonregular"/>
+        android:fontFamily="@font/poppinsregular"/>
 
 </LinearLayout>
 </layout>

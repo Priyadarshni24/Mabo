@@ -38,6 +38,7 @@ import com.advengers.mabo.ServerCall.ServerParams;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.cometchat.pro.uikit.ui_resources.utils.GpsUtils;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -71,7 +72,6 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
-import utils.GpsUtils;
 
 import static com.advengers.mabo.Activity.MainActivity.COMETCHATURL;
 import static com.advengers.mabo.Activity.MainActivity.LOGIN;
@@ -289,18 +289,11 @@ public class LoginActivity extends MyActivity implements EasyPermissions.Permiss
                             return;
                         }
 
-                        // Get new Instance ID token
-                        token = task.getResult().getToken();
+                         token = task.getResult().getToken();
 
-                      /*  // Log and toast
-                        String msg = getString(R.string.msg_token_fmt, token);
-                        Log.d(TAG, msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();*/
-                    }
+                     }
                 });
-        //   UserDetails("32");
-     //  CreateComet("mabo_test","test","");
-    }
+        }
     public void onNewToken(String token) {
         LogUtils.e( "Refreshed token: " + token);
 
@@ -653,24 +646,6 @@ public class LoginActivity extends MyActivity implements EasyPermissions.Permiss
                                     }
                                 });
                                 startActivity(new Intent(LoginActivity.this, SendotpActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                             /*    NexmoClient client = new NexmoClient.Builder()
-                                         .apiKey("761804fc")
-                                         .apiSecret("sv1DAfQloM1Ymt2y")
-                                         .build();
-                                 VerifyClient verifyClient = client.getVerifyClient();
-                                 VerifyRequest request = new VerifyRequest("919790449694", "Vonage");
-                                 request.setLength(4);
-
-                                 VerifyResponse response = verifyClient.verify(request);
-
-                                 if (response.getStatus() == VerifyStatus.OK) {
-                                     System.out.printf("RequestID: %s", response.getRequestId());
-                                 } else {
-                                     System.out.printf("ERROR! %s: %s",
-                                             response.getStatus(),
-                                             response.getErrorText()
-                                     );*/
-                               //  }
                              }
 
                              @Override
@@ -711,7 +686,7 @@ public class LoginActivity extends MyActivity implements EasyPermissions.Permiss
     }
     public void GetLocation()
     {
-        LocationTrack locationTrack = new LocationTrack(LoginActivity.this);
+        LocationTrack locationTrack = new LocationTrack(LoginActivity.this,LoginActivity.this);
         LogUtils.e(locationTrack.canGetLocation()+"");
 
         if (locationTrack.canGetLocation()&&locationTrack.getLatitude()!=0.0&&locationTrack.getLongitude()!=0.0) {

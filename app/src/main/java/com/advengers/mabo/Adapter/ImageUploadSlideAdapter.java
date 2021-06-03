@@ -1,6 +1,8 @@
 package com.advengers.mabo.Adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,19 +14,22 @@ import android.widget.RelativeLayout;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.advengers.mabo.Model.User;
+import com.advengers.mabo.Multipleimageselect.models.Image;
 import com.advengers.mabo.R;
+import com.advengers.mabo.Utils.LogUtils;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class ImageUploadSlideAdapter extends PagerAdapter {
 
     Context context;
     LayoutInflater layoutInflater;
-    ArrayList<Uri> imagelist = new ArrayList<>();
+    ArrayList<Image> imagelist = new ArrayList<>();
     TagImages tagImagecallback;
 
-    public ImageUploadSlideAdapter(Context context, ArrayList<Uri> list){
+    public ImageUploadSlideAdapter(Context context, ArrayList<Image> list){
         this.context=context;
         this.imagelist = list;
     }
@@ -49,7 +54,10 @@ public class ImageUploadSlideAdapter extends PagerAdapter {
         ImageView slideImageView = (ImageView) view.findViewById(R.id.iv_image_icon);
         ImageView btnclose = (ImageView) view.findViewById(R.id.btn_close);
 
-        Picasso.get().load(imagelist.get(position)).into(slideImageView);
+        LogUtils.e(imagelist.get(position).path);
+        Bitmap myBitmap = BitmapFactory.decodeFile(imagelist.get(position).path);
+       // Picasso.get().load(Uri.fromFile(new File(imagelist.get(position).path))).into(slideImageView);
+        slideImageView.setImageBitmap(myBitmap);
 
         btnclose.setOnClickListener(new View.OnClickListener() {
             @Override

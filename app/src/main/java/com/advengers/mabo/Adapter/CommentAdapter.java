@@ -34,12 +34,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     ArrayList<Commentlist> likelist = new ArrayList<>();
     ProfileClick profilecallback;
     SimpleDateFormat formatter;
+    String userid;
     PrettyTime p = new PrettyTime();
-    public  CommentAdapter(Context context,ArrayList<Commentlist> data)
+    public  CommentAdapter(Context context,ArrayList<Commentlist> data,String userid)
     {
         this.context = context;
         this.likelist = data;
-
+        this.userid = userid;
     }
     @NonNull
     @Override
@@ -58,26 +59,35 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
+
             Date date = formatter.parse(likelist.get(position).getCreated());
-            holder.binding.txtDate.setText(p.format(date));
+            if(userid.equals(likelist.get(position).getUser_id()))
+                holder.binding.txtName.setText("You commented on "+p.format(date));
+            else
+                holder.binding.txtName.setText(likelist.get(position).getUsername()+" commented "+p.format(date));
+         //   holder.binding.txtDate.setText(p.format(date));
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        holder.binding.txtName.setText(likelist.get(position).getUsername());
-        if(!likelist.get(position).getProfile_imagename().isEmpty())
-        Picasso.get().load(likelist.get(position).getProfile_imagename()).placeholder(R.drawable.ic_avatar).into(holder.binding.imgProfile);
+
+        if (!likelist.get(position).getProfile_imagename().isEmpty())
+            Picasso.get().load(likelist.get(position).getProfile_imagename()).placeholder(R.drawable.ic_avatar).into(holder.binding.imgProfile);
 
 
         String content = likelist.get(position).getComment();
         holder.binding.txtComment.setText(content);
+        LogUtils.e("Position "+position);
+        if(likelist.get(position).getTagpeopledata()!=null)
+        {
+            LogUtils.e("Coming after comment"+ likelist.get(position).getTagpeopledata().size());
         List<Tag> tagpeoples = likelist.get(position).getTagpeopledata();
        /* for(int t=0;t<tagpeoples.size();t++)
         LogUtils.e(tagpeoples.get(t).getUsername());*/
         SpannableStringBuilder ssBuilder = new SpannableStringBuilder(content);
-       //     LogUtils.e(content+ " "+tagpeoples.size());
+            LogUtils.e(content+ " "+tagpeoples.size());
+
         ClickableSpan[] clickableSpans = new ClickableSpan[tagpeoples.size()];
-        for (int i=0;i<tagpeoples.size();i++)
-        {
+        for (int i = 0; i < tagpeoples.size(); i++) {
             int finalI = i;
             clickableSpans[i] = new ClickableSpan() {
                 @Override
@@ -86,14 +96,19 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 }
             };
         }
-        for(int i =0;i<tagpeoples.size();i++)
-        {
+
+        for (int i = 0; i < tagpeoples.size(); i++) {
+            LogUtils.e("tags "+content.indexOf(tagpeoples.get(i).getUsername())+" "+(content.indexOf(tagpeoples.get(i).getUsername())+tagpeoples.get(i).getUsername().length()));
+            try{
             ssBuilder.setSpan(
                     clickableSpans[i],
                     content.indexOf(tagpeoples.get(i).getUsername()),
-                    content.indexOf(tagpeoples.get(i).getUsername()) + String.valueOf(tagpeoples.get(i).getUsername()).length(),
+                    (content.indexOf(tagpeoples.get(i).getUsername())+tagpeoples.get(i).getUsername().length()),
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            );
+            );}catch (Exception r)
+            {
+                r.printStackTrace();
+            }
         }
 
         // Display the spannable text to TextView
@@ -101,12 +116,19 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         // Specify the TextView movement method
         holder.binding.txtComment.setMovementMethod(LinkMovementMethod.getInstance());
+    }
         content = "";
         holder.binding.imgProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 profilecallback.onProfile(likelist.get(position).getId());
+            }
+        });
+        holder.binding.txtReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                profilecallback.onReply(position);
             }
         });
     }
@@ -135,6 +157,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     public interface ProfileClick
     {
         public void onProfile(String id);
+        public void onReply(int position);
     }
 }
 

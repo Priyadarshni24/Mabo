@@ -52,28 +52,58 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         // holder.bindData(dataModelList.get(position), mContext);
         formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
-            Date date = formatter.parse(likelist.get(position).getDate());
+            Date date = formatter.parse(likelist.get(position).getDetails().getCreated_at());
             holder.binding.txtDate.setText(p.format(date));
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        holder.binding.txtName.setText(likelist.get(position).getNotification_msg());
-        holder.binding.imgProfile.setVisibility(View.GONE);
+        if(likelist.get(position).getCategory().equals("comment")) {
+            if(Integer.parseInt(likelist.get(position).getCount())==1)
+                holder.binding.txtName.setText(likelist.get(position).getDetails().getUsername() +" commented on your post");
+            else
+                holder.binding.txtName.setText(likelist.get(position).getDetails().getUsername() + " and " +
+                    (Integer.parseInt(likelist.get(position).getCount()) - 1) + " others commented on your post");
+        }else if(likelist.get(position).getCategory().equals("replycomment")) {
+            if(Integer.parseInt(likelist.get(position).getCount())==1)
+                holder.binding.txtName.setText(likelist.get(position).getDetails().getUsername() + " replied to your comment");
+            else
+            holder.binding.txtName.setText(likelist.get(position).getDetails().getUsername() + " and " +
+                    (Integer.parseInt(likelist.get(position).getCount()) - 1) + " others replied to your comment");
+        }else if(likelist.get(position).getCategory().equals("commenttaggedpost")) {
+            if(Integer.parseInt(likelist.get(position).getCount())==1)
+                holder.binding.txtName.setText(likelist.get(position).getDetails().getUsername() +" tagged you on comment");
+            else
+                holder.binding.txtName.setText(likelist.get(position).getDetails().getUsername() + " and " +
+                    (Integer.parseInt(likelist.get(position).getCount()) - 1) + " others tagged you on comment");
+        }else if(likelist.get(position).getCategory().equals("like")) {
+            if(Integer.parseInt(likelist.get(position).getCount())==1)
+                holder.binding.txtName.setText(likelist.get(position).getDetails().getUsername()+" likes your post");
+            else
+                holder.binding.txtName.setText(likelist.get(position).getDetails().getUsername() + " and " +
+                        (Integer.parseInt(likelist.get(position).getCount()) - 1) + " others likes your post");
+        }else if(likelist.get(position).getCategory().equals("taggedpost")) {
+            if(Integer.parseInt(likelist.get(position).getCount())==1)
+                holder.binding.txtName.setText(likelist.get(position).getDetails().getUsername()+" tagged on post");
+            else
+                holder.binding.txtName.setText(likelist.get(position).getDetails().getUsername() + " and " +
+                        (Integer.parseInt(likelist.get(position).getCount()) - 1) + " others tagged on post");
+        }
+      //  holder.binding.imgProfile.setVisibility(View.GONE);
         holder.binding.rlRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 profilecallback.onItem(position);
             }
         });
-        /*if(!likelist.get(position).getProfile_imagename().isEmpty())
-            Picasso.get().load(likelist.get(position).getProfile_imagename()).placeholder(R.drawable.ic_avatar).into(holder.binding.imgProfile);
+        if(!likelist.get(position).getDetails().getProfile_imagename().isEmpty())
+            Picasso.get().load(likelist.get(position).getDetails().getProfile_imagename()).placeholder(R.drawable.ic_avatar).into(holder.binding.imgProfile);
         holder.binding.imgProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 profilecallback.onProfile(position);
             }
-        });*/
+        });
     }
 
 
@@ -100,6 +130,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public interface ProfileClick
     {
         public void onItem(int position);
+        public void onProfile(int position);
     }
 }
 

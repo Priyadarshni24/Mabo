@@ -18,6 +18,28 @@ android {
         }
     }
 
+    sourceSets {
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            java.srcDirs = ['src/main/java', '.apt_generated']
+            aidl.srcDirs = ['src/main/aidl', '.apt_generated']
+            res.srcDirs = [
+                    'src/main/res',
+                    'src/main/res-components',
+                    'src/main/res-components/calls',
+                    'src/main/res-components/chats',
+                    'src/main/res-components/cometchatui',
+                    'src/main/res-components/groups',
+                    'src/main/res-components/messagebubbles',
+                    'src/main/res-components/messages',
+                    'src/main/res-components/others',
+                    'src/main/res-components/shared',
+                    'src/main/res-components/userprofile',
+                    'src/main/res-components/users'
+                    ]
+        }
+    }
+
     dataBinding {
         enabled = true
     }
@@ -56,42 +78,32 @@ dependencies {
 
     implementation 'androidx.emoji:emoji-appcompat:1.0.0'
     implementation 'androidx.annotation:annotation:1.1.0'
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
     implementation 'com.google.android.material:material:1.2.0-alpha04'
 
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
 
+    implementation 'pub.devrel:easypermissions:1.0.0'
+
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     implementation 'com.google.android.gms:play-services-location:17.0.0'
-    implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation 'com.google.android.libraries.places:places:2.0.0'
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-
-    implementation 'pub.devrel:easypermissions:1.0.0'
-
     implementation( 'com.teliver.sdk:TeliverSdk:2.0.36'){
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
 
-
     implementation 'com.mindorks.android:prdownloader:0.6.0'
-
-    implementation 'com.giphy.sdk:ui:2.0.9'
-
-   // implementation 'com.github.tcking:giraffecompressor:0.1.4'
-
-    implementation 'com.github.AbedElazizShe:LightCompressor:0.7.9'
-    //cometchat
-    compileOnly 'com.cometchat:pro-android-chat-sdk:2.1.7-beta3'//2.1.7-beta2
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0'
-
     implementation 'bg.devlabs.fullscreenvideoview:library:1.1.5'
-}
-repositories {
-    mavenCentral()
+    //cometchat
+    implementation 'com.cometchat:pro-android-chat-sdk:2.3.1'
+    implementation 'com.bugfender.sdk:android:3.+'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0'
+    implementation 'com.github.JagarYousef:ChatVoicePlayer:1.0.7'
 }

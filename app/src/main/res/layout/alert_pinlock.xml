@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <TextView
+        android:id="@+id/txt_title"
+        android:background="@color/apptheme"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen50"
+        android:fontFamily="@font/poppinsregular"
+        android:text="@string/str_enterpin"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="@dimen/textsize18"
+        />
+    <in.aabhasjindal.otptextview.OtpTextView
+        android:layout_marginTop="@dimen/textsize20"
+        android:id="@+id/edt_pin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/apptheme"
+        app:height="50dp"
+        app:width="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/txt_title"
+        app:box_margin="@dimen/margin5"
+        app:otp_box_background="@drawable/background"
+        app:bar_height="2dp"
+        app:length="4"
+        app:otp_text_size="24dp"/>
+    <Button
+        android:layout_marginTop="@dimen/textsize20"
+        android:layout_marginBottom="@dimen/margin20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_verify"
+        android:layout_below="@+id/edt_pin"
+        android:layout_centerHorizontal="true"
+        android:text="@string/str_verifytext"
+        android:textColor="@color/white"
+        android:background="@drawable/button_background"
+        android:padding="@dimen/textsize10"/>
+
+</RelativeLayout>

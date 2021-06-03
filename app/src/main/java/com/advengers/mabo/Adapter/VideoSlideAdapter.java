@@ -54,30 +54,12 @@ public class VideoSlideAdapter extends PagerAdapter {
 
         ImageView slideImageView = (ImageView) view.findViewById(R.id.iv_image_icon);
         ImageView btnclose = (ImageView) view.findViewById(R.id.btn_close);
-//        LogUtils.e(imagelist.get(position).toString());
-    //   Picasso.get().load(imagelist.get(position)).into(slideImageView);
-      /*  Glide
-                .with( context )
-                .load( Uri.fromFile( new File( imagelist.get(position) ) ) )
-                .into( slideImageView );
-        LogUtils.e(imagelist.get(position));*/
+
         try {
             slideImageView.setImageBitmap(CreatePostActivity.retriveVideoFrameFromVideo(imagelist.get(position)));
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-
-       /* Bitmap bmThumbnail;
-        bmThumbnail = ThumbnailUtils.createVideoThumbnail(imagelist.get(position),
-                MediaStore.Video.Thumbnails.MINI_KIND);
-
-        if (bmThumbnail != null) {
-            LogUtils.e("VideoAdapter"+" video thumbnail found");
-            slideImageView.setImageBitmap(bmThumbnail);
-        } else {
-            LogUtils.e("VideoAdapter"+" video thumbnail not found");
-        }*/
-
 
         btnclose.setOnClickListener(new View.OnClickListener() {
             @Override

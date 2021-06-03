@@ -36,6 +36,9 @@ import com.cometchat.pro.core.Call;
 import com.cometchat.pro.helpers.CometChatHelper;
 import com.cometchat.pro.models.BaseMessage;
 import com.cometchat.pro.models.Group;
+import com.cometchat.pro.uikit.ui_components.calls.call_manager.CometChatCallActivity;
+import com.cometchat.pro.uikit.ui_components.messages.message_list.CometChatMessageListActivity;
+import com.cometchat.pro.uikit.ui_resources.constants.UIKitConstants;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -49,9 +52,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 
-import constant.StringContract;
-import screen.CometChatCallActivity;
-import screen.messagelist.CometChatMessageListActivity;
 
 import static com.advengers.mabo.Interfaces.Keys.POSTID;
 
@@ -112,23 +112,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 if (baseMessage.getReceiverType().equals(CometChatConstants.RECEIVER_TYPE_USER)) {
                     if (isCall && call.getCallStatus().equals(CometChatConstants.CALL_STATUS_INITIATED)) {
                         intent = new Intent(getApplicationContext(), CometChatCallActivity.class);
-                        intent.putExtra(StringContract.IntentStrings.NAME, baseMessage.getSender().getName());
-                        intent.putExtra(StringContract.IntentStrings.UID, baseMessage.getSender().getUid());
-                        intent.putExtra(StringContract.IntentStrings.MYUID,baseMessage.getReceiverUid());
-                        intent.putExtra(StringContract.IntentStrings.SESSION_ID, call.getSessionId());
-                        intent.putExtra(StringContract.IntentStrings.AVATAR, baseMessage.getSender().getAvatar());
+                        intent.putExtra(UIKitConstants.IntentStrings.NAME, baseMessage.getSender().getName());
+                        intent.putExtra(UIKitConstants.IntentStrings.UID, baseMessage.getSender().getUid());
+                        intent.putExtra(UIKitConstants.IntentStrings.MYUID,baseMessage.getReceiverUid());
+                        intent.putExtra(UIKitConstants.IntentStrings.SESSION_ID, call.getSessionId());
+                        intent.putExtra(UIKitConstants.IntentStrings.AVATAR, baseMessage.getSender().getAvatar());
                         intent.setAction(baseMessage.getReceiverType());
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.setType("incoming");
 
                     } else {
                         intent = new Intent(getApplicationContext(), CometChatMessageListActivity.class);
-                        intent.putExtra(StringContract.IntentStrings.UID, baseMessage.getSender().getUid());
-                        intent.putExtra(StringContract.IntentStrings.MYUID,baseMessage.getReceiverUid());
-                        intent.putExtra(StringContract.IntentStrings.AVATAR, baseMessage.getSender().getAvatar());
-                        intent.putExtra(StringContract.IntentStrings.STATUS, baseMessage.getSender().getStatus());
-                        intent.putExtra(StringContract.IntentStrings.NAME, baseMessage.getSender().getName());
-                        intent.putExtra(StringContract.IntentStrings.TYPE, baseMessage.getReceiverType());
+                        intent.putExtra(UIKitConstants.IntentStrings.UID, baseMessage.getSender().getUid());
+                        intent.putExtra(UIKitConstants.IntentStrings.MYUID,baseMessage.getReceiverUid());
+                        intent.putExtra(UIKitConstants.IntentStrings.AVATAR, baseMessage.getSender().getAvatar());
+                        intent.putExtra(UIKitConstants.IntentStrings.STATUS, baseMessage.getSender().getStatus());
+                        intent.putExtra(UIKitConstants.IntentStrings.NAME, baseMessage.getSender().getName());
+                        intent.putExtra(UIKitConstants.IntentStrings.TYPE, baseMessage.getReceiverType());
                     }
                 } else if (baseMessage.getReceiverType().equals(CometChatConstants.RECEIVER_TYPE_GROUP)) {
 /*
@@ -174,7 +174,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationCompat.Builder notificationBuilder = null;
             notificationBuilder = new NotificationCompat.Builder(this, String.valueOf(other_channelid))
-                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                    .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(getString(R.string.app_name))
                     .setAutoCancel(true)
                     .setSound(defaultSound)
@@ -394,8 +394,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
        LogUtils.e(" CH ID "+channelid);
 
         Intent callIntent = new Intent(getApplicationContext(), CallNotificationAction.class);
-        callIntent.putExtra(StringContract.IntentStrings.SESSION_ID,call.getSessionId());
-        callIntent.putExtra(StringContract.IntentStrings.CHANNEL_ID,String.valueOf(channelid));
+        callIntent.putExtra(UIKitConstants.IntentStrings.SESSION_ID,call.getSessionId());
+        callIntent.putExtra(UIKitConstants.IntentStrings.CHANNEL_ID,String.valueOf(channelid));
         callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         callIntent.setAction(title);
         return callIntent;

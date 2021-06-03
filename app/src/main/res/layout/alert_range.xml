@@ -8,7 +8,7 @@
         android:id="@+id/txt_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/gibsonregular"
+        android:fontFamily="@font/poppinsregular"
         android:text="@string/str_setrange"
         android:layout_marginLeft="@dimen/margin15"
         android:layout_marginRight="@dimen/margin15"
@@ -20,7 +20,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/gibsonregular"
+        android:fontFamily="@font/poppinsregular"
         android:textSize="@dimen/textsize18"
         android:layout_margin="@dimen/margin5"
         android:id="@+id/seekvalue"/>
@@ -29,8 +29,8 @@
         android:layout_below="@+id/txt_title"
         android:layout_width="match_parent"
         android:layout_margin="@dimen/margin25"
-        android:min="25"
-        android:max="1000"
+        android:min="1000"
+        android:max="5000"
         android:layout_height="wrap_content"/>
 
     <Button

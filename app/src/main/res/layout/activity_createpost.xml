@@ -9,9 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="0dp"
-
-        app:navigationIcon="@drawable/ic_backarraow"
-        android:background="@color/apptheme"
+        app:title="@string/back"
+        app:titleTextColor="@color/apptheme"
+        app:navigationIcon="@drawable/ic_back"
         android:minHeight="?attr/actionBarSize"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
@@ -30,16 +30,121 @@
         android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <TextView
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/margin10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_stepone"
+            android:id="@+id/stepone"
+            android:visibility="gone"
+            android:fontFamily="@font/poppinsregular"/>
+
+        <TextView
+            android:id="@+id/txtpost"
+            android:fontFamily="@font/poppinsregular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/stepone"
+            android:layout_marginLeft="@dimen/margin20"
+            android:layout_marginTop="@dimen/margin20"
+            android:textColor="@color/black"
+            android:text="@string/str_postmessage"/>
+        <EditText
+            android:layout_below="@+id/txtpost"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size180"
+            android:layout_margin="@dimen/margin15"
+            android:hint="@string/str_writecaption"
+            android:gravity="left"
+            android:id="@+id/edtpost"
+            android:padding="@dimen/margin20"
+            android:fontFamily="@font/poppinsregular"
+            android:background="@drawable/background"
+            />
+        <TextView
+            android:id="@+id/txttag"
+            android:fontFamily="@font/poppinsregular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edtpost"
+            android:layout_marginLeft="@dimen/margin20"
+            android:layout_marginTop="@dimen/margin20"
+            android:textColor="@color/black"
+            android:text="@string/str_tagpeoplpe"/>
+
+        <!--  <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/txt_tagged"
+              android:fontFamily="@font/poppinsregular"
+              android:textSize="@dimen/textsize16"
+              android:layout_marginLeft="@dimen/margin15"
+              android:layout_marginRight="@dimen/margin15"
+              android:layout_marginBottom="@dimen/margin15"
+              android:gravity="center"
+              android:padding="@dimen/margin20"
+              android:visibility="gone"
+              android:background="@drawable/background_with_shadow"
+              android:layout_below="@+id/txttagpeople"/>-->
+        <AutoCompleteTextView
+            android:id="@+id/txttagpeople"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txttag"
+            android:layout_marginLeft="@dimen/margin20"
+            android:layout_marginTop="-1dp"
+            android:layout_marginRight="@dimen/margin20"
+            android:fontFamily="@font/poppinsregular"
+
+            android:gravity="center"
+            android:hint="@string/str_tappeople"
+            android:padding="@dimen/margin20"
+            android:textSize="@dimen/textsize12" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_below="@+id/txttagpeople"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_tagpeople"
+            android:layout_marginLeft="@dimen/margin10"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:scrollbars="none"
+            android:minHeight="@dimen/dimen50"
+            android:layout_marginBottom="@dimen/margin25"
+            />
+        <TextView
+            android:layout_below="@+id/list_tagpeople"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_nextone"
+            android:text="@string/str_next"
+            android:textSize="@dimen/textsize20"
+            android:visibility="gone"
+            android:fontFamily="@font/poppinsregular"
+            android:textStyle="bold"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin20"
+            android:layout_marginBottom="@dimen/margin20"
+            android:textColor="@color/violet"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_below="@+id/rl_pageone"
+        android:id="@+id/rl_pagetwo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
      <TextView
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/margin10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/str_stepone"
-        android:id="@+id/stepone"
-        android:fontFamily="@font/gibsonregular"/>
+        android:text="@string/str_steptwo"
+        android:id="@+id/steptwo"
+         android:visibility="gone"
+        android:fontFamily="@font/poppinsregular"/>
     <RelativeLayout
-        android:layout_below="@+id/stepone"
+        android:layout_below="@+id/steptwo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -50,33 +155,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/background_with_shadow"
-        android:id="@+id/lyt_upload"
-        android:layout_marginLeft="@dimen/margin20"
-        android:layout_marginRight="@dimen/margin20">
-    <ImageView
-        android:id="@+id/img_upload"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size150"
-        android:src="@drawable/ic_upload"
-        />
-       <TextView
-           android:id="@+id/txtupload"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:gravity="center"
-           android:textSize="@dimen/textsize20"
-           android:fontFamily="@font/gibsonregular"
-           android:text="@string/str_uploaddesc"
-           android:layout_marginBottom="@dimen/margin10"/>
-    </LinearLayout>
+        android:id="@+id/lyt_upload">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/newPostImageList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/margin15"
-            android:visibility="gone" />
+            android:layout_alignParentLeft="true"/>
+       <Button
+           android:id="@+id/txtupload"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:gravity="center"
+           android:background="@drawable/button_background"
+           android:fontFamily="@font/poppinsregular"
+           android:textColor="@color/white"
+           android:padding="@dimen/margin5"
+           android:layout_marginLeft="@dimen/margin25"
+           android:layout_marginRight="@dimen/margin25"
+           android:text="@string/str_uploaddesc"/>
+    </LinearLayout>
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/slide_viewpager"
             android:layout_width="match_parent"
@@ -91,58 +189,61 @@
         <LinearLayout
             android:id="@+id/lyt_video"
             android:layout_below="@+id/lyt_media"
+            android:padding="@dimen/margin5"
             android:layout_marginLeft="@dimen/margin20"
-            android:layout_marginTop="@dimen/margin20"
+            android:layout_marginRight="@dimen/margin20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-        <TextView
+     <!--   <TextView
             android:id="@+id/txtvideo"
-            android:fontFamily="@font/gibsonregular"
+            android:fontFamily="@font/poppinsregular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/textsize18"
             android:textColor="@color/black"
-            android:text="@string/str_pickvideo"/>
+            android:text="@string/str_pickvideo"/>-->
         <Button
             android:id="@+id/btn_addvideo"
-            android:background="@color/apptheme"
-            android:fontFamily="@font/gibsonregular"
-            android:layout_width="wrap_content"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/poppinsregular"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/margin5"
-            android:layout_marginTop="@dimen/margin20"
+            android:layout_margin="@dimen/margin20"
             android:textSize="@dimen/textsize14"
             android:textColor="@color/white"
             android:text="@string/str_addvideo"/>
-        <androidx.viewpager.widget.ViewPager
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/slide_viewpagervideo"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_margin="@dimen/margin20"
+            android:layout_height="wrap_content"
             android:visibility="gone"
             android:background="@color/white">
-        </androidx.viewpager.widget.ViewPager>
+        </androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
-    <TextView
-        android:id="@+id/txtloc"
-        android:fontFamily="@font/gibsonregular"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lyt_video"
-        android:layout_marginLeft="@dimen/margin20"
-        android:layout_marginTop="@dimen/margin20"
-        android:textSize="@dimen/textsize18"
-        android:textColor="@color/black"
-        android:text="@string/str_addlocation"/>
-    <TextView
+
+        <TextView
+            android:id="@+id/txtloc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lyt_video"
+            android:layout_marginLeft="@dimen/margin20"
+            android:layout_marginTop="17dp"
+            android:fontFamily="@font/poppinsregular"
+            android:text="@string/str_addlocation"
+            android:textColor="@color/black" />
+
+        <TextView
         android:layout_below="@+id/txtloc"
         android:id="@+id/pinloction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/gibsonregular"
-        android:background="@drawable/background_with_shadow"
-        android:gravity="center"
+        android:fontFamily="@font/poppinsregular"
+        android:background="@drawable/image_border"
+        android:padding="@dimen/margin10"
+            android:gravity="center"
+        android:drawableLeft="@drawable/ic_taglocation"
         android:hint="@string/str_locdesc"
         android:layout_marginLeft="@dimen/margin20"
         android:layout_marginRight="@dimen/margin20"/>
@@ -161,15 +262,14 @@
            />
         </androidx.cardview.widget.CardView>-->
 
-    <TextView
+     <TextView
         android:id="@+id/txtinterest"
-        android:fontFamily="@font/gibsonregular"
+        android:fontFamily="@font/poppinsregular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/pinloction"
         android:layout_marginTop="@dimen/margin20"
         android:layout_marginLeft="@dimen/margin20"
-        android:textSize="@dimen/textsize18"
         android:textColor="@color/black"
         android:text="@string/str_addinterest"/>
         <androidx.recyclerview.widget.RecyclerView
@@ -191,121 +291,24 @@
         android:layout_marginRight="@dimen/margin20"
         android:layout_marginBottom="@dimen/margin20"/>-->
 
-    <TextView
-        android:layout_below="@+id/list_interest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/txt_nextone"
-        android:text="@string/str_next"
-        android:textSize="@dimen/textsize20"
-        android:fontFamily="@font/gibsonregular"
-        android:textStyle="bold"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/margin20"
-        android:layout_marginBottom="@dimen/margin20"
-        android:textColor="@color/violet"
-        />
-    </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/rl_pagetwo"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:layout_alignParentRight="true"
-            android:layout_margin="@dimen/margin10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/str_steptwo"
-            android:id="@+id/steptwo"
-            android:fontFamily="@font/gibsonregular"/>
 
-        <TextView
-            android:id="@+id/txtpost"
-            android:fontFamily="@font/gibsonregular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/steptwo"
-            android:layout_marginLeft="@dimen/margin20"
-            android:layout_marginTop="@dimen/margin20"
-            android:textSize="@dimen/textsize18"
-            android:textColor="@color/black"
-            android:text="@string/str_postmessage"/>
-        <EditText
-            android:layout_below="@+id/txtpost"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/size180"
-            android:layout_margin="@dimen/margin15"
-            android:hint="@string/str_writecaption"
-            android:gravity="left"
-            android:id="@+id/edtpost"
-            android:padding="@dimen/margin20"
-            android:fontFamily="@font/gibsonregular"
-            android:background="@drawable/background_with_shadow"
-            />
-        <TextView
-            android:id="@+id/txttag"
-            android:fontFamily="@font/gibsonregular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/edtpost"
-            android:layout_marginLeft="@dimen/margin20"
-            android:layout_marginTop="@dimen/margin20"
-            android:textSize="@dimen/textsize18"
-            android:textColor="@color/black"
-            android:text="@string/str_tagpeoplpe"/>
-        <AutoCompleteTextView
-            android:id="@+id/txttagpeople"
-            android:layout_below="@+id/txttag"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin20"
-            android:layout_marginRight="@dimen/margin20"
-            android:gravity="center"
-            android:fontFamily="@font/gibsonregular"
-            android:padding="@dimen/margin20"
-            android:hint="@string/str_tappeople"
-            />
-      <!--  <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txt_tagged"
-            android:fontFamily="@font/gibsonregular"
-            android:textSize="@dimen/textsize16"
-            android:layout_marginLeft="@dimen/margin15"
-            android:layout_marginRight="@dimen/margin15"
-            android:layout_marginBottom="@dimen/margin15"
-            android:gravity="center"
-            android:padding="@dimen/margin20"
-            android:visibility="gone"
-            android:background="@drawable/background_with_shadow"
-            android:layout_below="@+id/txttagpeople"/>-->
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_below="@+id/txttagpeople"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/list_tagpeople"
-            android:layout_marginLeft="@dimen/margin10"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:scrollbars="none"
-            android:minHeight="@dimen/dimen50"
-            android:layout_marginBottom="@dimen/margin25"
-            />
         <Button
             android:id="@+id/btn_post"
+            android:layout_marginLeft="@dimen/margin10"
+            android:layout_marginRight="@dimen/margin10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/apptheme"
+            android:background="@drawable/button_background"
             android:text="@string/str_post"
-            android:visibility="gone"
             android:layout_alignParentBottom="true"
             android:textColor="@color/white"
-            android:fontFamily="@font/gibsonregular"
-            android:layout_below="@+id/list_tagpeople"
+            android:fontFamily="@font/poppinsregular"
+            android:layout_below="@+id/list_interest"
             android:layout_marginTop="@dimen/margin10"
             android:textSize="@dimen/textsize20"
             />
     </RelativeLayout>
+
 </RelativeLayout>
 </ScrollView>
 </RelativeLayout>

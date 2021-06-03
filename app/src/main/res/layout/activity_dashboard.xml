@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-   <!-- <data>
-        <variable name="user" type="com.advengers.mabo.Activity.DashboardActivity"/>
-    </data>-->
 <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -79,14 +76,18 @@
         android:layout_height="match_parent">
 
     </FrameLayout>
-
+    <include
+        layout="@layout/layout_userprofile"
+        android:layout_above="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="350dp"/>
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        android:background="@color/apptheme"
+        android:background="@drawable/bottomnavigation"
         android:backgroundTint="@color/apptheme"
         app:itemTextColor="@drawable/selector"
         app:itemIconTint="@drawable/selector"
@@ -94,4 +95,3 @@
         app:menu="@menu/bottom_nav_menu" />
 
 </RelativeLayout>
-</layout>

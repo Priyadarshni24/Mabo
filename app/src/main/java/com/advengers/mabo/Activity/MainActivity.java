@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public static String GETINTREST = "Interest/viewinterest";
     public static String PUTINTREST = "Interest/update_interest";
     public static String LOADPOST = "Location/listuserdata";
-    public static String LOADNOTIFICATION = "Notification/notification_list";
+    public static String LOADNOTIFICATION = "Notification/notification_listnew";
     public static String USERSEARCH = "Authentication/user_search";
     public static String CREATEPOST = "Location/userpostcreate";
     public static String LIKEPOST = "Location/likeuserdata";
@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     public static String LIKELIST = "Location/listlike";
     public static String FRIENDSLIST = "Location/friendslist";
     public static String COMMENTLIST = "Location/listcomment";
+    public static String FEEDBACK = "Feedback/createfeedback";
     public static String REQUESTUSER = "Location/requestuser";
     public static String ACCEPTUSER = "Location/acceptuser";
     public static String SINGLEPOST = "Location/singledetails";
@@ -52,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
     public static String CHANGEPASSWORD = "Authentication/change_password/";
     public static String FORGOTPASSWORD = "Authentication/forgot_passwords/";
     public static String UPDATEPHONENUMBER = "Authentication/phonenumberupdate";
+    public static String UPDATELOCATION = "Authentication/locationlist_update/";
+    public static String REPLYCOMMENT = "Reply/userreply";
+    public static String DELETEPOST = "Location/postdelete";
+    public static String MYPOST = "Location/listuserdataid";
     //CometChat
     public static String COMETCHATURL = "https://api-us.cometchat.io/v2.0/users";
 

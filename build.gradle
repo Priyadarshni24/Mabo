@@ -28,7 +28,7 @@ allprojects {
             dirs 'src/main/libs'
         }
         maven {
-            url "https://dl.bintray.com/cometchat/pro"
+            url "https://dl.cloudsmith.io/public/cometchat/cometchat-pro-android/maven/"
         }
         maven {
             url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases"

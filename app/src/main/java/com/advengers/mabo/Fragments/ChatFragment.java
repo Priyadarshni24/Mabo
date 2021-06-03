@@ -2,7 +2,9 @@ package com.advengers.mabo.Fragments;
 
 
 import android.Manifest;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -29,6 +31,7 @@ import android.widget.TextView;
 
 import com.advengers.mabo.Activity.SearchActivity;
 import com.advengers.mabo.R;
+import com.advengers.mabo.Utils.LogUtils;
 import com.advengers.mabo.databinding.FragmentChatBinding;
 import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.core.CometChat;
@@ -36,6 +39,17 @@ import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.Conversation;
 import com.cometchat.pro.models.Group;
 import com.cometchat.pro.models.User;
+import com.cometchat.pro.uikit.ui_components.calls.call_manager.listener.CometChatCallListener;
+import com.cometchat.pro.uikit.ui_components.chats.CometChatConversationList;
+import com.cometchat.pro.uikit.ui_components.groups.group_list.CometChatGroupList;
+import com.cometchat.pro.uikit.ui_components.messages.message_list.CometChatMessageListActivity;
+import com.cometchat.pro.uikit.ui_components.users.user_details.UserModel;
+import com.cometchat.pro.uikit.ui_components.users.user_list.CometChatUserList;
+import com.cometchat.pro.uikit.ui_resources.constants.UIKitConstants;
+import com.cometchat.pro.uikit.ui_resources.utils.Utils;
+import com.cometchat.pro.uikit.ui_resources.utils.custom_alertDialog.CustomAlertDialogHelper;
+import com.cometchat.pro.uikit.ui_resources.utils.custom_alertDialog.OnAlertDialogButtonClickListener;
+import com.cometchat.pro.uikit.ui_resources.utils.item_clickListener.OnItemClickListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -43,22 +57,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import constant.StringContract;
-import listeners.CometChatCallListener;
-import listeners.CustomAlertDialogHelper;
-import listeners.OnAlertDialogButtonClickListener;
-import listeners.OnItemClickListener;
-import screen.CometChatConversationListScreen;
-import screen.CometChatGroupListScreen;
-import screen.CometChatUserListScreen;
-import screen.messagelist.CometChatMessageListActivity;
-import screen.unified.CometChatUnified;
-import utils.Utils;
-import viewmodel.UserModel;
 
 import static android.content.ContentValues.TAG;
-import static constant.StringContract.IntentStrings.ID;
-import static constant.StringContract.IntentStrings.MYUID;
+import static com.cometchat.pro.uikit.ui_resources.constants.UIKitConstants.IntentStrings.MYUID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,10 +107,10 @@ public class ChatFragment extends MyFragment implements OnAlertDialogButtonClick
         EmojiCompat.init(config);*/
         initViewComponent();
         // It performs action on click of user item in CometChatUserListScreen.
+        getUser();
         setUserClickListener();
-        if (getArguments() != null) {
-            myuid = getArguments().getString(MYUID);
-        }
+            myuid = user.getRoomid();
+            LogUtils.e("Chat page "+myuid);
 
 
         //It performs action on click of group item in CometChatGroupListScreen.
@@ -119,13 +120,14 @@ public class ChatFragment extends MyFragment implements OnAlertDialogButtonClick
         //It performs action on click of conversation item in CometChatConversationListScreen
         //Based on conversation item type it will perform the actions like open message screen for user and groups..
         setConversationClickListener();
-
+        NotificationManager notificationManager = (NotificationManager)getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
         // Set Tabs inside Toolbar
         binding.resultTabs.setupWithViewPager(binding.viewpager);
         return binding.getRoot();
     }
     private void setUserClickListener() {
-        CometChatUserListScreen.setItemClickListener(new OnItemClickListener<User>() {
+        CometChatUserList.setItemClickListener(new OnItemClickListener<User>() {
             @Override
             public void OnItemClick(User user, int position) {
                 startUserIntent(user);
@@ -139,14 +141,14 @@ public class ChatFragment extends MyFragment implements OnAlertDialogButtonClick
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO,
                                 Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        StringContract.RequestCode.RECORD);
+                        UIKitConstants.RequestCode.RECORD);
             }
         }
 
     }
 
     private void setConversationClickListener() {
-        CometChatConversationListScreen.setItemClickListener(new OnItemClickListener<Conversation>() {
+        CometChatConversationList.setItemClickListener(new OnItemClickListener<Conversation>() {
             @Override
             public void OnItemClick(Conversation conversation, int position) {
                 if (conversation.getConversationType().equals(CometChatConstants.CONVERSATION_TYPE_GROUP))
@@ -158,7 +160,7 @@ public class ChatFragment extends MyFragment implements OnAlertDialogButtonClick
     }
 
     private void setGroupClickListener() {
-        CometChatGroupListScreen.setItemClickListener(new OnItemClickListener<Group>() {
+        CometChatGroupList.setItemClickListener(new OnItemClickListener<Group>() {
             @Override
             public void OnItemClick(Group g, int position) {
                 group = g;
@@ -181,12 +183,12 @@ public class ChatFragment extends MyFragment implements OnAlertDialogButtonClick
 
     private void startUserIntent(User user) {
         Intent intent = new Intent(getActivity(), CometChatMessageListActivity.class);
-        intent.putExtra(StringContract.IntentStrings.UID, user.getUid());
-        intent.putExtra(MYUID, myuid);
-        intent.putExtra(StringContract.IntentStrings.AVATAR, user.getAvatar());
-        intent.putExtra(StringContract.IntentStrings.STATUS, user.getStatus());
-        intent.putExtra(StringContract.IntentStrings.NAME, user.getName());
-        intent.putExtra(StringContract.IntentStrings.TYPE, CometChatConstants.RECEIVER_TYPE_USER);
+        intent.putExtra(UIKitConstants.IntentStrings.UID, user.getUid());
+        intent.putExtra(MYUID, getUserdetail().getRoomid());
+        intent.putExtra(UIKitConstants.IntentStrings.AVATAR, user.getAvatar());
+        intent.putExtra(UIKitConstants.IntentStrings.STATUS, user.getStatus());
+        intent.putExtra(UIKitConstants.IntentStrings.NAME, user.getName());
+        intent.putExtra(UIKitConstants.IntentStrings.TYPE, CometChatConstants.RECEIVER_TYPE_USER);
         startActivity(intent);
     }
 
@@ -199,16 +201,16 @@ public class ChatFragment extends MyFragment implements OnAlertDialogButtonClick
     private void startGroupIntent(Group group) {
 
         Intent intent = new Intent(getActivity(), CometChatMessageListActivity.class);
-        intent.putExtra(StringContract.IntentStrings.GUID, group.getGuid());
+        intent.putExtra(UIKitConstants.IntentStrings.GUID, group.getGuid());
         intent.putExtra(MYUID, myuid);
-        intent.putExtra(StringContract.IntentStrings.AVATAR, group.getIcon());
-        intent.putExtra(StringContract.IntentStrings.GROUP_OWNER,group.getOwner());
-        intent.putExtra(StringContract.IntentStrings.NAME, group.getName());
-        intent.putExtra(StringContract.IntentStrings.GROUP_TYPE,group.getGroupType());
-        intent.putExtra(StringContract.IntentStrings.TYPE, CometChatConstants.RECEIVER_TYPE_GROUP);
-        intent.putExtra(StringContract.IntentStrings.MEMBER_COUNT,group.getMembersCount());
-        intent.putExtra(StringContract.IntentStrings.GROUP_DESC,group.getDescription());
-        intent.putExtra(StringContract.IntentStrings.GROUP_PASSWORD,group.getPassword());
+        intent.putExtra(UIKitConstants.IntentStrings.AVATAR, group.getIcon());
+        intent.putExtra(UIKitConstants.IntentStrings.GROUP_OWNER,group.getOwner());
+        intent.putExtra(UIKitConstants.IntentStrings.NAME, group.getName());
+        intent.putExtra(UIKitConstants.IntentStrings.GROUP_TYPE,group.getGroupType());
+        intent.putExtra(UIKitConstants.IntentStrings.TYPE, CometChatConstants.RECEIVER_TYPE_GROUP);
+        intent.putExtra(UIKitConstants.IntentStrings.MEMBER_COUNT,group.getMembersCount());
+        intent.putExtra(UIKitConstants.IntentStrings.GROUP_DESC,group.getDescription());
+        intent.putExtra(UIKitConstants.IntentStrings.GROUP_PASSWORD,group.getPassword());
         startActivity(intent);
     }
     @Override
@@ -233,13 +235,18 @@ public class ChatFragment extends MyFragment implements OnAlertDialogButtonClick
         myRef.child("users").child(user.getRoomid()).setValue(usermodel);
 
 
-        Fragment fragment = new CometChatConversationListScreen();
+        Fragment fragment = new CometChatConversationList();
         Bundle bundle = new Bundle();
         bundle.putString(MYUID,user.getRoomid());
         fragment.setArguments(bundle);
 
+        Fragment fragments = new FriendsFragment();
+        Bundle bundles = new Bundle();
+        bundles.putString(MYUID,user.getRoomid());
+        fragments.setArguments(bundle);
+
         Adapter adapter = new Adapter(getChildFragmentManager());
-        adapter.addFragment(new FriendsFragment(), getString(R.string.str_contacts));
+        adapter.addFragment(fragments, getString(R.string.str_contacts));
         adapter.addFragment(fragment, getString(R.string.str_chats));
        // adapter.addFragment(new RecentsFragment(), getString(R.string.str_followers));
     //    adapter.addFragment(new GroupListFragment(),getString(R.string.str_groups));

@@ -5,9 +5,11 @@ import com.advengers.mabo.Utils.LogUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 import static com.googlecode.mp4parser.h264.Debug.trace;
 
-public class Tag {
+public class Tag implements Serializable {
 
     String id;
     String username;

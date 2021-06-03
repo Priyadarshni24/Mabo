@@ -91,12 +91,7 @@
         <item name="tabMaxWidth">0dp</item>
     </style>
 
-    <style name="SmoothCheckBoxStyle">
-        <item name="color_checked">@color/checkbox_color</item>
-        <item name="color_unchecked">@android:color/white</item>
-        <item name="color_unchecked_stroke">@color/checkbox_unchecked_color</item>
-        <item name="color_tick">@android:color/white</item>
-    </style>
+
 
      <style name="SpinnerTheme" parent="android:Widget.Spinner">
     <item name="android:background">@drawable/bg_spinner</item>
@@ -120,5 +115,9 @@
                 
         <item name="colorAccent">@color/colorAccent</item>
             
+    </style>
+
+    <style name="CustomToolbarTheme" parent="Base.ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@color/apptheme</item>
     </style>
 </resources>

@@ -9,8 +9,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:elevation="0dp"
-            app:navigationIcon="@drawable/ic_backarraow"
-            android:background="@color/apptheme"
+            app:titleTextColor="@color/apptheme"
+            app:navigationIcon="@drawable/ic_back"
+            android:background="@color/white"
             android:minHeight="?attr/actionBarSize"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >

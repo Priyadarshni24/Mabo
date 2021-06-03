@@ -26,6 +26,6 @@
         <ImageView
             android:layout_width="@dimen/dimen50"
             android:layout_height="@dimen/dimen50"
-            android:src="@drawable/ic_close"/>
+            android:src="@drawable/ic_closeblack"/>
     </com.andexert.library.RippleView>
 </RelativeLayout>

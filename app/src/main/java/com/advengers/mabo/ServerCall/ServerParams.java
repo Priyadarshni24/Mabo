@@ -13,6 +13,7 @@ import com.advengers.mabo.Utils.LogUtils;
 import java.util.HashMap;
 
 import static com.advengers.mabo.Interfaces.Keys.*;
+import static com.cometchat.pro.uikit.ui_resources.constants.UIKitConstants.IntentStrings.NAME;
 
 
 public class ServerParams {
@@ -62,6 +63,13 @@ public class ServerParams {
         map.put(MOBILE,mobile);
         Log.d("LOGIN", "" + map);
         return map;
+    }
+    public HashMap<String, String> LoginPhoneNumber(String username,String phonenumber) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(USERNAME,username);
+        map.put(PHONENUMBER, phonenumber);
+        LogUtils.e(map.toString());
+        return map;
 
     }
     public HashMap<String, String> putFcm(String id,String token) {
@@ -107,15 +115,27 @@ public class ServerParams {
         return map;
 
     }
-    public HashMap<String, String> loadPost(String id,String latitude,String longitude) {
+    public HashMap<String, String> loadPost(String id,String latitude,String longitude,String range,String start) {
         HashMap<String, String> map = new HashMap<>();
         map.put(ID,id);
         map.put(LATITUDE,latitude);
         map.put(LONGITUDE,longitude);
+        map.put(RANGE,range);
+        map.put(START,start);
         LogUtils.e(map.toString());
         return map;
-
     }
+    public HashMap<String, String> loadMyPost(String id,String start,String lat,String lng) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(USER_ID,id);
+        map.put(START,start);
+        map.put(LATITUDE,lat);
+        map.put(LONGITUDE,lng);
+        LogUtils.e(map.toString());
+        return map;
+    }
+
+
     public HashMap<String, String> loadNotification(String id) {
         HashMap<String, String> map = new HashMap<>();
         map.put(USER_ID,id);
@@ -126,6 +146,16 @@ public class ServerParams {
     public HashMap<String, String> listlike(String postid) {
         HashMap<String, String> map = new HashMap<>();
         map.put(POSTID,postid);
+        LogUtils.e(map.toString());
+        return map;
+
+    }
+    public HashMap<String, String> SendFeedback(String name,String email,String message,String accountid) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(NAME,name);
+        map.put(EMAIL,email);
+        map.put(MESSAGE,message);
+        map.put(ACCOUNTID,accountid);
         LogUtils.e(map.toString());
         return map;
 
@@ -146,7 +176,25 @@ public class ServerParams {
         LogUtils.e(map.toString());
         return map;
      }
-
+    public HashMap<String, String> replycommentpost(String userid,String comment,String postid,String tagid,String commentid) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(POSTID,postid);
+        map.put(USERID,userid);
+        map.put(REPLY,comment);
+        map.put(TAGPEOPLEID,tagid);
+        map.put(COMMENTID,commentid);
+        LogUtils.e(map.toString());
+        return map;
+    }
+    public HashMap<String, String> UpdateLocation(String lat,String lng,String id) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(LOCATION,"latlng("+lat+","+lng+")");
+        map.put(LATITUDE, lat);
+        map.put(LONGITUDE,lng);
+        map.put(USERID,id);
+        LogUtils.e(map.toString());
+        return map;
+    }
     public HashMap<String, String> putLocation(String lat,String lng) {
         HashMap<String, String> map = new HashMap<>();
         map.put(LOCATION,"latlng("+lat+","+lng+")");
@@ -357,7 +405,7 @@ public class ServerParams {
         map.put(FIRSTNAME,"");
         map.put(LASTNAME,"");
      //   if(user.getPhone().contains(code))
-            map.put(PHONE,user.getPhone());
+      //  map.put(PHONE,"+919790449694");
     /*    else
             map.put(PHONE,code+user.getPhone());*/
         map.put(IPADDRESS,"");

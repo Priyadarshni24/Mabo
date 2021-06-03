@@ -43,4 +43,10 @@
     <dimen name="design_fab_size_normal" tools:override="true">70dp</dimen>
     <dimen name="dimen250">250dp</dimen>
     <dimen name="margin12">12dp</dimen>
+    <dimen name="size50">50dp</dimen>
+    <dimen name="dimen40">40dp</dimen>
+    <dimen name="textsize12">12dp</dimen>
+    <dimen name="textsize10">10dp</dimen>
+    <dimen name="dimen25">25dp</dimen>
+
 </resources>

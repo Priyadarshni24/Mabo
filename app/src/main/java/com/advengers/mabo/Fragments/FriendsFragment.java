@@ -39,6 +39,8 @@ import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.cometchat.pro.constants.CometChatConstants;
+import com.cometchat.pro.uikit.ui_components.messages.message_list.CometChatMessageListActivity;
+import com.cometchat.pro.uikit.ui_resources.constants.UIKitConstants;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -51,16 +53,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import constant.StringContract;
+
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
-import screen.messagelist.CometChatMessageListActivity;
 
 import static com.advengers.mabo.Activity.MainActivity.FRIENDSLIST;
 import static com.advengers.mabo.Activity.MainActivity.SERVER_URL;
 import static com.advengers.mabo.Interfaces.Keys.DATA;
 import static com.advengers.mabo.Interfaces.Keys.STATUS_JSON;
-import static constant.StringContract.IntentStrings.MYUID;
+import static com.cometchat.pro.uikit.ui_resources.constants.UIKitConstants.IntentStrings.MYUID;
 
 public class FriendsFragment extends MyFragment implements  EasyPermissions.PermissionCallbacks,FriendsAdapter.ProfileClick {
 FragmentFriendsBinding binding;
@@ -384,11 +385,12 @@ FragmentFriendsBinding binding;
     @Override
     public void onProfile(int position) {
         getUser();
-        Tools.showUserProfile(R.style.Animation_Design_BottomSheetDialog,user.getId(),friends.get(position).getId(),getContext(),getActivity());
+        //Tools.showUserProfile(R.style.Animation_Design_BottomSheetDialog,user.getId(),friends.get(position).getId(),getContext(),getActivity());
+        callback.onProfile(friends.get(position).getId());
     }
 
     @Override
-    public void onChatClick(int position) {
+    public void onitemClick(int position) {
         type = "chat";
          room_Id = friends.get(position).getRoomid();
          name = friends.get(position).getUsername();
@@ -413,11 +415,11 @@ FragmentFriendsBinding binding;
     }
     private void startUserIntent(com.cometchat.pro.models.User user) {
         Intent intent = new Intent(getActivity(), CometChatMessageListActivity.class);
-        intent.putExtra(MYUID, "mabo"+id);
-        intent.putExtra(StringContract.IntentStrings.UID, user.getUid());
-        intent.putExtra(StringContract.IntentStrings.AVATAR, user.getAvatar());
-        intent.putExtra(StringContract.IntentStrings.STATUS, user.getStatus());
-        intent.putExtra(StringContract.IntentStrings.TYPE, CometChatConstants.RECEIVER_TYPE_USER);
+        intent.putExtra(MYUID,getUserdetail().getRoomid());
+        intent.putExtra(UIKitConstants.IntentStrings.UID, user.getUid());
+        intent.putExtra(UIKitConstants.IntentStrings.AVATAR, user.getAvatar());
+        intent.putExtra(UIKitConstants.IntentStrings.STATUS, user.getStatus());
+        intent.putExtra(UIKitConstants.IntentStrings.TYPE, CometChatConstants.RECEIVER_TYPE_USER);
         startActivity(intent);
     }
     @Override

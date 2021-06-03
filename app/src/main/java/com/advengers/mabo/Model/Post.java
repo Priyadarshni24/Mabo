@@ -1,10 +1,11 @@
 package com.advengers.mabo.Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Post {
-   public class userdetails {
+public class Post implements Serializable {
+   public class userdetails implements Serializable {
 
         String first_name;
         String last_name;
@@ -70,6 +71,9 @@ public class Post {
     String commentcount;
     String likecount;
     String likedbyme;
+    String username;
+    String profile_imagename;
+
     List<Tag> tagpeopledata;
 
     userdetails userdetails;
@@ -81,6 +85,22 @@ public class Post {
 
     public void setTagpeopledata(List<Tag> tagpeopledata) {
         this.tagpeopledata = tagpeopledata;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getProfile_imagename() {
+        return profile_imagename;
+    }
+
+    public void setProfile_imagename(String profile_imagename) {
+        this.profile_imagename = profile_imagename;
     }
 
 

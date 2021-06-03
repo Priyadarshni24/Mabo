@@ -8,7 +8,7 @@
         android:id="@+id/txt_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/gibsonregular"
+        android:fontFamily="@font/poppinsregular"
         android:text="@string/str_titleinterest"
         android:layout_marginLeft="@dimen/margin15"
         android:layout_marginRight="@dimen/margin15"

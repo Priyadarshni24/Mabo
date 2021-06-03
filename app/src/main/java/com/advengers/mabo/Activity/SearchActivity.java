@@ -31,6 +31,8 @@ import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.cometchat.pro.constants.CometChatConstants;
+import com.cometchat.pro.uikit.ui_components.messages.message_list.CometChatMessageListActivity;
+import com.cometchat.pro.uikit.ui_resources.constants.UIKitConstants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,8 +42,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import constant.StringContract;
-import screen.messagelist.CometChatMessageListActivity;
 
 import static com.advengers.mabo.Activity.MainActivity.SERVER_URL;
 import static com.advengers.mabo.Activity.MainActivity.USERSEARCH;
@@ -213,7 +213,7 @@ ActivitySearchBinding binding;
     }
 
     @Override
-    public void onChatClick(int position) {
+    public void onitemClick(int position) {
         type = "chat";
         room_Id = Userlist.get(position).getRoomid();
         name = Userlist.get(position).getUsername();
@@ -224,12 +224,12 @@ ActivitySearchBinding binding;
         else
         {
             Intent intent = new Intent(SearchActivity.this, CometChatMessageListActivity.class);
-            intent.putExtra(StringContract.IntentStrings.UID, room_Id);
-            intent.putExtra(StringContract.IntentStrings.MYUID, myuid);
-            intent.putExtra(StringContract.IntentStrings.AVATAR, Userlist.get(position).getprofile_imagename());
-            intent.putExtra(StringContract.IntentStrings.STATUS, user.getStatus());
-            intent.putExtra(StringContract.IntentStrings.NAME, name);
-            intent.putExtra(StringContract.IntentStrings.TYPE, CometChatConstants.RECEIVER_TYPE_USER);
+            intent.putExtra(UIKitConstants.IntentStrings.UID, room_Id);
+            intent.putExtra(UIKitConstants.IntentStrings.MYUID, myuid);
+            intent.putExtra(UIKitConstants.IntentStrings.AVATAR, Userlist.get(position).getprofile_imagename());
+            intent.putExtra(UIKitConstants.IntentStrings.STATUS, user.getStatus());
+            intent.putExtra(UIKitConstants.IntentStrings.NAME, name);
+            intent.putExtra(UIKitConstants.IntentStrings.TYPE, CometChatConstants.RECEIVER_TYPE_USER);
             startActivity(intent);
             //  LogUtils.e("AVATAR "+user.getprofile_imagename());
           /*  Intent intent = new Intent(SearchActivity.this, OneToOneChatActivity.class);

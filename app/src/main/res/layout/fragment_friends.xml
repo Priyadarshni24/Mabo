@@ -20,6 +20,7 @@
         android:id="@+id/btn_myRoom"
         android:layout_gravity="right"
         android:text="@string/str_synccontacts"
+
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/margin10"
         />

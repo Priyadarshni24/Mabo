@@ -2,17 +2,19 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto">
     <RelativeLayout
+        android:background="@drawable/commentlist_background"
         android:orientation="vertical"
+        android:layout_marginBottom="@dimen/margin5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_margin="@dimen/margin10"
-            android:layout_width="@dimen/dimen50"
-            android:layout_height="@dimen/dimen50"
+            android:layout_width="@dimen/dimen25"
+            android:layout_height="@dimen/dimen25"
             android:src="@drawable/ic_avatar"
             android:id="@+id/img_profile"/>
-        <LinearLayout
+        <RelativeLayout
             android:layout_toRightOf="@id/img_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,26 +24,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txt_name"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="@dimen/textsize18"
+            android:textSize="@dimen/textsize12"
+            android:fontFamily="@font/poppinsregular"
+            android:layout_toLeftOf="@+id/txt_date"
             />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_date"
+                android:fontFamily="@font/poppinsregular"
+                android:layout_alignParentRight="true"
+                android:gravity="right"
+                />
         <TextView
+           android:layout_below="@+id/txt_name"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:id="@+id/txt_comment"
-           android:textColor="@color/black"
-           android:textSize="@dimen/textsize16"
-           />
-        <TextView
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:id="@+id/txt_date"
-            android:layout_gravity="right"
-            android:gravity="right"
+           android:fontFamily="@font/poppinsregular"
            android:textColor="@color/black"
            android:textSize="@dimen/textsize14"
            />
-        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppinsregular"
+            android:id="@+id/txt_reply"
+            android:textColor="@color/apptheme"
+            android:layout_below="@+id/txt_comment"
+            android:layout_alignParentEnd="true"
+            android:text="@string/str_reply"/>
+
+        </RelativeLayout>
     </RelativeLayout>
 </layout>

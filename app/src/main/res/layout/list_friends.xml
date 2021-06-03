@@ -22,7 +22,7 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:layout_centerVertical="true"
-                android:textSize="@dimen/textsize18"
+                android:textSize="@dimen/textsize16"
                 />
         <ImageView
             android:visibility="gone"

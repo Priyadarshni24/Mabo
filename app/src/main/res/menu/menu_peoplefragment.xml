@@ -12,10 +12,12 @@
     <item
         android:id="@+id/action_findpartner"
         android:title="@string/action_findPartner"
+        android:visible="false"
          />
     <item
         android:id="@+id/action_findfriends"
         android:title="@string/action_findfriends"
+        android:visible="false"
         />
     <item android:id="@+id/action_findnearme"
         android:title="@string/action_findnearme"/>

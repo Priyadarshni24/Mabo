@@ -1,6 +1,7 @@
 package com.advengers.mabo.Model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class User implements Serializable {
      String id;
@@ -32,6 +33,8 @@ public class User implements Serializable {
      String interests;
      String roomid;
      String request_status;
+     String post_count;
+     ArrayList<RecentLocation> locationlist;
      boolean verify;
 
 
@@ -97,7 +100,7 @@ public class User implements Serializable {
     }
 
     public static boolean isLogged() {
-        return getUser() != null && getUser().getEmail() != null && !getUser().getEmail().isEmpty() && getUser().isVerify();
+        return getUser() != null && getUser().getPhone() != null && !getUser().getPhone().isEmpty();
     }
     public String getprofile_imagename() {
         return profile_imagename;
@@ -125,6 +128,22 @@ public class User implements Serializable {
         this.interests = interest;
     }
 
+
+    public String getPost_count() {
+        return post_count;
+    }
+
+    public void setPost_count(String post_count) {
+        this.post_count = post_count;
+    }
+
+    public ArrayList<RecentLocation> getLocationlist() {
+        return locationlist;
+    }
+
+    public void setLocationlist(ArrayList<RecentLocation> locationlist) {
+        this.locationlist = locationlist;
+    }
 
 
     public String getGender() {

@@ -113,8 +113,6 @@ public class MyVolleyRequestManager {
     public static StringRequest createStringRequest(int method, String serverURL, final HashMap<String, String> payload, Response.Listener responseListener, Response.ErrorListener errorListener) {
 
         Log.e("Server Url",serverURL);
-
-
         StringRequest stringRequest = new StringRequest(method, serverURL, responseListener, errorListener)
         {
             @Override
@@ -143,21 +141,11 @@ public class MyVolleyRequestManager {
                 return params;
 
             }
-
-         /*   public String getBodyContentType()
-            {
-                return "application/form-data";
-            }*/
-
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-             //   LogUtils.e(payload.toString());
-                return payload;
+                 return payload;
             }
         };
-
-
-
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
                 request_time,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,

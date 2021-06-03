@@ -1,7 +1,9 @@
 package com.advengers.mabo.Activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,16 +16,17 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.advengers.mabo.Adapter.InterestAdapter;/*
-import com.advengers.mabo.Cometchat.Contracts.CometChatActivityContract;
-import com.advengers.mabo.Cometchat.Presenters.CometChatActivityPresenter;
-import com.advengers.mabo.Cometchat.Utils.FontUtils;*/
+import com.advengers.mabo.Adapter.InterestAdapter;
+import com.advengers.mabo.Adapter.RecentLocationAdapter;
+import com.advengers.mabo.Cometchat.constants.AppConfig;
 import com.advengers.mabo.Database.MyDBHandler;
 import com.advengers.mabo.Fragments.ChatFragment;
+import com.advengers.mabo.Fragments.MyFragment;
 import com.advengers.mabo.Fragments.NotificationFragment;
 import com.advengers.mabo.Fragments.PeoplesFragment;
 import com.advengers.mabo.Fragments.SettingsFragment;
 import com.advengers.mabo.Fragments.TrendingFragment;
+import com.advengers.mabo.Interfaces.Keys;
 import com.advengers.mabo.Location.LocationTrack;
 import com.advengers.mabo.Model.Apiresponse;
 import com.advengers.mabo.Model.Interest;
@@ -34,6 +37,7 @@ import com.advengers.mabo.ServerCall.ServerParams;
 import com.advengers.mabo.Services.NotificationService;
 import com.advengers.mabo.Tools.MyActivity;
 import com.advengers.mabo.Utils.LogUtils;
+import com.advengers.mabo.Utils.Tools;
 import com.advengers.mabo.Utils.Utils;
 import com.advengers.mabo.databinding.ActivityDashboardBinding;
 import com.android.volley.NetworkResponse;
@@ -45,7 +49,10 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
-import com.cometchat.pro.models.BaseMessage;
+import com.cometchat.pro.uikit.ui_components.messages.message_list.CometChatMessageListActivity;
+import com.cometchat.pro.uikit.ui_resources.constants.UIKitConstants;
+import com.cometchat.pro.uikit.ui_resources.utils.CallUtils;
+import com.cometchat.pro.uikit.ui_settings.UISettings;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -53,22 +60,23 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
+import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -81,57 +89,60 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
-import constant.StringContract;
+import in.aabhasjindal.otptextview.OtpTextView;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
-import screen.messagelist.CometChatMessageScreen;
-import screen.unified.CometChatUnified;
-
 import static android.view.View.GONE;
 import static com.advengers.mabo.Activity.MainActivity.COMETCHATURL;
 import static com.advengers.mabo.Activity.MainActivity.FCM;
 import static com.advengers.mabo.Activity.MainActivity.GETINTREST;
 import static com.advengers.mabo.Activity.MainActivity.LOCATION;
+import static com.advengers.mabo.Activity.MainActivity.LOGOUT;
 import static com.advengers.mabo.Activity.MainActivity.PUTINTREST;
 import static com.advengers.mabo.Activity.MainActivity.SERVER_URL;
+import static com.advengers.mabo.Activity.MainActivity.USERDETAILS;
 import static com.advengers.mabo.Interfaces.Keys.AUTHPASSWORD;
 import static com.advengers.mabo.Interfaces.Keys.AUTHUSERNAME;
 import static com.advengers.mabo.Interfaces.Keys.DATA;
 import static com.advengers.mabo.Interfaces.Keys.ID;
 import static com.advengers.mabo.Interfaces.Keys.INTEREST;
 import static com.advengers.mabo.Interfaces.Keys.INTERESTJSON;
+import static com.advengers.mabo.Interfaces.Keys.MESSAGE;
+import static com.advengers.mabo.Interfaces.Keys.PIN;
 import static com.advengers.mabo.Interfaces.Keys.STATUS_JSON;
 import static com.advengers.mabo.Interfaces.Keys.USER;
 
 public class DashboardActivity extends MyActivity implements EasyPermissions.PermissionCallbacks,
                                                              LocationListener,
-                                                             InterestAdapter.SelectedInterest{
+                                                             InterestAdapter.SelectedInterest,MyFragment.ProfileClick{
     FragmentTransaction transaction;
     FragmentManager manager;
-    ActivityDashboardBinding binding;
+  //  ActivityDashboardBinding binding;
     private static final int RC_LOCATION = 1 ;
     LocationTrack locationTrack;
     String SelectedInterest="";
    // private CometChatActivityContract.CometChatActivityPresenter cometChatActivityPresenter;
     Context context;
-
+    int status = 0, attempt =0;
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
     private RelativeLayout onGoingCallView;
-
+    String pin= "";
+    BottomNavigationView navView;
     private TextView onGoingCallTxt;
-
+    TextView txtname;
+    TextView txtpostcount;
+    TextView txtPlace,btnstatus;
+    ImageView imgProfile;
     private ImageView onGoingCallClose;
-
+     RelativeLayout onprofileView;
+     RecyclerView locationlist;
     LocationManager locationManager;
     Location loc;
     boolean isGPS = false;
@@ -140,11 +151,13 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
     String token;
     String TAG = "Mabo";
     MyDBHandler db;
+    MenuItem mitem;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            mitem = item;
             switch (item.getItemId()) {
                 case R.id.navigation_trending:
                     manager=getSupportFragmentManager();
@@ -183,7 +196,7 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
                     getUser();
                     Fragment fragment = new ChatFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString(StringContract.IntentStrings.MYUID, "mabo"+ user.getId());
+                    bundle.putString(UIKitConstants.IntentStrings.MYUID, "mabo"+ user.getId());
                     fragment.setArguments(bundle);
                     manager.beginTransaction().replace(R.id.container, fragment).commit();
                     return true;
@@ -199,17 +212,20 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(DashboardActivity.this,R.layout.activity_dashboard);
-        binding.navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        binding.navView.setSelectedItemId(R.id.navigation_settings);
+        setContentView(R.layout.activity_dashboard);
 
+        navView = (BottomNavigationView)findViewById(R.id.nav_view);
+        navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navView.setSelectedItemId(R.id.navigation_settings);
         context = this;
-
 
         manager=getSupportFragmentManager();//create an instance of fragment manager
         transaction=manager.beginTransaction();//create an instance of Fragment-transaction
         transaction.add(R.id.container,new SettingsFragment());
         transaction.commitAllowingStateLoss();
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+
         Uri data = this.getIntent().getData();
         if (data != null && data.isHierarchical()) {
             String uri = this.getIntent().getDataString();
@@ -260,8 +276,140 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
         onGoingCallView =(RelativeLayout) ongoingview.findViewById(R.id.ongoing_call_view);
         onGoingCallClose = (ImageView)ongoingview.findViewById(R.id.close_ongoing_view);
         onGoingCallTxt = (TextView)ongoingview.findViewById(R.id.ongoing_call);
+        View layout = (RelativeLayout)findViewById(R.id.profile_view);
+        onprofileView = (RelativeLayout)layout.findViewById(R.id.profile_view);
+         txtname = layout.findViewById(R.id.txt_name);
+         txtpostcount = layout.findViewById(R.id.txt_postcount);
+         btnstatus = layout.findViewById(R.id.btn_status);
+         txtPlace = layout.findViewById(R.id.txt_place);
+         imgProfile = layout.findViewById(R.id.img_profile);
+         locationlist = layout.findViewById(R.id.list_recentlyvisited);
         checkOnGoingCall();
+        onCheckPIN();
+
     }
+    void onCheckPIN()
+    {
+        attempt = 0;
+         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.alert_pinlock, null);
+        dialogBuilder.setView(dialogView);
+
+        TextView txt_title = (TextView) dialogView.findViewById(R.id.txt_title);
+        OtpTextView edt_pin = (OtpTextView) dialogView.findViewById(R.id.edt_pin);
+        Button Verify = (Button)dialogView.findViewById(R.id.btn_verify);
+        if(Utils.getInstance(DashboardActivity.this).getInt(PIN)==0)
+        {
+            txt_title.setText(getString(R.string.enter_pin));
+            Verify.setText(getString(R.string.str_addpin));
+        }else{
+            txt_title.setText(getString(R.string.str_enterpin));
+            Verify.setText(getString(R.string.str_verifytext));
+        }
+        final AlertDialog dialog = dialogBuilder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        Verify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Verify.getText().equals(getString(R.string.str_addpin)))
+                {
+                    if(edt_pin.getOTP().equals(""))
+                    {
+                        Utils.showToast(getString(R.string.enter_pin),context);
+                    }else {
+                        Verify.setText(getString(R.string.str_confirmpin));
+                        pin = edt_pin.getOTP();
+                        edt_pin.setOTP("");
+                    }
+                }else if(Verify.getText().equals(getString(R.string.str_confirmpin)))
+                {
+                    LogUtils.e("PIN "+edt_pin.getOTP()+" "+pin);
+                    if(edt_pin.getOTP().equals(pin))
+                    {
+                        Utils.getInstance(context).setInt(PIN,Integer.parseInt(edt_pin.getOTP()));
+                        dialog.dismiss();
+                    }else{
+                        edt_pin.setOTP("");
+                        Utils.showToast(getString(R.string.str_pinmismatch),context);
+                    }
+                }else if(Verify.getText().equals(getString(R.string.str_verifytext))) {
+                    if(edt_pin.getOTP().equals(""))
+                    {
+                        Utils.showToast(getString(R.string.enter_pin),context);
+                    }else if(edt_pin.getOTP().equals(Utils.getInstance(context).getInt(PIN)+""))
+                    {
+                        dialog.dismiss();
+                    }else{
+                        attempt = attempt + 1;
+                        if(attempt==3)
+                        {
+                            dialog.dismiss();
+                            onLoadProgress(context);
+                            new MyDBHandler(context).dropfriends();
+                            CometChat.logout(new CometChat.CallbackListener<String>() {
+                                @Override
+                                public void onSuccess(String s) {
+                                    onLogout();
+                                }
+
+                                @Override
+                                public void onError(CometChatException e) {
+                                    LogUtils.e( "onError: "+e.getMessage());
+                                }
+                            });
+                        }else
+                        {
+                            edt_pin.setOTP("");
+                            Utils.showToast(" Attempt "+attempt+". More that 3 incorrect attempt makes logout ",context);
+                        }
+                    }
+                }
+            }
+        });
+
+
+        dialog.show();
+    }
+    private void onLogout() {
+        String URL = SERVER_URL+LOGOUT;
+        URL = URL.replaceAll(" ", "%20");
+        App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST,
+                URL,new ServerParams().logout(user.getId())
+                , logoutlister,error_listener));
+    }
+    Response.Listener logoutlister = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            onLoadDismiss();
+
+            LogUtils.e(response.toString());
+
+            try {
+                JSONObject login = new JSONObject(response.toString());
+
+                if (login.has(STATUS_JSON)) {
+
+
+                    if (login.getString(STATUS_JSON).equals("true")) {
+                        if(login.has(DATA))
+                        {
+                            showWarning(login.getString(MESSAGE),context,DashboardActivity.this);
+                        }else {
+                            FirebaseMessaging.getInstance().unsubscribeFromTopic(AppConfig.AppDetails.AppID_user_UID);
+                            Utils.getInstance(getApplicationContext()).clearPref();
+                            User.logout();
+                            startActivity(new Intent(getApplicationContext(), SplashActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                            finish();
+                        }
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
     private void checkOnGoingCall() {
         LogUtils.e(CometChat.getActiveCall()+" check ongoing call");
      //   onGoingCallView.setVisibility(View.VISIBLE);
@@ -277,7 +425,7 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
                     @Override
                     public void onClick(View v) {
                         onGoingCallView.setVisibility(View.GONE);
-                        utils.Utils.joinOnGoingCall(context);
+                         CallUtils.joinOnGoingCall(context,CometChat.getActiveCall());
                     }
                 });
             }
@@ -301,7 +449,15 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
     @Override
     protected void onStop() {
         super.onStop();
-        startService( new Intent( this, NotificationService. class )) ;
+        //startService( new Intent( this, NotificationService. class )) ;
+    }
+
+    @SuppressLint("MissingSuperCall")
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+   //     super.onActivityResult(requestCode, resultCode, data);
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     void openLocationSettings()
@@ -363,7 +519,7 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
 
     public void GetLocation()
     {
-        locationTrack = new LocationTrack(DashboardActivity.this);
+        locationTrack = new LocationTrack(DashboardActivity.this,DashboardActivity.this);
         LogUtils.e(locationTrack.canGetLocation()+"");
 
         if (locationTrack.canGetLocation()&&locationTrack.getLatitude()!=0.0&&locationTrack.getLongitude()!=0.0) {
@@ -460,6 +616,114 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
     }
 
 
+   void UserDetails(String userid,String friendid) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("","");
+
+        App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST,
+                SERVER_URL + USERDETAILS,new ServerParams().UserDetails(userid,friendid)
+                , user_lister,error_listener));
+    }
+     Response.Listener user_lister = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+
+            Log.e("FBLogin Response", "" + response);
+
+            try {
+                JSONObject login = new JSONObject(response.toString());
+
+                if (login.has(STATUS_JSON)) {
+                   if (login.getString(STATUS_JSON).equals("true")) {
+                       JSONObject data = login.getJSONObject("data");
+                       LogUtils.e("JSON   "+login.getString("data"));
+                       String jsondata = data.getString("users");
+                       Gson g = new Gson();
+                       final User profile = g.fromJson(jsondata,User.class);
+
+
+                       onprofileView.setVisibility(View.VISIBLE);
+
+                       txtname.setText(profile.getUsername());
+                       getUserStatus(profile.getRoomid());
+                       if(status==1)
+                       {
+                            btnstatus.setText(CometChatConstants.USER_STATUS_ONLINE);
+                            btnstatus.setBackgroundColor(getColor(R.color.green_600));
+                       }else
+                       {
+                           btnstatus.setText(CometChatConstants.USER_STATUS_OFFLINE);
+                           btnstatus.setBackgroundColor(getColor(R.color.red_600));
+                       }
+                       try {
+                           if (!profile.getprofile_imagename().isEmpty())
+                               Picasso.get().load(profile.getprofile_imagename()).placeholder(R.drawable.ic_avatar).into(imgProfile);
+                       }catch (Exception e)
+                       {
+                           e.printStackTrace();
+                       }
+                       txtpostcount.setText(profile.getPost_count()+" Posts");
+                       if(!profile.getProfile_display_status().equals("1")) {
+                           if (profile.getLatitude() != null && profile.getLongitude() != null) {
+                               txtPlace.setText(Tools.getAddress(DashboardActivity.this, Double.parseDouble(profile.getLatitude()), Double.parseDouble(profile.getLongitude())));
+                           }
+                           if(!user.getId().equals(profile.getId()))
+                               btnstatus.setOnClickListener(new View.OnClickListener() {
+                                   @Override
+                                   public void onClick(View v) {
+                                       String room_Id = profile.getRoomid();
+                                       String name = profile.getUsername();
+                                       String id = profile.getId();
+                                       if(room_Id.isEmpty()||room_Id==null||room_Id.length()<2||!room_Id.contains("mabo"))
+                                           Tools.showDialog(true,"This user need to login again to use chat",DashboardActivity.this,DashboardActivity.this);
+                                       else
+                                       {
+                                           Intent intent = new Intent(DashboardActivity.this, CometChatMessageListActivity.class);
+                                           intent.putExtra(UIKitConstants.IntentStrings.UID, room_Id);
+                                           intent.putExtra(UIKitConstants.IntentStrings.MYUID, "mabo"+user.getId());
+                                           intent.putExtra(UIKitConstants.IntentStrings.AVATAR, profile.getprofile_imagename());
+                                           intent.putExtra(UIKitConstants.IntentStrings.STATUS, profile.getStatus());
+                                           intent.putExtra(UIKitConstants.IntentStrings.NAME, name);
+                                           intent.putExtra(UIKitConstants.IntentStrings.TYPE, CometChatConstants.RECEIVER_TYPE_USER);
+                                           startActivity(intent);
+                                           //  LogUtils.e("AVATAR "+user.getprofile_imagename());
+                                     /*   Intent intent = new Intent(activity, OneToOneChatActivity.class);
+                                        intent.putExtra(StringContract.IntentStrings.USER_ID, room_Id);
+                                        intent.putExtra(StringContract.IntentStrings.USER_AVATAR, profile.getprofile_imagename());
+                                        intent.putExtra(StringContract.IntentStrings.USER_NAME, name);
+                                        activity.startActivity(intent);*/
+                                       }
+                                   }
+                               });
+
+                          }else if(profile.getProfile_display_status().equals("1")){
+                           txtPlace.setText(Tools.getAddress(DashboardActivity.this, Double.parseDouble(profile.getLatitude()), Double.parseDouble(profile.getLongitude())));
+                       }
+                       if(profile.getLocationlist()!=null)
+                       {
+                           if(profile.getLocationlist().size()>0)
+                           {
+                               RecentLocationAdapter adapter = new RecentLocationAdapter(context,profile.getUsername(),profile.getprofile_imagename(),profile.getLocationlist());
+                               locationlist.setLayoutManager(new LinearLayoutManager(DashboardActivity.this));
+                               locationlist.setAdapter(adapter);
+                           }
+                       }
+                    }
+                }
+
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    @Override
+    public void onProfile(String userid) {
+        UserDetails(userid,userid);
+    }
+
     public class UpdateToken extends AsyncTask<String,Void,String>
     {
 
@@ -508,7 +772,31 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
         App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST,URL,
                 new ServerParams().putInterest(user.getId(),SelectedInterest),lister,fcm_error_listener));
     }
+    public void getUserStatus(String uid) {
+        LogUtils.e("Room id " +uid );
+        CometChat.getUser(uid, new CometChat.CallbackListener<com.cometchat.pro.models.User>() {
+            @Override
+            public void onSuccess(com.cometchat.pro.models.User user) {
 
+                     if(user.getStatus().equals(CometChatConstants.USER_STATUS_ONLINE))
+                     {
+                         status = 1;
+                         LogUtils.e("Status "+status);
+                         return;
+                     }
+                     else
+                     {
+                         status = 0;
+                         return;
+                     }
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     void getCometUserList()
     {
         String URL = COMETCHATURL;
@@ -529,6 +817,16 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
 
                     if (login.getString(STATUS_JSON).equals("true")) {
                      user.setFcm_key(token);
+                        CometChat.registerTokenForPushNotification(token, new CometChat.CallbackListener<String>() {
+                            @Override
+                            public void onSuccess(String s) {
+                                Log.e( "onSuccessPN: ",s );
+                            }
+                            @Override
+                            public void onError(CometChatException e) {
+                                Log.e("onErrorPN: ",e.getMessage() );
+                            }
+                        });
                      setUser();
                     }
                 }
@@ -555,6 +853,7 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
 
                     if (login.getString(STATUS_JSON).equals("true")) {
                        user.setInterests(SelectedInterest);
+
                        setUser();
                        getUser();
                     }
@@ -567,7 +866,27 @@ public class DashboardActivity extends MyActivity implements EasyPermissions.Per
             }
         }
     };
-
+      Response.ErrorListener error_listener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            NetworkResponse response = error.networkResponse;
+            if (error instanceof ServerError && response != null) {
+                try {
+                    String res = new String(response.data,
+                            HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                    // Now you can use any deserializer to make sense of data
+                    LogUtils.e(res);
+                    JSONObject obj = new JSONObject(res);
+                } catch (UnsupportedEncodingException e1) {
+                    // Couldn't properly decode data to string
+                    e1.printStackTrace();
+                } catch (JSONException e2) {
+                    // returned data is not JSONObject?
+                    e2.printStackTrace();
+                }
+            }
+        }
+    };
 
     Response.ErrorListener fcm_error_listener = new Response.ErrorListener() {
         @Override
@@ -724,6 +1043,40 @@ void ShowInterestAlert(JSONObject login)
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if(onprofileView.getVisibility()==View.VISIBLE)
+        {
+            onprofileView.setVisibility(GONE);
+        }else
+        {
+            if(getCurrentFragment() instanceof SettingsFragment)
+            {
+                super.onBackPressed();
+            }else{
+                manager=getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.container, new SettingsFragment()).commit();
+                Menu menu = navView.getMenu();
+                menu.findItem(R.id.navigation_settings).setIcon(R.drawable.ic_settings);
+                mitem = menu.getItem(0);
+                mitem.setIcon(R.drawable.ic_settings);
+                mitem.setChecked(true);
+                /*switch (mitem.getItemId()) {
+                    case R.id.navigation_settings:
+                        mitem.setIcon(R.drawable.selector);
+                        mitem.setChecked(true);
+
+                }*/
+            }
+
+        }
+    }
+    Fragment getCurrentFragment()
+    {
+        Fragment currentFragment = getSupportFragmentManager()
+                .findFragmentById(R.id.container);
+        return currentFragment;
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

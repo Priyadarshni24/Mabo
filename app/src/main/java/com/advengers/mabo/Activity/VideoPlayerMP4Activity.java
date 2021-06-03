@@ -28,18 +28,21 @@ public class VideoPlayerMP4Activity extends MyActivity {
                 onBackPressed();
             }
         });
-        mediacontroller = new MediaController(this);
+      /*  mediacontroller = new MediaController(this);
         mediacontroller.setAnchorView(binding.videoView);
         mediacontroller.setMediaPlayer(binding.videoView);
-        binding.videoView.setMediaController(mediacontroller);
+        binding.videoView.setMediaController(mediacontroller);*/
         LogUtils.e(getIntent().getStringExtra(Keys.VIDEO_URL));
-        binding.videoView.setVideoPath(CLOUDVIDEOBASEURL+ getIntent().getStringExtra(Keys.VIDEO_URL));
+        binding.videoView.videoUrl(CLOUDVIDEOBASEURL+ getIntent().getStringExtra(Keys.VIDEO_URL));
+        binding.pbLoading.setVisibility(View.GONE);
+            binding.videoView.enableAutoStart();
+        /*binding.videoView.setVideoPath(CLOUDVIDEOBASEURL+ getIntent().getStringExtra(Keys.VIDEO_URL));
         binding.videoView.start();
         binding.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
                 binding.pbLoading.setVisibility(View.GONE);
             }
-        });
+        });*/
     }
 }

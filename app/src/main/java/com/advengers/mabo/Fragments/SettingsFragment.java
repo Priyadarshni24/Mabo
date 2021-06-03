@@ -11,10 +11,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,6 +32,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,13 +40,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.advengers.mabo.Activity.App;
 import com.advengers.mabo.Activity.ChangePasswordActivity;
 import com.advengers.mabo.Activity.DashboardActivity;
+import com.advengers.mabo.Activity.FeedbackActivity;
 import com.advengers.mabo.Activity.GalleryActivity;
 import com.advengers.mabo.Activity.LoginActivity;
 import com.advengers.mabo.Activity.MainActivity;
+import com.advengers.mabo.Activity.MyPostActivity;
+import com.advengers.mabo.Activity.SearchActivity;
+import com.advengers.mabo.Activity.SplashActivity;
+import com.advengers.mabo.Activity.WebViewActivity;
 import com.advengers.mabo.Adapter.InterestAdapter;
 //import com.advengers.mabo.Database.MyDBHandler;
 import com.advengers.mabo.Cometchat.constants.AppConfig;
 import com.advengers.mabo.Database.MyDBHandler;
+import com.advengers.mabo.Location.LocationTrack;
 import com.advengers.mabo.Model.Interest;
 import com.advengers.mabo.Model.User;
 import com.advengers.mabo.R;
@@ -89,12 +101,15 @@ import static com.advengers.mabo.Activity.MainActivity.COMETCHATURL;
 import static com.advengers.mabo.Activity.MainActivity.GETINTREST;
 import static com.advengers.mabo.Activity.MainActivity.LOGOUT;
 import static com.advengers.mabo.Activity.MainActivity.SERVER_URL;
+import static com.advengers.mabo.Activity.MainActivity.UPDATELOCATION;
 import static com.advengers.mabo.Activity.MainActivity.UPDATEUSER;
+import static com.advengers.mabo.Interfaces.Keys.DATA;
 import static com.advengers.mabo.Interfaces.Keys.ID;
 import static com.advengers.mabo.Interfaces.Keys.INTEREST;
 import static com.advengers.mabo.Interfaces.Keys.INTERESTJSON;
 import static com.advengers.mabo.Interfaces.Keys.MESSAGE;
 import static com.advengers.mabo.Interfaces.Keys.STATUS_JSON;
+import static com.advengers.mabo.Interfaces.Keys.TITLE;
 import static com.advengers.mabo.Interfaces.Keys.USER;
 
 public class SettingsFragment extends MyFragment implements
@@ -127,19 +142,38 @@ public class SettingsFragment extends MyFragment implements
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_settings, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false);
+        binding.mToolbar.inflateMenu(R.menu.menu_settings);
+        binding.mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId())
+                {
+                    case R.id.action_edit:
+                        if(isEdit)
+                        {
+                            item.setTitle(getResources().getString(R.string.str_edit));
+                            callEditProfile();
+                        }else {
+                            isEdit = true;
+                            item.setTitle(getResources().getString(R.string.str_save));
+                            //    binding.txtEditprofile.setText(getResources().getString(R.string.str_save));
+                            onEditProfile();
+                        }
+                        break;
+
+                }
+                return true;
+            }
+        });
         getUser();
-      /*  binding.txtName.setFocusable(false);
-        binding.edtPhone.setFocusable(false);
-        binding.edtGender.setFocusable(false);
-        binding.tglEmail.setEnabled(false);
-        binding.tglPush.setEnabled(false);
-        binding.tglScrumble.setEnabled(false);
-        binding.tglFavorite.setEnabled(false);
-        binding.radioGroup.setEnabled(false);
-        binding.radioPrivate.setEnabled(false);
-        binding.radioPublic.setEnabled(false);*/
         binding.txtEmail.setText(User.getUser().getEmail());
         binding.txtName.setText(User.getUser().getUsername());
         if (user.getPhone() != null && user.getPhone().length() > 0)
@@ -176,9 +210,18 @@ public class SettingsFragment extends MyFragment implements
         binding.edtGender.setClickable(false);
         binding.llLogout.setOnClickListener(this);
         binding.edtGender.setOnClickListener(this);
-        binding.txtEditprofile.setOnClickListener(this);
+    //    binding.txtEditprofile.setOnClickListener(this);
+
         binding.llChangepassword.setOnClickListener(this);
         binding.imgProfile.setOnClickListener(this);
+        binding.txtNotification.setOnClickListener(this);
+        binding.txtPrivacy.setOnClickListener(this);
+        binding.txtInterest.setOnClickListener(this);
+        binding.llLocation.setOnClickListener(this);
+        binding.llTerms.setOnClickListener(this);
+        binding.llPrvy.setOnClickListener(this);
+        binding.llFeedback.setOnClickListener(this);
+        binding.llMypost.setOnClickListener(this);
         //   LogUtils.e(user.getprofile_imagename());
         getUser();
         if (user.getprofile_imagename() != null) {
@@ -186,23 +229,17 @@ public class SettingsFragment extends MyFragment implements
                 Picasso.get().load(user.getprofile_imagename()).into(binding.imgProfile);
         }
         getInterest();
-        onUpdateProfile();
+      //  onUpdateProfile();
         binding.tglEmail.setOnCheckedChangeListener(this);
         binding.tglPush.setOnCheckedChangeListener(this);
         binding.tglScrumble.setOnCheckedChangeListener(this);
         binding.tglFavorite.setOnCheckedChangeListener(this);
         binding.radioGroup.setOnCheckedChangeListener(this);
         onEditProfileDone();
-     //   RequiresPermission();
-        if (!user.getLogin_type().equals("manual")) {
+       if (!user.getLogin_type().equals("manual")) {
             binding.llChangepassword.setVisibility(View.GONE);
         }
-      /*  try {
-            requestHint();
-        } catch (IntentSender.SendIntentException e) {
-            e.printStackTrace();
-        }*/
-        return binding.getRoot();
+      return binding.getRoot();
     }
 
     // Construct a request for phone numbers and show the picker
@@ -281,13 +318,7 @@ public class SettingsFragment extends MyFragment implements
         }
         super.onResume();
     }
-   /* public void setUser()
-    {
-        gson = new Gson();
-        user = new User();
-        User.setUser(gson.fromJson(Utils.getInstance(getActivity()).getString(USER),User.class));
-        user = User.getUser();
-    }*/
+   
    void getInterest()
    {
        HashMap<String, String> map = new HashMap<>();
@@ -376,19 +407,35 @@ public class SettingsFragment extends MyFragment implements
     public void onClick(View view) {
         switch (view.getId())
         {
+            case R.id.ll_terms:
+                Intent wb = new Intent(getActivity(), WebViewActivity.class);
+                wb.putExtra(TITLE,getString(R.string.str_terms));
+                getActivity().startActivity(wb);
+                break;
+            case R.id.ll_prvy:
+                Intent wba = new Intent(getActivity(), WebViewActivity.class);
+                wba.putExtra(TITLE,getString(R.string.str_privacypolicy));
+                getActivity().startActivity(wba);
+                break;
             case R.id.ll_logout:
                 onLogoutpopup();
                 break;
-            case R.id.txt_editprofile:
+            case R.id.ll_feedback:
+                getActivity().startActivity(new Intent(getActivity(), FeedbackActivity.class));
+                break;
+            case R.id.ll_mypost:
+                getActivity().startActivity(new Intent(getActivity(), MyPostActivity.class));
+                break;
+           /* case R.id.txt_editprofile:
                 if(isEdit)
                 {
                     callEditProfile();
                 }else {
                     isEdit = true;
-                    binding.txtEditprofile.setText(getResources().getString(R.string.str_save));
+                //    binding.txtEditprofile.setText(getResources().getString(R.string.str_save));
                     onEditProfile();
                 }
-                break;
+                break;*/
             case R.id.img_profile:
                 mProfilePhoto();
                 break;
@@ -397,6 +444,27 @@ public class SettingsFragment extends MyFragment implements
                 break;
             case R.id.ll_changepassword:
                 startActivity(new Intent(getActivity(), ChangePasswordActivity.class));
+                break;
+            case R.id.txt_notification:
+                if(binding.rlNotifications.getVisibility()==View.GONE)
+                    binding.rlNotifications.setVisibility(View.VISIBLE);
+                else
+                    binding.rlNotifications.setVisibility(View.GONE);
+                break;
+            case R.id.txt_privacy:
+                if(binding.radioGroup.getVisibility()==View.GONE)
+                    binding.radioGroup.setVisibility(View.VISIBLE);
+                else
+                    binding.radioGroup.setVisibility(View.GONE);
+                break;
+            case R.id.txt_interest:
+                if(binding.listInterest.getVisibility()==View.GONE)
+                    binding.listInterest.setVisibility(View.VISIBLE);
+                else
+                    binding.listInterest.setVisibility(View.GONE);
+                break;
+            case R.id.ll_location:
+                    GetLocation();
                 break;
         }
     }
@@ -453,7 +521,7 @@ public class SettingsFragment extends MyFragment implements
     }
 
     private void onEditProfileDone() {
-        binding.txtEditprofile.setText(getString(R.string.str_editprofile));
+     //   binding.txtEditprofile.setText(getString(R.string.str_edit));
         binding.txtName.requestFocus();
         binding.txtName.setFocusableInTouchMode(false);
         binding.txtName.setFocusable(false);
@@ -554,11 +622,6 @@ public class SettingsFragment extends MyFragment implements
                 CometChat.logout(new CometChat.CallbackListener<String>() {
                     @Override
                     public void onSuccess(String s) {
-                       /* Intent intent=new Intent(context, LoginActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                        ((CometChatActivity)context).finish();*/
-
                         onLogout();
                     }
 
@@ -611,6 +674,39 @@ public class SettingsFragment extends MyFragment implements
         });
         alert.show();
     }
+    public void GetLocation()
+    {
+        LocationTrack  locationTrack = new LocationTrack(getContext(),getMyActivty());
+        LogUtils.e(locationTrack.canGetLocation()+"");
+
+        if (locationTrack.canGetLocation()&&locationTrack.getLatitude()!=0.0&&locationTrack.getLongitude()!=0.0) {
+
+
+            double longitude = locationTrack.getLongitude();
+            double latitude = locationTrack.getLatitude();
+
+            LogUtils.e("Longitude:" + Double.toString(longitude) + "\nLatitude:" + Double.toString(latitude));//.show();
+            Location loc = new Location(LocationManager.GPS_PROVIDER);
+            loc.setLatitude(latitude);
+            loc.setLongitude(longitude);
+            onUpdateLocation(loc);
+        } else {
+
+            if(!locationTrack.isCheckGPS())
+            {
+                if(!locationTrack.isShowAlert())
+                    locationTrack.showSettingsAlert();
+            }
+        }
+
+    }
+    private void onUpdateLocation(Location loc)
+    {
+        String URL = SERVER_URL+UPDATELOCATION+user.getId();
+        App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST,
+                URL,new ServerParams().UpdateLocation(String.valueOf(loc.getLatitude()),String.valueOf(loc.getLongitude()),user.getId())
+                , lister,error_listener));
+    }
     private void onLogout() {
         String URL = SERVER_URL+LOGOUT;
         URL = URL.replaceAll(" ", "%20");
@@ -647,17 +743,18 @@ public class SettingsFragment extends MyFragment implements
 
 
                     if (login.getString(STATUS_JSON).equals("true")) {
-                        FirebaseMessaging.getInstance().unsubscribeFromTopic(AppConfig.AppDetails.AppID_user_UID);
-                        Utils.getInstance(getApplicationContext()).clearPref();
-                        User.logout();
-                       // intent
-                        startActivity(new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_NEW_TASK));
-                        getActivity().finish();
+                        if(login.has(DATA))
+                        {
+                            showWarning(login.getString(MESSAGE));
+                        }else {
+                            FirebaseMessaging.getInstance().unsubscribeFromTopic(AppConfig.AppDetails.AppID_user_UID);
+                            Utils.getInstance(getApplicationContext()).clearPref();
+                            User.logout();
+                            startActivity(new Intent(getApplicationContext(), SplashActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                            getActivity().finish();
+                        }
                     }
                 }
-
-
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -706,12 +803,13 @@ public class SettingsFragment extends MyFragment implements
                     if (login.getString(STATUS_JSON).equals("true")) {
                         isEdit = false;
                         //onEditProfileDone();
+
                         setUser();
                         message = login.getString(MESSAGE);
                         CometProfilePicUpdate();
                     }
                 }else{
-                    showInfo(message);
+                   // showWarning(message);
                     onEditProfileDone();
                 }
 

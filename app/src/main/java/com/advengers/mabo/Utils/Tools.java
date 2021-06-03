@@ -28,8 +28,10 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +60,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.cometchat.pro.constants.CometChatConstants;
+import com.cometchat.pro.uikit.ui_components.messages.message_list.CometChatMessageListActivity;
+import com.cometchat.pro.uikit.ui_resources.constants.UIKitConstants;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -87,8 +91,6 @@ import java.util.Locale;
 import java.util.Map;
 
 
-import constant.StringContract;
-import screen.messagelist.CometChatMessageListActivity;
 
 import static com.advengers.mabo.Activity.MainActivity.REQUESTUSER;
 import static com.advengers.mabo.Activity.MainActivity.SERVER_URL;
@@ -209,11 +211,7 @@ public class Tools {
         return null;
     }
     public final static boolean isValidEmail(CharSequence target) {
-        if (target == null) {
-            return false;
-        } else {
-            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
-        }
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
     public static String writeFileToInternalStorage(Context context, Bitmap outputImage) {
@@ -537,12 +535,12 @@ public class Tools {
                                     else
                                     {
                                         Intent intent = new Intent(activity, CometChatMessageListActivity.class);
-                                        intent.putExtra(StringContract.IntentStrings.UID, room_Id);
-                                        intent.putExtra(StringContract.IntentStrings.MYUID, "mabo"+myid);
-                                        intent.putExtra(StringContract.IntentStrings.AVATAR, profile.getprofile_imagename());
-                                        intent.putExtra(StringContract.IntentStrings.STATUS, profile.getStatus());
-                                        intent.putExtra(StringContract.IntentStrings.NAME, name);
-                                        intent.putExtra(StringContract.IntentStrings.TYPE, CometChatConstants.RECEIVER_TYPE_USER);
+                                        intent.putExtra(UIKitConstants.IntentStrings.UID, room_Id);
+                                        intent.putExtra(UIKitConstants.IntentStrings.MYUID, "mabo"+myid);
+                                        intent.putExtra(UIKitConstants.IntentStrings.AVATAR, profile.getprofile_imagename());
+                                        intent.putExtra(UIKitConstants.IntentStrings.STATUS, profile.getStatus());
+                                        intent.putExtra(UIKitConstants.IntentStrings.NAME, name);
+                                        intent.putExtra(UIKitConstants.IntentStrings.TYPE, CometChatConstants.RECEIVER_TYPE_USER);
                                         activity.startActivity(intent);
                                         //  LogUtils.e("AVATAR "+user.getprofile_imagename());
                                      /*   Intent intent = new Intent(activity, OneToOneChatActivity.class);

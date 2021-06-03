@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -13,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -21,17 +23,28 @@ import com.advengers.mabo.Activity.App;
 import com.advengers.mabo.Activity.DashboardActivity;
 import com.advengers.mabo.Activity.LoginActivity;
 import com.advengers.mabo.Activity.SplashActivity;
+import com.advengers.mabo.Cometchat.constants.AppConfig;
+import com.advengers.mabo.Model.User;
 import com.advengers.mabo.R;
 import com.advengers.mabo.ServerCall.MyVolleyRequestManager;
 import com.advengers.mabo.ServerCall.ServerParams;
 import com.advengers.mabo.Tools.MyActivity;
 import com.advengers.mabo.Utils.LogUtils;
+import com.advengers.mabo.Utils.Tools;
+import com.advengers.mabo.Utils.Utils;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.cometchat.pro.core.CometChat;
+import com.cometchat.pro.exceptions.CometChatException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.msg91.sendotpandroid.library.internal.SendOTP;
 import com.msg91.sendotpandroid.library.listners.VerificationListener;
 import com.msg91.sendotpandroid.library.roots.RetryType;
@@ -42,13 +55,26 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 
+import in.aabhasjindal.otptextview.OtpTextView;
+
+import static com.advengers.mabo.Activity.MainActivity.COMETCHATURL;
 import static com.advengers.mabo.Activity.MainActivity.LOGIN;
+import static com.advengers.mabo.Activity.MainActivity.ROOMIDUPDATE;
 import static com.advengers.mabo.Activity.MainActivity.SERVER_URL;
 import static com.advengers.mabo.Activity.MainActivity.UPDATEPHONENUMBER;
 import static com.advengers.mabo.Activity.MainActivity.UPDATEUSER;
+import static com.advengers.mabo.Activity.MainActivity.USERDETAILS;
+import static com.advengers.mabo.Interfaces.Keys.COMET_ID;
+import static com.advengers.mabo.Interfaces.Keys.DATA;
 import static com.advengers.mabo.Interfaces.Keys.MESSAGE;
+import static com.advengers.mabo.Interfaces.Keys.RANGE;
 import static com.advengers.mabo.Interfaces.Keys.STATUS_JSON;
+import static com.advengers.mabo.Interfaces.Keys.USER;
+import static com.advengers.mabo.Sendotp.SendotpActivity.INTENT_COUNTRY_CODE;
+import static com.advengers.mabo.Sendotp.SendotpActivity.INTENT_PHONENUMBER;
+import static com.advengers.mabo.Sendotp.SendotpActivity.INTENT_USERNAME;
 
 
 public class VerificationActivity extends MyActivity implements
@@ -58,8 +84,10 @@ public class VerificationActivity extends MyActivity implements
     TextView resend_timer;
     int countryCode;
     String phoneNumber;
-    private OtpEditText mOtpEditText;
-
+    private OtpTextView mOtpEditText;
+    String CODE;
+    String username;
+    String token;
     String URL = "https://api.msg91.com/api/v5/otp";
     String authkey = "335467A4I8Tzy96017ddabP1";
     String tempid = "6017d207aadf7653df3d3304";
@@ -79,8 +107,21 @@ public class VerificationActivity extends MyActivity implements
         });
         startTimer();
         mOtpEditText = findViewById(R.id.inputCode);
-        mOtpEditText.setMaxLength(OTP_LNGTH);
+       // mOtpEditText.setMaxLength(OTP_LNGTH);
         enableInputField(true);
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            LogUtils.e( "getInstanceId failed "+ task.getException());
+                            return;
+                        }
+
+                        token = task.getResult().getToken();
+
+                    }
+                });
         initiateVerification();
     }
 
@@ -106,12 +147,36 @@ public class VerificationActivity extends MyActivity implements
     }
 
     private void sendotp(String mobile) {
-
+        CODE = "OTP";
         String finalurl = URL+"?authkey="+authkey+"&template_id="+tempid+"&mobile="+mobile;
         App.requestQueue.add(MyVolleyRequestManager.getmsgStringRequest(Request.Method.GET,
                 finalurl,fcm_lister,fcm_error_listener));
       }
+    private void Login(String username, String phoneNumber) {
+        CODE = "Login";
+        App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST,
+                SERVER_URL + LOGIN,
+                new ServerParams().LoginPhoneNumber(""+username,phoneNumber), fcm_lister, fcm_error_listener));
+        onLoadProgress(VerificationActivity.this);
 
+    }
+    private void CreateComet(String id,String name,String avatar) {
+        CODE = "CreateComet";
+        // url = url.replaceAll(" ", "%20");
+        String UID = "mabo"+id;
+        App.requestQueue.add(MyVolleyRequestManager.createCometStringRequest(Request.Method.POST,
+                COMETCHATURL.replaceAll(" ", "%20"),new ServerParams().createCometUser(UID, name, avatar)
+                , fcm_lister,user_error_listener));
+    }
+
+    private void UpdateRoomId(String roomid, String userid) {
+        CODE = "UpdateRoomid";
+        App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST,
+                SERVER_URL + ROOMIDUPDATE,
+                new ServerParams().putRoomID(userid,roomid), fcm_lister, fcm_error_listener));
+        //  onLoadProgress(LoginActivity.this);
+
+    }
     Response.Listener fcm_lister = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
@@ -121,53 +186,136 @@ public class VerificationActivity extends MyActivity implements
 
             try {
                 JSONObject login = new JSONObject(response.toString());
-                if(login.getString("type").equals("success"))
-                {
-                    DataManager.getInstance().hideProgressMessage();
-                    if(login.getString("message").equalsIgnoreCase("OTP verified success"))
-                    {
+                switch (CODE) {
+                    case "OTP":
 
-                    enableInputField(false);
-                    hideKeypad();
-                    TextView textView2 = (TextView) findViewById(R.id.textView2);
-                    TextView textView1 = (TextView) findViewById(R.id.textView1);
-                    TextView messageText = (TextView) findViewById(R.id.textView);
-                    ImageView topImg = (ImageView) findViewById(R.id.topImg);
-                    TextView phoneText = (TextView) findViewById(R.id.numberText);
-                    RelativeLayout topLayout = findViewById(R.id.topLayout);
-                    if (android.os.Build.VERSION.SDK_INT > 16)
-                        topLayout.setBackgroundDrawable(ContextCompat.getDrawable(VerificationActivity.this, R.drawable.gradient_bg_white));
-                    else
-                        topLayout.setBackgroundResource(R.drawable.gradient_bg_white);
-                    messageText.setVisibility(View.GONE);
-                    phoneText.setVisibility(View.GONE);
-                    topImg.setVisibility(View.INVISIBLE);
-                    textView1.setVisibility(View.VISIBLE);
-                    textView2.setVisibility(View.VISIBLE);
-                        showCompleted(false);
-                    hideProgressBarAndShowMessage(R.string.verified);
+                        if (login.getString("type").equals("success")) {
+                            DataManager.getInstance().hideProgressMessage();
 
-                    getUser();
+                            if(login.has("message"))
+                            if (login.getString("message").equalsIgnoreCase("OTP verified success")) {
+
+                                enableInputField(false);
+                                hideKeypad();
+                                TextView textView2 = (TextView) findViewById(R.id.textView2);
+                                TextView textView1 = (TextView) findViewById(R.id.textView1);
+                                TextView messageText = (TextView) findViewById(R.id.textView);
+                                TextView topImg = (TextView) findViewById(R.id.topImg);
+                                TextView phoneText = (TextView) findViewById(R.id.numberText);
+                                RelativeLayout topLayout = findViewById(R.id.topLayout);
+                                if (android.os.Build.VERSION.SDK_INT > 16)
+                                    topLayout.setBackgroundDrawable(ContextCompat.getDrawable(VerificationActivity.this, R.drawable.gradient_bg_white));
+                                else
+                                    topLayout.setBackgroundResource(R.drawable.gradient_bg_white);
+                                messageText.setVisibility(View.GONE);
+                                phoneText.setVisibility(View.GONE);
+                                topImg.setVisibility(View.INVISIBLE);
+                                textView1.setVisibility(View.VISIBLE);
+                                textView2.setVisibility(View.VISIBLE);
+                                showCompleted(false);
+                                hideProgressBarAndShowMessage(R.string.verified);
+                                String pn = "+"+countryCode+phoneNumber;
+                                Login(username,pn);
+                   /* getUser();
 
                     user.setPhone("+"+countryCode+phoneNumber);
                     setUser();
                     String URL = SERVER_URL+UPDATEPHONENUMBER;
                     App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST,
                             URL,new ServerParams().UpdatePhonenumber(user.getId(),user.getPhone())
-                            , updatelister,update_error_listener));
-                    }else if(login.getString("message").equalsIgnoreCase("retry send successfully"))
-                    {
+                            , updatelister,update_error_listener));*/
+                            } else if (login.getString("message").equalsIgnoreCase("retry send successfully")) {
 
-                    }
-                }else if(login.getString("type").equals("error"))
-                {
-                    DataManager.getInstance().hideProgressMessage();
-                    hideKeypad();
-                    hideProgressBarAndShowMessage(R.string.failed);
-                    Toast.makeText(VerificationActivity.this,login.getString("message"),Toast.LENGTH_LONG).show();
-                    enableInputField(true);
+                            }
+                        } else if (login.getString("type").equals("error")) {
+                            DataManager.getInstance().hideProgressMessage();
+                            hideKeypad();
+                            hideProgressBarAndShowMessage(R.string.failed);
+                            Toast.makeText(VerificationActivity.this, login.getString("message"), Toast.LENGTH_LONG).show();
+                            enableInputField(true);
+                        }
+                        break;
+                    case "Login":
+                        if(login.getString(STATUS_JSON).equals("true"))
+                        {
+                            String id = login.getString(DATA);
+                            UserDetails(id);
+                        }
+                        break;
+                    case "UserDetails":
+                        if (login.has(STATUS_JSON)) {
+                            if (login.getString(STATUS_JSON).equals("true")) {
+                                JSONObject data = login.getJSONObject("data");
+                                String jsondata = data.getString("users");//gson.toJson(data);
+                                LogUtils.e("JSON   "+jsondata);
+                                Utils.getInstance(VerificationActivity.this).setString(USER,jsondata);
+                                getUser();
+                                User.setUser(gson.fromJson(Utils.getInstance(VerificationActivity.this).getString(USER),User.class));
+                                setRange();
+                                CreateComet(User.getUser().getId(),User.getUser().getUsername().trim(),User.getUser().getprofile_imagename());
+
+                            }
+                        }
+                        break;
+                    case "CreateComet":
+                        LogUtils.e("Coming here");
+                        String UID="";
+                        if(login.has("data")) {
+                            JSONObject data = login.getJSONObject("data");
+                            LogUtils.e(data.toString());
+                            UID = data.getString(COMET_ID);
+                            LogUtils.e(UID);
+                        }else if(login.has("error"))
+                        {
+                            JSONObject data = login.getJSONObject("error");
+                            UID = data.getJSONObject("details").getString(COMET_ID);
+                            LogUtils.e(UID);
+                        }
+
+                        UpdateRoomId("mabo"+User.getUser().getId(),User.getUser().getId());
+
+
+                        break;
+                    case "UpdateRoomid":
+                        if (login.has(STATUS_JSON)) {
+                            if (login.getString(STATUS_JSON).equals("true")) {
+                                String uid = "mabo"+User.getUser().getId();
+                                CometChat.login(uid, AppConfig.AppDetails.API_KEY, new CometChat.CallbackListener<com.cometchat.pro.models.User>() {
+                                    @Override
+                                    public void onSuccess(com.cometchat.pro.models.User user) {
+                                        onLoadDismiss();
+                                        FirebaseMessaging.getInstance().subscribeToTopic(AppConfig.AppDetails.AppID_user_UID);
+                                        CometChat.registerTokenForPushNotification(token, new CometChat.CallbackListener<String>() {
+                                            @Override
+                                            public void onSuccess(String s) {
+                                                Log.e( "onSuccessPN: ",s );
+                                            }
+                                            @Override
+                                            public void onError(CometChatException e) {
+                                                Log.e("onErrorPN: ",e.getMessage() );
+                                            }
+                                        });
+                                        startActivity(new Intent(VerificationActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                                    }
+
+                                    @Override
+                                    public void onError(CometChatException e) {
+                                        onLoadDismiss();
+                                        e.printStackTrace();
+                                        Toast.makeText(VerificationActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        //   Log.d(TAG, "onError: "+e.getMessage());
+                                    }
+
+                                });
+                            }else if(login.getString(STATUS_JSON).equals("false"))
+                            {
+                                onLoadDismiss();
+                                Tools.showDialog(true,login.getString("message"),VerificationActivity.this,VerificationActivity.this);
+                            }
+
+                        }
+                        break;
                 }
-
 
 
             } catch (JSONException e) {
@@ -201,16 +349,82 @@ public class VerificationActivity extends MyActivity implements
         Intent intent = getIntent();
         if (intent != null) {
             DataManager.getInstance().showProgressMessage(this, "");
-            phoneNumber = intent.getStringExtra(SendotpActivity.INTENT_PHONENUMBER);
-            countryCode = intent.getIntExtra(SendotpActivity.INTENT_COUNTRY_CODE, 0);
+            phoneNumber = intent.getStringExtra(INTENT_PHONENUMBER);
+            countryCode = intent.getIntExtra(INTENT_COUNTRY_CODE, 0);
+            username = intent.getStringExtra(INTENT_USERNAME);
             TextView phoneText = (TextView) findViewById(R.id.numberText);
-            phoneText.setText(phoneNumber);
+            phoneText.setText("+"+countryCode+phoneNumber);
             sendotp(countryCode+phoneNumber);
          //   createVerification(phoneNumber, countryCode);
         }
     }
+    private void UserDetails(String id) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("","");
+        CODE = "UserDetails";
+        App.requestQueue.add(MyVolleyRequestManager.createStringRequest(Request.Method.POST,
+                SERVER_URL + USERDETAILS,new ServerParams().UserDetails(id,id)
+                , fcm_lister,user_error_listener));
+    }
+    Response.ErrorListener user_error_listener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+            NetworkResponse response = error.networkResponse;
+            if (response != null ) {
+                try {
+                    String res = new String(response.data,
+                            HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                    try {
+                        JSONObject login = new JSONObject(res.toString());
+                        LogUtils.e(res);
+                        if (login.has(STATUS_JSON)) {
+
+                            if (login.getString(STATUS_JSON).equals("true")) {
+                                JSONObject data = login.getJSONObject("data");
+                                String jsondata = login.getString("data");
+                                LogUtils.e("JSON   "+login.getString("data"));
+                                Utils.getInstance(VerificationActivity.this).setString(USER,jsondata);
+                                User.setUser(gson.fromJson(Utils.getInstance(VerificationActivity.this).getString(USER),User.class));
+                                setRange();
+                                CreateComet(User.getUser().getId(),User.getUser().getUsername().trim(),User.getUser().getprofile_imagename());
+                            }
+                        }else if(CODE.equals("CreateComet")) {
+                            LogUtils.e("Coming here");
+                            String UID="";
+                            if (login.has("data")) {
+                                JSONObject data = login.getJSONObject("data");
+                                LogUtils.e(data.toString());
+                                UID = data.getString(COMET_ID);
+                                LogUtils.e(UID);
+                            } else if (login.has("error")) {
+                                JSONObject data = login.getJSONObject("error");
+                                UID = data.getJSONObject("details").getString(COMET_ID);
+                                LogUtils.e(UID);
+                            }
+                            UpdateRoomId("mabo"+User.getUser().getId(),User.getUser().getId());
+
+                        }
+
+
+                    } catch (JSONException e) {
+                        onLoadDismiss();
+                        e.printStackTrace();
+                    }
+                } catch (UnsupportedEncodingException e1) {
+                    onLoadDismiss();
+                    e1.printStackTrace();
+                }
+            }
+        }
+    };
+    void setRange()
+    {
+        Utils.getInstance(VerificationActivity.this).setInt(RANGE,1000);
+    }
 
     public void ResendCode() {
+        CODE = "OTP";
         startTimer();
         String verifyurl = URL+"/retry?mobile="+countryCode+phoneNumber+"&authkey="+authkey;
         App.requestQueue.add(MyVolleyRequestManager.getmsgStringRequest(Request.Method.POST,
@@ -220,7 +434,7 @@ public class VerificationActivity extends MyActivity implements
     }
 
     public void onSubmitClicked(View view) {
-        String code = mOtpEditText.getText().toString();
+        String code = mOtpEditText.getOTP();
         if (!code.isEmpty()) {
             hideKeypad();
             verifyOtp(code);
@@ -281,7 +495,7 @@ public class VerificationActivity extends MyActivity implements
     }
 
     public void verifyOtp(String otp) {
-
+        CODE = "OTP";
         String verifyurl = URL+"/verify?mobile="+countryCode+phoneNumber+"&authkey="+authkey+"&otp="+otp;
         App.requestQueue.add(MyVolleyRequestManager.getmsgStringRequest(Request.Method.POST,
                 verifyurl,fcm_lister,fcm_error_listener));
@@ -301,8 +515,9 @@ public class VerificationActivity extends MyActivity implements
                     hideKeypad();
                     TextView textView2 = (TextView) findViewById(R.id.textView2);
                     TextView textView1 = (TextView) findViewById(R.id.textView1);
+                    TextView OtpText = (TextView) findViewById(R.id.otptext);
                     TextView messageText = (TextView) findViewById(R.id.textView);
-                    ImageView topImg = (ImageView) findViewById(R.id.topImg);
+                    TextView topImg = (TextView) findViewById(R.id.topImg);
                     TextView phoneText = (TextView) findViewById(R.id.numberText);
                     RelativeLayout topLayout = findViewById(R.id.topLayout);
                     if (android.os.Build.VERSION.SDK_INT > 16)
@@ -312,6 +527,7 @@ public class VerificationActivity extends MyActivity implements
                     messageText.setVisibility(View.GONE);
                     phoneText.setVisibility(View.GONE);
                     topImg.setVisibility(View.INVISIBLE);
+                    OtpText.setVisibility(View.INVISIBLE);
                     textView1.setVisibility(View.VISIBLE);
                     textView2.setVisibility(View.VISIBLE);
                     if (responseCode == SendOTPResponseCode.DIRECT_VERIFICATION_SUCCESSFUL_FOR_NUMBER)
@@ -331,7 +547,7 @@ public class VerificationActivity extends MyActivity implements
 
                 } else if (responseCode == SendOTPResponseCode.READ_OTP_SUCCESS) {
                     DataManager.getInstance().hideProgressMessage();
-                    mOtpEditText.setText(message);
+                    mOtpEditText.setOTP(message);
                     LogUtils.e(message);
                    /* getUser();
                     user.setVerify(true);
@@ -362,8 +578,10 @@ public class VerificationActivity extends MyActivity implements
 
                 if (login.has(STATUS_JSON)) {
                     if (login.getString(STATUS_JSON).equals("true")) {
-                        user.setVerify(true);
+                        getUser();
+                        user.setVerify(false);
                         setUser();
+                        getUser();
                         startActivity(new Intent(VerificationActivity.this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                     }else{
                         //setUser();
@@ -405,21 +623,21 @@ public class VerificationActivity extends MyActivity implements
     };
     private void startTimer() {
         resend_timer.setClickable(false);
-        resend_timer.setTextColor(ContextCompat.getColor(VerificationActivity.this, R.color.white));
+        resend_timer.setTextColor(ContextCompat.getColor(VerificationActivity.this, R.color.apptheme));
         new CountDownTimer(30000, 1000) {
             int secondsLeft = 0;
 
             public void onTick(long ms) {
                 if (Math.round((float) ms / 1000.0f) != secondsLeft) {
                     secondsLeft = Math.round((float) ms / 1000.0f);
-                    resend_timer.setText("Resend via call ( " + secondsLeft + " )");
+                    resend_timer.setText(Html.fromHtml("Didn't receive your code." + "<font color=\"#db3236\">" +"Resend (" + secondsLeft +")</font>"));
                 }
             }
 
             public void onFinish() {
                 resend_timer.setClickable(true);
                 resend_timer.setText("Resend via call");
-                resend_timer.setTextColor(ContextCompat.getColor(VerificationActivity.this, R.color.white));
+                resend_timer.setTextColor(ContextCompat.getColor(VerificationActivity.this, R.color.apptheme));
             }
         }.start();
     }

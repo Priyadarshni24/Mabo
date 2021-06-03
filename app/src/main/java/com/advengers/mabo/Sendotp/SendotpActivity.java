@@ -28,8 +28,9 @@ public class SendotpActivity extends AppCompatActivity {
 
     public static final String INTENT_PHONENUMBER = "phonenumber";
     public static final String INTENT_COUNTRY_CODE = "code";
+    public static final String INTENT_USERNAME = "username";
 
-    private EditText mPhoneNumber;
+    private EditText mPhoneNumber,mUsername;
     private TextView mSmsButton;
     private String mCountryIso;
     private TextWatcher mNumberTextWatcher;
@@ -40,6 +41,7 @@ public class SendotpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_sendotp);
+        mUsername = findViewById(R.id.edt_username);
         mPhoneNumber = findViewById(R.id.phoneNumber);
         mSmsButton = findViewById(R.id.smsVerificationButton);
         mCountrycode = findViewById(R.id.txt_countrycode);
@@ -87,10 +89,11 @@ public class SendotpActivity extends AppCompatActivity {
         }
     }
 
-    private void openActivity(String phoneNumber) {
+    private void openActivity(String phoneNumber,String username) {
         Intent verification = new Intent(this, VerificationActivity.class);
         verification.putExtra(INTENT_PHONENUMBER, phoneNumber);
         verification.putExtra(INTENT_COUNTRY_CODE, Iso2Phone.getPhone(mCountryIso));
+        verification.putExtra(INTENT_USERNAME,username);
         startActivity(verification);
     }
 
@@ -99,7 +102,13 @@ public class SendotpActivity extends AppCompatActivity {
     }
 
     public void onButtonClicked(View view) {
-        openActivity(getE164Number());
+       if(mUsername.getText().toString().trim()!=null)
+       {
+           openActivity(getE164Number(),mUsername.getText().toString());
+       }else{
+           Toast.makeText(SendotpActivity.this,getString(R.string.str_enter_name),Toast.LENGTH_LONG).show();
+       }
+
     }
 
     private void resetNumberTextWatcher(String countryIso) {

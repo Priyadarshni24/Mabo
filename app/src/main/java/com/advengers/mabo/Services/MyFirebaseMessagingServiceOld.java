@@ -151,7 +151,7 @@ public class MyFirebaseMessagingServiceOld extends FirebaseMessagingService {
         }
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(Config.title)
                 .setAutoCancel(true)
                 .setSound(defaultSound)

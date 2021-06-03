@@ -4,30 +4,33 @@
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
-<RelativeLayout
+    <RelativeLayout
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/mToolbar"
         android:layout_width="match_parent"
+        android:background="@color/white"
         android:layout_height="?attr/actionBarSize">
 
         <TextView
-            android:textColor="@color/white"
+            android:textColor="@color/apptheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:textSize="@dimen/textsize18"
-            android:fontFamily="@font/gibsonregular"
-            android:text="@string/str_settings"/>
+            android:fontFamily="@font/poppinsregular"
+            android:gravity="right"
+            android:text="@string/str_myaccount"/>
     </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
+   <!-- <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/app_bar_layout"
@@ -35,12 +38,12 @@
         android:layout_marginTop="@dimen/margin10"
         android:layout_marginEnd="@dimen/margin10"
         android:layout_marginBottom="@dimen/margin10"
-        android:fontFamily="@font/gibsonregular"
+        android:fontFamily="@font/poppinsregular"
         android:text="@string/str_myprofile"
         android:textSize="@dimen/textsize18"
-        android:textStyle="bold" />
+        android:textStyle="bold" />-->
 
-    <TextView
+    <!--<TextView
         android:id="@+id/txt_editprofile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,115 +52,194 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="@dimen/margin10"
         android:gravity="right"
-        android:text="@string/str_editprofile"
-        android:fontFamily="@font/gibsonregular"
+        android:text="@string/str_edit"
+        android:fontFamily="@font/poppinsregular"
         android:textColor="@android:color/holo_red_dark"
         android:textSize="@dimen/textsize18"
-        android:textStyle="bold" />
-
+        android:textStyle="bold" />-->
+    <RelativeLayout
+        android:id="@+id/rl_profile"
+        android:layout_margin="@dimen/textsize25"
+        android:padding="@dimen/margin25"
+        android:layout_below="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:background="@drawable/bg_profile"
+        android:layout_height="wrap_content">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_profile"
-        android:layout_width="@dimen/size150"
-        android:layout_height="@dimen/size150"
+        android:layout_width="@dimen/size50"
+        android:layout_height="@dimen/size50"
         app:border_width="2dp"
-
         android:src="@drawable/ic_avatar"
         app:border_color="@color/grey"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/txt_editprofile"
         android:layout_marginTop="8dp" />
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/str_name"
-        android:fontFamily="@font/gibsonregular"
+        android:fontFamily="@font/poppinsregular"
         android:id="@+id/txt_name"
         android:textSize="@dimen/textsize18"
         android:focusable="false"
         android:maxLength="35"
-        android:textColor="@color/black"
-        android:background="@color/white"
-        android:layout_below="@+id/img_profile"
-        android:layout_centerHorizontal="true"/>
-
-<EditText
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/edt_phone"
-    android:textSize="@dimen/textsize18"
-    android:background="@color/white"
-    android:layout_margin="@dimen/margin10"
-    android:textColor="@color/black"
-    android:drawableLeft="@drawable/ic_phone"
-    android:drawablePadding="@dimen/margin5"
-    android:inputType="phone"
-    android:maxLength="15"
-    android:hint="@string/str_phonenumber"
-    android:layout_below="@+id/txt_name"
-    android:fontFamily="@font/gibsonregular"
-    />
+        android:background="@color/transparent"
+        android:layout_marginLeft="@dimen/margin15"
+        android:textColor="@color/apptheme"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/img_profile"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_gender"
+            android:id="@+id/img_gender"
+            android:layout_marginRight="@dimen/margin15"
+            android:layout_alignParentRight="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/edt_gender"
+            android:layout_below="@+id/img_gender"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/apptheme"
+            android:hint="@string/str_gender"
+            android:fontFamily="@font/poppinsregular"
+         />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_below="@+id/rl_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_callprofile"
+            android:layout_marginLeft="@dimen/margin25"
+            android:layout_marginTop="@dimen/margin30"
+            />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/edt_phone"
+            android:background="@color/white"
+            android:layout_margin="@dimen/margin25"
+            android:textColor="@color/black"
+            android:drawablePadding="@dimen/margin5"
+            android:inputType="phone"
+            android:hint="@string/str_phonenumber"
+            android:fontFamily="@font/poppinsregular"
+            />
+    </LinearLayout>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/edt_gender"
-        android:layout_alignParentRight="true"
+        android:id="@+id/txt_email"
         android:textSize="@dimen/textsize18"
         android:background="@color/white"
         android:textColor="@color/black"
         android:layout_margin="@dimen/margin10"
-        android:drawableLeft="@drawable/ic_gender"
+        android:visibility="gone"
+        android:drawableLeft="@drawable/ic_mail"
         android:drawablePadding="@dimen/margin5"
-        android:hint="@string/str_gender"
-        android:layout_below="@+id/txt_name"
-        android:paddingRight="@dimen/margin25"
-        android:fontFamily="@font/gibsonregular"
-
-        />
-    <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/txt_email"
-
-    android:textSize="@dimen/textsize18"
-    android:background="@color/white"
-        android:textColor="@color/black"
-    android:layout_margin="@dimen/margin10"
-    android:drawableLeft="@drawable/ic_mail"
-    android:drawablePadding="@dimen/margin5"
-    android:hint="@string/str_mail"
-    android:layout_below="@+id/edt_phone"
-    android:fontFamily="@font/gibsonregular"
+        android:hint="@string/str_mail"
+        android:layout_below="@+id/ll"
+        android:fontFamily="@font/poppinsregular"
     />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/txt_notification"
-
-        android:textSize="@dimen/textsize16"
-        android:background="@color/white"
-        android:layout_margin="@dimen/margin10"
-        android:drawableLeft="@drawable/ic_notification"
-        android:drawablePadding="@dimen/margin10"
-        android:text="@string/str_notifications"
-        android:layout_below="@+id/txt_email"
-        android:fontFamily="@font/gibsonregular"
-        />
-    <RelativeLayout
-        android:layout_below="@+id/txt_notification"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:id="@+id/rl_emailnotification">
+        <LinearLayout
+            android:layout_below="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/ll_location">
+            <ImageView
+                android:layout_marginLeft="@dimen/margin25"
+                android:layout_marginTop="@dimen/margin25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_notification"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_location"
+                android:textColor="@color/black"
+                android:background="@color/white"
+                android:layout_margin="@dimen/margin25"
+                android:text="@string/str_updatelocation"
+                android:layout_below="@+id/txt_email"
+                android:fontFamily="@font/poppinsregular"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_below="@+id/ll_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/ll_mypost">
+            <ImageView
+                android:layout_marginLeft="@dimen/margin25"
+                android:layout_marginTop="@dimen/margin25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_notification"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_mypost"
+                android:textColor="@color/black"
+                android:background="@color/white"
+                android:layout_margin="@dimen/margin25"
+                android:text="@string/str_mypost"
+                android:fontFamily="@font/poppinsregular"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_below="@+id/ll_mypost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/ll_notification">
+            <ImageView
+                android:layout_marginLeft="@dimen/margin25"
+                android:layout_marginTop="@dimen/margin25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_notification"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_notification"
+                android:textColor="@color/black"
+                android:background="@color/white"
+                android:layout_margin="@dimen/margin25"
+                android:text="@string/str_notifications"
+                android:layout_below="@+id/txt_email"
+                android:fontFamily="@font/poppinsregular"
+                />
+        </LinearLayout>
+        <RelativeLayout
+            android:visibility="gone"
+            android:background="@drawable/bg_profile"
+            android:layout_below="@+id/ll_notification"
+            android:layout_marginRight="@dimen/margin25"
+            android:layout_marginLeft="@dimen/margin25"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rl_notifications">
+            <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:id="@+id/rl_emailnotification">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/textsize16"
             android:background="@color/white"
             android:textColor="@color/black"
             android:layout_margin="@dimen/margin10"
             android:paddingLeft="@dimen/margin25"
             android:text="@string/str_emailnotification"
-            android:fontFamily="@font/gibsonregular"
+            android:fontFamily="@font/poppinsregular"
             />
         <CheckBox
             android:id="@+id/tgl_email"
@@ -168,37 +250,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="false" />
-      <!--  <ToggleButton
-            android:layout_alignParentRight="true"
-            android:layout_width="@dimen/margin30"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/gibsonregular"
-            android:textOn=""
-            android:textOff=""
-            android:id="@+id/tgl_email"
-            android:background="@color/white"
-            android:gravity="center"
-            android:layout_marginRight="@dimen/margin30"
-            android:button="@drawable/toggle_selector"
-        />-->
+
     </RelativeLayout>
+
     <RelativeLayout
-        android:layout_below="@+id/rl_emailnotification"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:id="@+id/rl_pushnotification">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/textsize16"
-            android:background="@color/white"
-            android:textColor="@color/black"
             android:layout_margin="@dimen/margin10"
+            android:fontFamily="@font/poppinsregular"
             android:paddingLeft="@dimen/margin25"
             android:text="@string/str_pushnotification"
-            android:fontFamily="@font/gibsonregular"
-            />
+            android:textColor="@color/black" />
         <CheckBox
             android:id="@+id/tgl_push"
             android:layout_alignParentRight="true"
@@ -208,37 +276,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="false" />
-      <!--  <ToggleButton
-            android:layout_alignParentRight="true"
-            android:layout_width="@dimen/margin30"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/gibsonregular"
-            android:textOn=""
-            android:textOff=""
-            android:id="@+id/tgl_push"
-            android:paddingLeft="@dimen/margin30"
-            android:background="@color/white"
-            android:gravity="center"
-            android:layout_marginRight="@dimen/margin30"
-            android:button="@drawable/toggle_selector"
-            />-->
     </RelativeLayout>
     <RelativeLayout
     android:layout_below="@+id/rl_pushnotification"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:visibility="gone"
     android:id="@+id/rl_favorite">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/textsize16"
-        android:background="@color/white"
         android:layout_margin="@dimen/margin10"
         android:paddingLeft="@dimen/margin25"
         android:textColor="@color/black"
         android:text="@string/str_onlyfavorite"
-        android:fontFamily="@font/gibsonregular"
+        android:fontFamily="@font/poppinsregular"
         />
         <CheckBox
             android:id="@+id/tgl_favorite"
@@ -249,36 +302,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="false" />
-   <!-- <ToggleButton
-        android:layout_alignParentRight="true"
-        android:layout_width="@dimen/margin30"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/gibsonregular"
-        android:textOn=""
-        android:textOff=""
-        android:id="@+id/tgl_favorite"
-        android:background="@color/white"
-        android:gravity="center"
-        android:layout_marginRight="@dimen/margin30"
-        android:button="@drawable/toggle_selector"
-        />-->
-</RelativeLayout>
+    </RelativeLayout>
     <RelativeLayout
         android:layout_below="@+id/rl_favorite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:id="@+id/rl_scrumble">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/textsize16"
-            android:background="@color/white"
             android:textColor="@color/black"
             android:layout_margin="@dimen/margin10"
             android:paddingLeft="@dimen/margin25"
             android:text="@string/str_scrumblelocation"
-            android:fontFamily="@font/gibsonregular"
+            android:fontFamily="@font/poppinsregular"
             />
         <CheckBox
             android:id="@+id/tgl_scrumble"
@@ -294,7 +331,7 @@
             android:layout_width="@dimen/margin30"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/margin30"
-            android:fontFamily="@font/gibsonregular"
+            android:fontFamily="@font/poppinsregular"
             android:textOn=""
             android:textOff=""
             android:id="@+id/tgl_scrumble"
@@ -304,45 +341,49 @@
             android:button="@drawable/toggle_selector"
             />-->
     </RelativeLayout>
-
-    <View
-        android:layout_below="@+id/rl_scrumble"
-        android:id="@+id/line1"
-        android:layout_marginTop="@dimen/margin25"
-        android:layout_marginBottom="@dimen/margin10"
-        android:layout_marginLeft="@dimen/margin35"
-        android:layout_marginRight="@dimen/margin35"
-        android:background="@color/grey"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/txt_privacy"
-
-        android:textSize="@dimen/textsize16"
-        android:background="@color/white"
-        android:layout_margin="@dimen/margin10"
-        android:drawableLeft="@drawable/ic_privacy"
-        android:drawablePadding="@dimen/margin10"
-        android:text="@string/str_privacy"
-        android:layout_below="@+id/line1"
-        android:fontFamily="@font/gibsonregular"
-        />
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/rl_notifications"
+            android:id="@+id/ll_privacy">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_privacy"
+                android:layout_marginTop="@dimen/margin25"
+                android:layout_marginLeft="@dimen/margin25"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_privacy"
+                android:background="@color/white"
+                android:layout_margin="@dimen/margin25"
+                android:drawablePadding="@dimen/margin10"
+                android:text="@string/str_privacy"
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppinsregular"
+                />
+        </LinearLayout>
     <RadioGroup
-        android:layout_marginLeft="@dimen/margin30"
-        android:layout_below="@+id/txt_privacy"
+        android:visibility="gone"
+        android:layout_below="@+id/ll_privacy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/margin10"
-        android:layout_marginRight="@dimen/margin30"
+        android:paddingLeft="@dimen/margin25"
+        android:paddingTop="@dimen/margin10"
+        android:paddingRight="@dimen/margin25"
+        android:paddingBottom="@dimen/margin10"
+        android:layout_marginRight="@dimen/margin25"
+        android:layout_marginLeft="@dimen/margin25"
+        android:background="@drawable/bg_profile"
         android:id="@+id/radioGroup">
 
         <RadioButton
             android:id="@+id/radioPrivate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:button="@null"
             android:layoutDirection="rtl"
             android:textAlignment="textStart"
@@ -351,14 +392,12 @@
             android:text="@string/str_private"
             android:gravity="start"
             android:textColor="@color/black"
-            android:fontFamily="@font/gibsonregular"
-            android:textSize="@dimen/textsize18" />
+            android:fontFamily="@font/poppinsregular" />
 
         <RadioButton
             android:id="@+id/radioPublic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:button="@null"
             android:textColor="@color/black"
             android:drawablePadding="30dp"
@@ -370,57 +409,50 @@
             android:textAlignment="textStart"
             android:layout_gravity="start"
             android:gravity="start"
-            android:fontFamily="@font/gibsonregular"
-            android:textSize="@dimen/textsize18" />
+            android:fontFamily="@font/poppinsregular" />
     </RadioGroup>
-
-    <View
+    <LinearLayout
         android:layout_below="@+id/radioGroup"
-        android:id="@+id/line2"
-        android:layout_marginTop="@dimen/margin25"
-        android:layout_marginBottom="@dimen/margin10"
-        android:layout_marginLeft="@dimen/margin35"
-        android:layout_marginRight="@dimen/margin35"
-        android:background="@color/grey"
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
-    <TextView
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_interest"
-        android:textSize="@dimen/textsize16"
-        android:background="@color/white"
-        android:layout_margin="@dimen/margin10"
-        android:drawableLeft="@drawable/ic_notification"
-        android:drawablePadding="@dimen/margin10"
-        android:text="@string/str_interest"
-        android:layout_below="@+id/line2"
-        android:fontFamily="@font/gibsonregular"
-        />
+        android:orientation="horizontal"
+        android:id="@+id/ll_interest">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_privacy"
+            android:layout_marginTop="@dimen/margin25"
+            android:layout_marginLeft="@dimen/margin25"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_interest"
+            android:layout_margin="@dimen/margin25"
+            android:text="@string/str_interest"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppinsregular"
+            />
+    </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@+id/txt_interest"
+        android:layout_below="@+id/ll_interest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/list_interest"
-        android:layout_marginLeft="@dimen/margin35"
+
+        android:paddingLeft="@dimen/margin25"
+        android:layout_marginRight="@dimen/margin25"
+        android:layout_marginLeft="@dimen/margin25"
+        android:background="@drawable/bg_profile"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:scrollbars="none"
+        android:visibility="gone"
+       />
 
-        />
-    <View
-        android:layout_below="@+id/list_interest"
-        android:id="@+id/line3"
-        android:layout_marginTop="@dimen/margin25"
-        android:layout_marginBottom="@dimen/margin10"
-        android:layout_marginLeft="@dimen/margin35"
-        android:layout_marginRight="@dimen/margin35"
-        android:background="@color/grey"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
     <LinearLayout
-        android:layout_below="@+id/line3"
+        android:layout_below="@+id/list_interest"
         android:id="@+id/ll_changepassword"
-        android:layout_margin="@dimen/margin10"
+        android:layout_margin="@dimen/margin25"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -428,7 +460,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txt_changepassword"
-            android:textSize="@dimen/textsize18"
             android:background="@color/white"
             android:layout_marginLeft="@dimen/margin10"
             android:drawableLeft="@drawable/ic_feedback"
@@ -436,7 +467,7 @@
             android:text="@string/str_changepassword"
             android:textColor="@color/black"
             android:layout_below="@+id/rl_scrumble"
-            android:fontFamily="@font/gibsonregular"
+            android:fontFamily="@font/poppinsregular"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -445,103 +476,141 @@
             android:background="@color/white"
             android:layout_marginLeft="@dimen/margin45"
             android:text="@string/str_changepwddesc"
-            android:fontFamily="@font/gibsonregular"
+            android:fontFamily="@font/poppinsregular"
             />
     </LinearLayout>
     <LinearLayout
-    android:layout_below="@+id/ll_changepassword"
+    android:layout_below="@+id/list_interest"
     android:id="@+id/ll_feedback"
-    android:layout_margin="@dimen/margin10"
+    android:layout_margin="@dimen/margin25"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin25"
+            android:src="@drawable/ic_feedback"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txt_feedback"
-
-        android:textSize="@dimen/textsize18"
         android:background="@color/white"
-        android:layout_marginLeft="@dimen/margin10"
-        android:drawableLeft="@drawable/ic_feedback"
-        android:drawablePadding="@dimen/margin10"
         android:text="@string/str_feedback"
         android:textColor="@color/black"
         android:layout_below="@+id/rl_scrumble"
-        android:fontFamily="@font/gibsonregular"
+        android:fontFamily="@font/poppinsregular"
         />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/textsize16"
+            android:visibility="gone"
             android:background="@color/white"
             android:layout_marginLeft="@dimen/margin45"
             android:text="@string/str_feeddesc"
-            android:fontFamily="@font/gibsonregular"
+            android:fontFamily="@font/poppinsregular"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_below="@+id/ll_feedback"
         android:id="@+id/ll_terms"
-        android:layout_margin="@dimen/margin10"
+        android:layout_margin="@dimen/margin25"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin25"
+            android:src="@drawable/ic_termsconditions"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txt_terms"
-            android:textSize="@dimen/textsize18"
             android:background="@color/white"
-            android:layout_marginLeft="@dimen/margin10"
-            android:drawableLeft="@drawable/ic_terms"
-            android:drawablePadding="@dimen/margin10"
             android:text="@string/str_terms"
             android:textColor="@color/black"
-            android:fontFamily="@font/gibsonregular"
+            android:fontFamily="@font/poppinsregular"
             />
         <TextView
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/textsize16"
             android:background="@color/white"
             android:layout_marginLeft="@dimen/margin45"
             android:text="@string/str_legal"
-            android:fontFamily="@font/gibsonregular"
+            android:fontFamily="@font/poppinsregular"
             />
     </LinearLayout>
+
+
     <LinearLayout
-        android:layout_below="@+id/ll_terms"
+        android:layout_below="@+id/ll_prvy"
         android:id="@+id/ll_logout"
-        android:layout_margin="@dimen/margin10"
+        android:layout_margin="@dimen/margin25"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin25"
+            android:src="@drawable/ic_logout"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txt_logout"
-
-            android:textSize="@dimen/textsize18"
             android:background="@color/white"
-            android:layout_marginLeft="@dimen/margin10"
-            android:drawableLeft="@drawable/ic_feedback"
-            android:drawablePadding="@dimen/margin10"
             android:text="@string/str_logout"
             android:textColor="@color/black"
             android:layout_below="@+id/rl_scrumble"
-            android:fontFamily="@font/gibsonregular"
+            android:fontFamily="@font/poppinsregular"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/textsize16"
             android:background="@color/white"
+            android:visibility="gone"
             android:layout_marginLeft="@dimen/margin45"
             android:text="@string/str_logoutdesc"
-            android:fontFamily="@font/gibsonregular"
+            android:fontFamily="@font/poppinsregular"
             />
     </LinearLayout>
+         <LinearLayout
+           android:layout_below="@+id/ll_terms"
+           android:id="@+id/ll_prvy"
+           android:layout_margin="@dimen/margin25"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal">
+           <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginRight="@dimen/margin25"
+               android:src="@drawable/ic_termsconditions"/>
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:id="@+id/txt_prvy"
+               android:background="@color/white"
+               android:text="@string/str_privacypolicy"
+               android:textColor="@color/black"
+               android:fontFamily="@font/poppinsregular"
+               />
+           <TextView
+               android:visibility="gone"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:textSize="@dimen/textsize16"
+               android:background="@color/white"
+               android:layout_marginLeft="@dimen/margin45"
+               android:text="@string/str_legal"
+               android:fontFamily="@font/poppinsregular"
+               />
+       </LinearLayout>
 </RelativeLayout>
     </ScrollView>
 </layout>

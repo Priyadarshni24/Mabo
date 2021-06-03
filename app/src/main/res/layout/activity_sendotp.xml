@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_bg"
+    android:background="@color/apptheme"
     android:padding="0dip">
 
     <LinearLayout
@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical"
 
         android:paddingLeft="40dp"
@@ -21,21 +21,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/ic_sendotp" />
+            android:src="@drawable/logo" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="SendOTP"
+            android:text="@string/str_verify"
             android:textColor="@color/white"
             android:textSize="20dp" />
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/inputbox_new"
+            android:orientation="vertical">
+        <EditText
+            android:id="@+id/edt_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/str_enter_name"
+            android:inputType="textPersonName"
+            android:padding="10dp"
+            android:background="@android:color/transparent"
+            android:textColor="@color/send_otp_blue"
+            android:textColorHint="@color/white_trans"
+            android:textSize="16sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/inputbox_new"
             android:orientation="horizontal">

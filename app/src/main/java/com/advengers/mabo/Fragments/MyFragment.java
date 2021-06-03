@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.advengers.mabo.Activity.LoginActivity;
+import com.advengers.mabo.Adapter.LikeAdapter;
 import com.advengers.mabo.Model.User;
 import com.advengers.mabo.R;
 import com.advengers.mabo.Tools.MyActivity;
@@ -55,6 +56,7 @@ public abstract class MyFragment<T extends AppCompatActivity> extends Fragment {
     abstract public String getTagManager();
     Gson gson;
     User user;
+    ProfileClick callback;
     GoogleApiClient mGoogleApiClient;
     public String getLogTag() {
 
@@ -77,6 +79,7 @@ public abstract class MyFragment<T extends AppCompatActivity> extends Fragment {
   {
       LogUtils.e("I am coming here");
       progressDialog = new TransparentProgressDialog(context, R.drawable.ic_loading);
+   //   if(!progressDialog.isShowing())
       progressDialog.show();
   }
     public void onLoadProgresswithtitle(Context context)
@@ -98,7 +101,7 @@ public abstract class MyFragment<T extends AppCompatActivity> extends Fragment {
             progressDialog.dismiss();
     }
     public void showInfo(String msg) {
-        Tools.showDialog(false, msg, getMyActivty(),getMyActivty());
+        Tools.showDialog(false, msg, getActivity(),getActivity());
     }
     public void showWarning(String msg) {
         Tools.showDialog(true, msg, getMyActivty(),getMyActivty());
@@ -201,6 +204,7 @@ public abstract class MyFragment<T extends AppCompatActivity> extends Fragment {
         gson = new Gson();
         user = new User();
         User.setUser(gson.fromJson(Utils.getInstance(getApplicationContext()).getString(USER),User.class));
+
         if (view != null) {
 
             view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -230,6 +234,11 @@ public abstract class MyFragment<T extends AppCompatActivity> extends Fragment {
         log("onAttach " + activity);
 
         super.onAttach(activity);
+        try {
+            callback = (ProfileClick) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnItemClickedListener");
+        }
         synchronized (mAttachingActivityLock) {
             mSyncVariable = true;
             mAttachingActivityLock.notifyAll();
@@ -245,7 +254,11 @@ public abstract class MyFragment<T extends AppCompatActivity> extends Fragment {
         LogUtils.e(gson.toJson(user));
 
     }
-
+    public User getUserdetail()
+    {
+        getUser();
+        return user;
+    }
     public void setUser()
     {
         String jsondata = gson.toJson(user);
@@ -300,7 +313,13 @@ public abstract class MyFragment<T extends AppCompatActivity> extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
     }
-
+    public void CallBackListener(ProfileClick mCallback) {
+        this.callback = mCallback;
+    }
+    public interface ProfileClick
+    {
+        public void onProfile(String userid);
+    }
 
 }
 

@@ -63,7 +63,7 @@ public class FriendsAdapter extends  RecyclerView.Adapter<FriendsAdapter.ViewHol
         holder.binding.makechat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                profilecallback.onChatClick(position);
+                profilecallback.onitemClick(position);
             }
         });
         holder.binding.videocall.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +75,7 @@ public class FriendsAdapter extends  RecyclerView.Adapter<FriendsAdapter.ViewHol
         holder.binding.lytRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                profilecallback.onChatClick(position);
+                profilecallback.onitemClick(position);
             }
         });
     }
@@ -105,7 +105,7 @@ public class FriendsAdapter extends  RecyclerView.Adapter<FriendsAdapter.ViewHol
     public interface ProfileClick
     {
         public void onProfile(int position);
-        public void onChatClick(int position);
+        public void onitemClick(int position);
         public void onCallClick(int position);
     }
 }

@@ -3,6 +3,6 @@
     <dimen name="message_corner_collapse_radius">12</dimen>
     <dimen name="app_bar_size">250dp</dimen>
     <dimen name="margin5">5dp</dimen>
-    <dimen name="margin15">15dp</dimen>
     <dimen name="dimen50">50dp</dimen>
+    <dimen name="margin15">15dp</dimen>
 </resources>
