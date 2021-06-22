@@ -4,7 +4,7 @@
   <item
       android:id="@+id/menu_conversation"
       android:title="@string/chats"
-      android:icon="@drawable/ic_nav_chat" />
+      android:icon="@drawable/ic_chats" />
 
   <item
       android:id="@+id/menu_call"
@@ -14,7 +14,7 @@
   <item
       android:id="@+id/menu_users"
       android:title="@string/users"
-      android:icon="@drawable/ic_contacts"/>
+      android:icon="@drawable/ic_contacts_24dp"/>
 
   <item
       android:icon="@drawable/ic_group"

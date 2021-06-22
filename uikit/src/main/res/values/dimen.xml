@@ -5,4 +5,5 @@
     <dimen name="fourteen">14sp</dimen>
     <dimen name="twelve">12sp</dimen>
     <dimen name="bottom_nav_icon_size">30dp</dimen>
+    <dimen name="eleven">11sp</dimen>
 </resources>

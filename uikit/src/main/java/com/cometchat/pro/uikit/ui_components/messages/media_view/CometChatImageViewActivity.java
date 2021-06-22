@@ -39,7 +39,7 @@ public class CometChatImageViewActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         toolbar.getNavigationIcon().setTint(getResources().getColor(R.color.textColorWhite));
         toolbar.setTitle(senderName);
-        toolbar.setSubtitle(Utils.getLastMessageDate(sentAt));
+        toolbar.setSubtitle(Utils.getLastMessageDate(this,sentAt));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.getNavigationIcon().setTint(getResources().getColor(R.color.textColorWhite));

@@ -23,6 +23,7 @@ import com.cometchat.pro.core.AppSettings;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.uikit.ui_components.calls.call_manager.listener.CometChatCallListener;
+import com.cometchat.pro.uikit.ui_settings.UIKitSettings;
 import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -60,6 +61,7 @@ public class App extends Application {
     public static Gson gson;
     private static boolean activityVisible,callactivityVisible;
     private static String roomid = null;
+    private static final String TAG = "UIKitApplication";
     @Override
     public void onCreate() {
         super.onCreate();
@@ -104,6 +106,9 @@ public class App extends Application {
             @Override
             public void onSuccess(String s) {
              //   Toast.makeText(App.this, "SetUp Complete", Toast.LENGTH_SHORT).show();
+                UIKitSettings.setAppID(AppConfig.AppDetails.APP_ID);
+                UIKitSettings.setAuthKey(AppConfig.AppDetails.API_KEY);
+                CometChat.setSource("ui-kit","android","java");
             }
 
             @Override
@@ -114,7 +119,12 @@ public class App extends Application {
 
         });
         //createNotificationChannel();
-        CometChatCallListener.addCallListener(getString(R.string.app_name),this);
+        UIKitSettings uiKitSettings = new UIKitSettings(this);
+        uiKitSettings.addConnectionListener(TAG);
+        CometChatCallListener.addCallListener(TAG,this);
+        createNotificationChannel();
+     //   CometChatCallListener.addCallListener(getString(R.string.app_name),this);
+
     }
 
 
@@ -203,6 +213,7 @@ public class App extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
+        CometChat.removeConnectionListener(TAG);
         CometChatCallListener.removeCallListener(getString(R.string.app_name));
     }
 }

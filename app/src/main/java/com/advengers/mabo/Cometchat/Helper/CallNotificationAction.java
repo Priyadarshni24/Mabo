@@ -13,6 +13,7 @@ import com.cometchat.pro.core.Call;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.uikit.ui_components.calls.call_manager.CometChatCallActivity;
+import com.cometchat.pro.uikit.ui_components.calls.call_manager.CometChatStartCallActivity;
 import com.cometchat.pro.uikit.ui_resources.constants.UIKitConstants;
 
 public class CallNotificationAction extends BroadcastReceiver {
@@ -30,7 +31,7 @@ public class CallNotificationAction extends BroadcastReceiver {
             CometChat.acceptCall(sessionID, new CometChat.CallbackListener<Call>() {
                 @Override
                 public void onSuccess(Call call) {
-                    Intent acceptIntent = new Intent(context, CometChatCallActivity.class);
+                    Intent acceptIntent = new Intent(context, CometChatStartCallActivity.class);
                     acceptIntent.putExtra(UIKitConstants.IntentStrings.SESSION_ID,call.getSessionId());
                     acceptIntent.putExtra(UIKitConstants.IntentStrings.NOTIFYCALL,"true");
                     acceptIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

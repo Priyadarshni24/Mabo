@@ -139,8 +139,8 @@ dependencies {
         transitive = true
     }*/
     //cometchat sdk  2.1.0-beta7
-  //  implementation 'com.cometchat:pro-android-chat-sdk:2.1.4'
-    implementation 'com.cometchat:pro-android-chat-sdk:2.3.1'
+  //  implementation 'com.cometchat:pro-android-chat-sdk:2.3.1'
+    implementation 'com.cometchat:pro-android-chat-sdk:2.3.5'
     //implementation 'com.cometchat:pro-android-chat-sdk:2.0.4-beta1'
     //implementation 'com.cometchat:pro-android-chat-sdk:2.0.0-beta8'
     implementation 'androidx.recyclerview:recyclerview-selection:1.0.0'
